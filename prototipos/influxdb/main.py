@@ -56,6 +56,7 @@ data = rx \
     .from_iterable(DictReader(open('prototipos/datos/vix-daily_csv.csv', 'r'))) \
     .pipe(ops.map(lambda row: parse_row(row)))
 
+# CAMBIAR SEGÚN SEA NECESARIO
 token = "uJhMvWk6iyQuKjUe4R-5P_kNR--4POblDny9x-LREvQa2uZ7roXtuR7AwPRvpPPM6BvNAgAmvmJ8tnzTBencqg=="
 org = "UBU"
 bucket = "TFG"
