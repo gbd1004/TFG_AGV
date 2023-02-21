@@ -57,7 +57,7 @@ data = rx \
     .pipe(ops.map(lambda row: parse_row(row)))
 
 # CAMBIAR SEGÚN SEA NECESARIO
-token = "uJhMvWk6iyQuKjUe4R-5P_kNR--4POblDny9x-LREvQa2uZ7roXtuR7AwPRvpPPM6BvNAgAmvmJ8tnzTBencqg=="
+token = "123456789"
 org = "UBU"
 bucket = "TFG"
 
