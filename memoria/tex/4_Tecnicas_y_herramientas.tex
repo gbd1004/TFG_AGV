@@ -4,3 +4,14 @@ Esta parte de la memoria tiene como objetivo presentar las técnicas metodológi
 No se pretende que este apartado se convierta en un capítulo de un libro dedicado a cada una de las alternativas, sino comentar los aspectos más destacados de cada opción, con un repaso somero a los fundamentos esenciales y referencias bibliográficas para que el lector pueda ampliar su conocimiento sobre el tema.
 
 
+\tablaSmallSinColores{Comparación gestores de Bases de Datos}{l c c c c}{compbd}
+{\multicolumn{1}{l}{Herramientas} & SQLite & VoltDB & InfluxDB & MongoDB \\}
+{
+% Tipo & SQL & NewSQL & \multirow{2}{l}{} & NoSQL \\
+\multirow{2}*{Tipo} & \multirow{2}*{SQL} & \multirow{2}*{NewSQL} & NoSQL & NoSQL \\
+                    &                    &                       & TSDB & DBDB \\
+Relacional & Sí & Sí & No & No \\
+\multirow{2}*{}Almacenamiento & \multirow{2}*{No} & \multirow{2}*{Sí} & \multirow{2}*{No} & \multirow{2}*{No} \\
+en memoria & & & & \ \\
+Soporte para Linux & Sí & Sí & Sí & Sí \\
+}
