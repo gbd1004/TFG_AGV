@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$(sudo docker container inspect influxdb 2> /dev/null)" == "[]" ]]; then
+if [[ "$(sudo docker container inspect mongo 2> /dev/null)" == "[]" ]]; then
     sudo docker run --name mongo -d -p 27017:27017 mongo
 
     # sleep 5

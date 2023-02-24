@@ -32,7 +32,7 @@ def query(collection_name):
     print("max close = " + str(max_close))
 
 def get_database():
-    client = MongoClient("mongodb://localhost:27017/")
+    client = MongoClient("mongodb://localhost:27017")
 
     return client["mydatabase"]
 
@@ -42,10 +42,10 @@ if __name__ == "__main__":
     collection_name = dbname["financial-analysis"]
 
     print("Insertando datos")
-    try:    
-        insert(collection_name)
-    except:
-        print("Datos ya insertados")
+    # try:    
+    insert(collection_name)
+    # except:
+    #     print("Datos ya insertados")
     
     print("Datos insertados")
 
