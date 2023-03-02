@@ -1,3 +1,6 @@
 memoria/build/*
 
 !memoria/build/*.pdf
+
+src/reciever/.venv
+src/simulator/.venv
