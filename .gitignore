@@ -2,5 +2,5 @@ memoria/build/*
 
 !memoria/build/*.pdf
 
-src/reciever/.venv
-src/simulator/.venv
+servicios/reciever/.venv
+servicios/simulator/.venv
