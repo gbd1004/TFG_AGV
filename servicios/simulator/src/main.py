@@ -1,9 +1,9 @@
 """Servicio dedicado a simular el AGV. De momento solo son datos aleatorios"""
 
+from datetime import datetime
 import socket
 import random
 import json
-import sys
 import time
 
 UDP_IP = "reciever"
@@ -12,7 +12,7 @@ UDP_PORT = 5004
 def generar_datos():
     """Genera datos aleatorios del AGV con id=1"""
     dato = {
-        "tiempo": time.time(),
+        "tiempo": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
         "id": 1,
         "bateria": random.randint(0, 100),
         "velocidad": random.randint(0, 5),
@@ -30,4 +30,5 @@ if __name__ == "__main__":
         sock.sendto(bytes(datos, encoding="utf-8"), (UDP_IP, UDP_PORT))
         print(datos)
 
-        time.sleep(5)
+        time.sleep(5
+)
