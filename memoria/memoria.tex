@@ -122,6 +122,24 @@
  \end{table}
 }
 
+% Nuevo comando para tablas pequeñas (menos de una página).
+\newcommand{\tablaSmallFija}[5]{%
+ \begin{table}[htbp]
+  \begin{center}
+   \rowcolors {2}{gray!35}{}
+   \begin{tabular}{#2}
+    \toprule
+    #4
+    \otoprule
+    #5
+    \bottomrule
+   \end{tabular}
+   \caption{#1}
+   \label{tabla:#3}
+  \end{center}
+ \end{table}
+}
+
 %
 % Nuevo comando para tablas pequeñas (menos de una página).
 \newcommand{\tablaSmallSinColores}[5]{%
@@ -169,14 +187,14 @@
       \otoprule
     }
     \tablehead{
-      \multicolumn{#3}{l}{\small\sl continúa desde la página anterior}\\
+      \multicolumn{#3}{l}{\small\slshape continúa desde la página anterior}\\
       \toprule
       #5
       \otoprule
     }
     \tabletail{
       \hline
-      \multicolumn{#3}{r}{\small\sl continúa en la página siguiente}\\
+      \multicolumn{#3}{r}{\small\slshape Continúa en la página siguiente}\\
     }
     \tablelasttail{
       \hline
@@ -201,14 +219,14 @@
       \otoprule
     }
     \tablehead{
-      \multicolumn{#3}{l}{\small\sl continúa desde la página anterior}\\
+      \multicolumn{#3}{l}{\small\slshape continúa desde la página anterior}\\
       \toprule
       #5
       \otoprule
     }
     \tabletail{
       \hline
-      \multicolumn{#3}{r}{\small\sl continúa en la página siguiente}\\
+      \multicolumn{#3}{r}{\small\slshape continúa en la página siguiente}\\
     }
     \tablelasttail{
       \hline
