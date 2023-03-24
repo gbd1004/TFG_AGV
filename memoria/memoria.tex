@@ -8,6 +8,7 @@
 \usepackage{lmodern} % Scalable font
 \usepackage{microtype}
 \usepackage{placeins}
+\usepackage{float}
 
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
@@ -124,7 +125,7 @@
 
 % Nuevo comando para tablas pequeñas (menos de una página).
 \newcommand{\tablaSmallFija}[5]{%
- \begin{table}[htbp]
+ \begin{table}[H]
   \begin{center}
    \rowcolors {2}{gray!35}{}
    \begin{tabular}{#2}
@@ -144,6 +145,23 @@
 % Nuevo comando para tablas pequeñas (menos de una página).
 \newcommand{\tablaSmallSinColores}[5]{%
  \begin{table}
+  \begin{center}
+   \begin{tabular}{#2}
+    \toprule
+    #4
+    \otoprule
+    #5
+    \bottomrule
+   \end{tabular}
+   \caption{#1}
+   \label{tabla:#3}
+  \end{center}
+ \end{table}
+}
+
+% Nuevo comando para tablas pequeñas (menos de una página).
+\newcommand{\tablaSmallSinColoresFija}[5]{%
+ \begin{table}[H]
   \begin{center}
    \begin{tabular}{#2}
     \toprule
