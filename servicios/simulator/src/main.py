@@ -42,7 +42,7 @@ class AGV:
 
     def log(self, sock):
         datos = {
-            "tiempo": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+            "tiempo": str(datetime.utcnow()),
             "id": self.id,
             "bateria": self.bateria,
             "velocidad": self.velocidad,
@@ -98,7 +98,7 @@ class AGV:
 def generar_datos():
     """Genera datos aleatorios del AGV con id=1"""
     dato = {
-        "tiempo": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        "tiempo": str(datetime.utcnow()),
         "id": 1,
         "bateria": random.randint(0, 100),
         "velocidad": random.randint(0, 5),
