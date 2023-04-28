@@ -2,5 +2,7 @@ memoria/build/*
 
 !memoria/build/*.pdf
 
+prototipos/timescaledb/.venv
+
 servicios/reciever/.venv
 servicios/simulator/.venv
