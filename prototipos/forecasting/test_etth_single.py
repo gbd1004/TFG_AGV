@@ -14,6 +14,8 @@ from darts.dataprocessing.transformers import Scaler
 from darts.models.forecasting.prophet_model import Prophet
 from darts.models.forecasting.transformer_model import TransformerModel
 
+VAL_SIZE = 5000
+
 token = "u_nT6lvnTJEfY1xrcGF7E6ypuHKXDLoGOKXm580Q2pyFwNYv8CY_yFGUkCgjPep387EWuhE3p90EQaYFkW5Zww=="
 bucket = "AGV"
 org = "TFG"
@@ -42,7 +44,7 @@ with client.write_api(write_options=WriteOptions(batch_size=50_000, flush_interv
     write_api.write(bucket=bucket, record=data)
 
 query = 'from(bucket:"AGV")' \
-        ' |> range(start:2016-07-01, stop:2018-06-26)'\
+        ' |> range(start:2016-07-01, stop:2018-06-27)'\
         ' |> filter(fn: (r) => r._measurement == "etth")' \
         ' |> filter(fn: (r) => r._field == "ot")' \
         ' |> filter(fn: (r) => r.type == "value")'
@@ -63,15 +65,15 @@ df.head()
 series = TimeSeries.from_dataframe(df, "date", "ot", freq="H").astype(np.float32)
 series = fill_missing_values(series=series)
 
-train, val = series[:-2000], series[-2000:]
+train, val = series[:-VAL_SIZE], series[-VAL_SIZE:]
 
 scaler = Scaler()
 train_scaled = scaler.fit_transform(train).astype(np.float32)
 val_scaled = scaler.fit_transform(val).astype(np.float32)
 
-model = TransformerModel(input_chunk_length=1000, output_chunk_length=100)
+model = TransformerModel(input_chunk_length=24*14, output_chunk_length=12)
 model.fit(train, val_series=val, epochs=100)
-prediction = model.predict(series=train_scaled, n=4000)
+prediction = model.predict(series=train, n=24)
 
 # model = Prophet()
 # model.fit(train)

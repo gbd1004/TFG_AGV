@@ -70,10 +70,10 @@ series_hufl = get_series('hufl')
 series_lufl = get_series('lufl')
 series_mufl = get_series('mufl')
 
-series = series_ot.stack(series_hufl).stack(series_mufl).stack(series_mufl)
+series = series_ot.stack(series_hufl).stack(series_mufl).stack(series_lufl)
 
 train, val = series[:-VAL_SIZE], series[-VAL_SIZE:]
-# train_ot, val_ot = series_ot[:-VAL_SIZE], series_ot[-VAL_SIZE:]
+train_ot, val_ot = series_ot[:-VAL_SIZE], series_ot[-VAL_SIZE:]
 # train_hufl, val_hufl = series_hufl[:-VAL_SIZE], series_hufl[-VAL_SIZE:]
 # train_lufl, val_lufl = series_lufl[:-VAL_SIZE], series_lufl[-VAL_SIZE:]
 # train_mufl, val_mufl = series_mufl[:-VAL_SIZE], series_mufl[-VAL_SIZE:]
@@ -102,12 +102,12 @@ prediction = model.predict(series=train, n=24)
 pred = prediction
 # pred = scaler.inverse_transform(prediction)
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
             
-plt.figure(figsize=(10, 6))
-series.plot()
-pred.plot()
-plt.show()
+# plt.figure(figsize=(10, 6))
+# series.plot()
+# pred.plot()
+# plt.show()
 
 pred_df = pred.pd_dataframe().reset_index()
 
