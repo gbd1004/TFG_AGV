@@ -6,3 +6,5 @@ prototipos/timescaledb/.venv
 
 servicios/reciever/.venv
 servicios/simulator/.venv
+
+.vscode
