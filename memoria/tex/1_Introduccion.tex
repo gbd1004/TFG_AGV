@@ -1,120 +1,28 @@
 \capitulo{1}{Introducción}
 
-Descripción del contenido del trabajo y del estrucutra de la memoria y del resto de materiales entregados.
+% Descripción del contenido del trabajo y del estrucutra de la memoria y del resto de materiales entregados.
 
+Los AGV, Autonomous Guided Vehicles por sus siglas en inglés, son complejos sistemas robóticos, 
+capaces de moverse en un entorno concreto, cuyo uso es transportar cargas pesadas en fábricas o 
+almacenes, y que están diseñados para mejorar la eficiencia y la productividad en la logística 
+y el transporte de materiales. Debido a sus ventajas en seguridad, flexibilidad y velocidad,
+esta tecnología se está convirtiendo cada vez más importante \cite{espinosa2020transporte}.
 
-\section{INTRO TEMPORAL}
+Aunque estos sistemas pueden mejorar la productividad, desajustes en su configuración u otros
+errores operacionales pueden producir una reducción de su rendimiento, y, en casos extremos,
+causar una detención de la línea de producción. Por este motivo, es necesario extraer información
+de los sistemas en marcha para analizar el rendimiento de las máquinas y las aplicaciones logísticas.
+Esta información puede usarse para predecir comportamientos futuros del sistema, realizar mantenimiento
+predictivo y proveer retroalimentación con el fin de diseñar mejoras continuas de las máquinas. Estas
+predicciones pueden ser conseguidas con el uso de algoritmos de análisis de series temporales, que
+permitan anticipar futuras condiciones del sistema. \cite{BARUQUE201949}
 
-Our goal is to collect data on a fleet of Autonomous Guided Vehicles (AGVs) through log messages sent from each vehicle. 
-These messages contain information about key parameters of the vehicle, and are indexed over time.\\
-Later, we intend to use this information to predict future behaviour, so the fleet can be managed in a more optimal way. 
-Because access to an AGV is not always possible, we also intend to develop a simulator, which will be useful to gather the data needed to train the model.\\
-The first part of this work will address which database model and software to use to store the information, and the second will address the data analysis and prediction part.
+Algunos de estos datos obtenidos del sistema tienen una baja frecuencia de actualización, como puede
+ser la temperatura y voltaje de la batería, pero otros cambian cada pocos milisegundos, como la
+corriente eléctrica, la velocidad, la posición del vehículo, errores y estado, etc. Toda esta
+información proveída por el AGV debe estar relacionada con el tiempo en el que fue generada, por
+lo que puede ser agrupada en series temporales \cite{DBLP:journals/corr/abs-2104-00164}. Cualquier
+tipo de base de datos puede usarse para almacenar esta información generada por los AGV, sin embargo,
+ya que se trata de series temporales, es preferible utilizar bases de datos para series temporales
+para optimizar el rendimiento del sistema.
 
-\section{Data storing}
-\subsection{Database model}
-The first thing to choose is the database model to use, as this will have a key importance when deciding which database management system to use.
-The next models will be considered:
-\begin{enumerate}
-    \item Relational database management systems: in these systems, data is stored in relations. A relation, also sometimes called a table, is a collection of tuples, or rows. Those tables are defined by their name, and a set of fixed number of attributes, or columns, with fixed data types. These systems respect the ACID properties (Atomicity, Consistency, Isolation and Durability), and have basic operations defined, like selection, projection and join.
-    \item Document stores: the principal characteristic of this kind of system is their schema-free organization of data. This means that, contrary that in relational databases, records don't need to have a uniform structure, columns can have more than one value, and even records can have a nested structure.
-    \item Key-Value stores: they are the most basic and simplest database management systems, and can only store key-value pairs. Those are usually not feasible for complex applications, but usually have good performance due to their simplicity.
-    \item Search engines: their main usage is the search for data content, and are typically NoSQL database management systems, meaning that they don't use a relational data model.
-    \item Time Series database management systems: this database systems are optimized for storing time series data\cite{influx:timeseries}. Although they are typically NoSQL, some systems of this kind follow the relational data model.
-\end{enumerate}
-
-Time series data, like the data we receive from the AGVs, can be managed with any of those models. However, Time Series DBMS are specialized in this kind of work, making them the best suit for our needs. Knowing this, we will make a comparison in the following chapter between the top 5 most used TSDBMS, according to DB-Engines\cite{dbengines:rankingTSDBMS}.
-
-\subsection{DataBase Management System}
-The next DBMS will be compared:
-\begin{itemize}
-    \item InfluxDB.
-    \item Kdb.
-    \item Prometheus.
-    \item Graphite.
-    \item TimescaleDB.
-\end{itemize}
-
-\subsection{General information}
-\tablaSmallFija{General information comparison}{l c c c c}{gisgbd}{
-Systems & Developer & Launch & Latest version & Licence \\
-}{
-InfluxDB    & InfluxData & 2013 & 2022 & OSS\footnotemark \\
-Kdb         & Kx Systems & 2000 & 2018 & Commercial\footnotemark \\
-Prometheus  &            & 2015 & 2023 & OSS \\
-Graphite    &            & 2006 & 2022 & OSS \\
-TimescaleDB & Timescale  & 2017 & 2022 & OSS \\
-}
-
-\footnotetext[1]{Commercial Enterprise Edition.}
-\footnotetext[2]{Free 32 bit version.}
-
-Only Open Source Software will be considered for this work. Kdb, therefore, will not be used, and will not appear in the following comparisons.
-For the same reason, only the features of the Community Edition of InfluxDB will be used in those comparisons, and features of the Enterprise Edition, 
-like sharding, will not be taken in mind.
-
-\subsection{Data model}
-\tablaSmallSinColoresFija{Data model comparison}{l c c c c}{dmsgbd}{
-\multirow{2}{*}{System} & \multirow{2}{*}{Model} & \multirow{2}{*}{Schema} & \multirow{2}{*}{Typing} & Secondary\\
-&&&& Index \\
-}{
-&&& Numeric & \\
-\multirow{-2}{*}{InfluxDB}    & \multirow{-2}{*}{Multidimensional} & \multirow{-2}{*}{Schema-free} & and string & \multirow{-2}{*}{No} \\
-\rowcolor{gray!35}
-Prometheus  & Multidimensional & Yes & Numeric & No \\
-Graphite    & Key-Value & Yes & Numeric & No \\
-\rowcolor{gray!35}
-TimescaleDB & Relational & Yes & All & Yes \\
-}
-
-\subsection{Support}
-
-\tablaSmallSinColoresFija{Support}{l c c c c}{ssgbd}{
-System & OS & Python & API & SQL \\
-}{
-                           & Linux &                       & HTPP API &  \\
-\multirow{-2}{*}{InfluxDB} & OS x  & \multirow{-2}{*}{Yes} & Json UDP & \multirow{-2}{*}{SQL-like} \\
-\rowcolor{gray!35}
-                             & Linux   &                       & REST HTTP & \\
-\rowcolor{gray!35}
-\multirow{-2}{*}{Prometheus} & Windows & \multirow{-2}{*}{Yes} & JSON API  & \multirow{-2}{*}{No} \\
-                           & Linux &                       & HTTP API &  \\
-\multirow{-2}{*}{Graphite} & Unix  & \multirow{-2}{*}{Yes} & Sockets  & \multirow{-2}{*}{No} \\
-\rowcolor{gray!35}
-                              & Linux   &                       & JDBC      &  \\
-\rowcolor{gray!35}
-                              & OS X    &                       & ODBC      &  \\
-\rowcolor{gray!35}
-\multirow{-3}{*}{TimescaleDB} & Windows & \multirow{-3}{*}{Yes} & C Library & \multirow{-3}{*}{Yes} \\
-}
-
-
-\subsection{Other}
-\tablaSmallSinColoresFija{Other}{l c c c c}{osgbd}{
-System & InfluxDB & Prometheus & Graphite & TimescaleDB \\
-}{
-Server scripts & No & No & No & Yes \\
-\rowcolor{gray!35}
-Partitioning & No\footnotemark & Sharding & No & Yes \\
-Replication & No\footnotemark & Yes & No & Yes \\
-\rowcolor{gray!35}
-Consistency & Eventual\footnotemark & No & No & Innmediate \\
-Transaction&&&&\\
-concepts & \multirow{-2}{*}{No} & \multirow{-2}{*}{No} & \multirow{-2}{*}{No} & \multirow{-2}{*}{ACID} \\
-\rowcolor{gray!35}
-Concurrency & Yes & Yes & Yes\footnotemark & Yes \\
-Durability & Yes & Yes & Yes & Yes \\
-\rowcolor{gray!35}
-                              & Rights via    &                      &                      & Access rights \\
-\rowcolor{gray!35}
-\multirow{-2}{*}{User rights} & user accounts & \multirow{-2}{*}{No} & \multirow{-2}{*}{No} & SQL-standard \\
-}
-
-\footnotetext[3]{Only in Enterprise Edition.}
-\footnotetext[4]{Only in Enterprise Edition.}
-\footnotetext[5]{According to the InfluxDB documentation, InfluxDB prioritizes read and write performance over strong consistency. However, it is ensured that data is eventually consistent.\cite{influx:consistency} }
-\footnotetext[6]{Concurrency by blocking.}
-
-\subsection{Performance}
-
-\subsection{Conclusion}
