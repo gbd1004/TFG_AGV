@@ -1,1 +1,0 @@
-{"rule":"WHITESPACE_RULE","sentence":"^\\QData model comparison l c c c c dmsgbd System Model Schema SQL Secondary Index  InfluxDB Multidimensional Schema-free SQL Like No Prometheus Multidimensional Yes No No Graphite Key-Value Yes No No TimescaleDB Relational Yes Yes Yes\\E$"}
