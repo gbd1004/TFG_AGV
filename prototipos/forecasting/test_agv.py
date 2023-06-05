@@ -15,17 +15,21 @@ from darts.utils.missing_values import fill_missing_values
 from darts.dataprocessing.transformers import Scaler
 from darts.models.forecasting.prophet_model import Prophet
 from darts.models.forecasting.transformer_model import TransformerModel
+from darts.models.forecasting.tft_model import TFTModel
 from darts.models.forecasting.rnn_model import RNNModel
 from darts.models.forecasting.tcn_model import TCNModel
 from darts.models.forecasting.nbeats import NBEATSModel
+from darts.models.forecasting.nhits import NHiTSModel
 from darts.models.forecasting.arima import ARIMA
+from darts.models.forecasting.auto_arima import AutoARIMA
 from darts.models.forecasting.varima import VARIMA
+from darts.models.forecasting.prophet_model import Prophet
 from darts.utils.statistics import plot_acf
 
 import matplotlib.pyplot as plt
 import torch
 
-VAL_SIZE = 1000
+VAL_SIZE = 1100
 
 torch.set_float32_matmul_precision('high')
 
@@ -68,34 +72,57 @@ series = series_ed.stack(series_ei).stack(series_sr).stack(series_sl)
 
 train, val = series[:-VAL_SIZE], series[-VAL_SIZE:]
 
+
 # train.plot()
 val.plot()
 plt.show()
 
-scaler = Scaler()
-train_scaled = scaler.fit_transform(train).astype(np.float32)
-val_scaled = scaler.fit_transform(val).astype(np.float32)
+scaler_ed, scaler_ei, scaler_sr, scaler_sl = Scaler(), Scaler(), Scaler(), Scaler()
 
-# model = TransformerModel(input_chunk_length=120, output_chunk_length=60)
+series_ed_scaled = scaler_ed.fit_transform(series_ed).astype(np.float32)
+series_ei_scaled = scaler_ei.fit_transform(series_ei).astype(np.float32)
+series_sr_scaled = scaler_sr.fit_transform(series_sr).astype(np.float32)
+series_sl_scaled = scaler_sl.fit_transform(series_sl).astype(np.float32)
+
+# train_scaled = scaler.fit_transform(train).astype(np.float32)
+# val_scaled = scaler.fit_transform(val).astype(np.float32)
+train_ed, val_ed = series_ed_scaled[:-VAL_SIZE], series_ed_scaled[-VAL_SIZE:]
+train_ei, val_ei = series_ei_scaled[:-VAL_SIZE], series_ei_scaled[-VAL_SIZE:]
+train_sr, val_sr = series_sr_scaled[:-VAL_SIZE], series_sr_scaled[-VAL_SIZE:]
+train_sl, val_sl = series_sl_scaled[:-VAL_SIZE], series_sl_scaled[-VAL_SIZE:]
+
+out = 500
+# model = Prophet()
+model = TransformerModel(input_chunk_length=500, output_chunk_length=out)
+# model = TFTModel(input_chunk_length=360, output_chunk_length=20)
 # model = NBEATSModel(input_chunk_length=240, output_chunk_length=120)
-# model = RNNModel(input_chunk_length=120, model="LSTM", hidden_dim=100, n_rnn_layers=10)
-model = TCNModel(input_chunk_length=120, output_chunk_length=60)
+# model = NHiTSModel(input_chunk_length=360, output_chunk_length=20)
+# model = RNNModel(input_chunk_length=300, model="LSTM", n_rnn_layers=5, dropout=0.2)
+# model = TCNModel(input_chunk_length=1000, output_chunk_length=20)
 # model = ARIMA()
-# model = VARIMA(p=5, d=1,q=10)
-# model.fit(train_scaled, val_series=val_scaled, epochs=100)
-# model.fit(train_scaled)
-model.fit(series=train_scaled, val_series=val_scaled)
-prediction = model.predict(series=train_scaled, n=240)
-# model.fit(train_scaled)
+# model = VARIMA(p=0, d=0, q=100, trend="n")
+# model.fit(train_scaled, val_series=val_scaled, epochs=20)
+# model.fit([train_ed, train_ei, train_sr, train_sl], epochs=20)
+model.fit([train_sr, train_sl], past_covariates=[train_ed, train_ei], epochs=20)
+# model.fit(train_scaled, val)
+# model = AutoARIMA()
+# prediction = model.predict(series=train_scaled, n=240)
 # prediction = model.predict(series=train_scaled, n=VAL_SIZE)
+prediction = model.predict(series=[train_sr, train_sl], past_covariates=[train_ed, train_ei], n=out)
+# model.fit(train_scaled)
+# prediction = model.predict(series=train_sr, n=VAL_SIZE)
 
-pred = scaler.inverse_transform(prediction)
+print(prediction)
+
+pred = scaler_sr.inverse_transform(prediction[0])
 # pred = prediction
 
 print(pred)
 
-series.plot()
+series_sr.plot()
 # train.plot()
 # val.plot()
 pred.plot()
 plt.show()
+
+model.save("test_model.pt")
