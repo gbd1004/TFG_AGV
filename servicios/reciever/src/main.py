@@ -39,7 +39,8 @@ if __name__ == "__main__":
 
     while not connected and retries < MAX_RETRIES:
         try:
-            write_api = client.write_api(write_options=SYNCHRONOUS)
+            write_options = influxdb_client.WriteOptions(batch_size=1000, flush_interval=1_000, retry_interval=5_000)
+            write_api = client.write_api(write_options=write_options)
             connected = True
         except:
             retries += 1
@@ -55,14 +56,30 @@ if __name__ == "__main__":
         data, addr = sock.recvfrom(1024)
         data_json = json.loads(data)
 
-        point = influxdb_client.Point("agv_logs") \
-            .tag("vid", str(data_json["id"])) \
-            .field("bateria", int(data_json["bateria"])) \
-            .field("velocidad", int(data_json["velocidad"])) \
-            .field("punto", data_json["punto"]) \
-            .field("siguiente_punto", data_json["siguiente_punto"]) \
-            .field("pos_x", int(data_json["pos_x"])) \
-            .field("pos_y", int(data_json["pos_y"])) \
-            .time(data_json["tiempo"])
+        # point = influxdb_client.Point("agv_logs") \
+        #     .tag("vid", str(data_json["id"])) \
+        #     .field("bateria", int(data_json["bateria"])) \
+        #     .field("velocidad", int(data_json["velocidad"])) \
+        #     .field("punto", data_json["punto"]) \
+        #     .field("siguiente_punto", data_json["siguiente_punto"]) \
+        #     .field("pos_x", int(data_json["pos_x"])) \
+        #     .field("pos_y", int(data_json["pos_y"])) \
+        #     .time(data_json["tiempo"])
+        ed = int(data_json['???EncoderDerecho'])
+        if(ed & 0x80000000):
+            ed = -0x100000000 + ed
 
+        point = influxdb_client.Point("test") \
+            .tag("type", "value") \
+            .field("encoder_derecho", ed) \
+            .field("encoder_izquierdo", int(data_json['???EncoderIzquierdo'])) \
+            .field("in.current_l", int(data_json['In.CurrentL'])) \
+            .field("in.current_h", int(data_json['In.CurrentH'])) \
+            .field("in.i_medida_bat", int(data_json['In.I_MedidaBat'])) \
+            .field("in.guide_error", float(data_json['In.guideError'])) \
+            .field("out.set_speed_right", int(data_json['Out.SetSpeedRight'])) \
+            .field("out.set_speed_left", int(data_json['Out.SetSpeedLeft'])) \
+            .field("out.display", int(data_json['Out.Display'])) \
+            .time(data_json['time'])
+        
         write_api.write(bucket=BUCKET, org=ORG, record=point)

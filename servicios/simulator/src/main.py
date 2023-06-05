@@ -1,11 +1,12 @@
 """Servicio dedicado a simular el AGV. De momento solo son datos aleatorios"""
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import socket
 import random
 import json
 import time
 import itertools
+import csv
 
 UDP_IP = "reciever"
 UDP_PORT = 5004
@@ -111,10 +112,19 @@ def generar_datos():
 
     return json.dumps(dato)
 
+def simular_csv(socket, csv_path):
+    time = datetime.utcnow()
+    with open("/simulator/" + csv_path) as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            delta = timedelta(seconds=float(row['time']))
+            while datetime.utcnow() < time + delta:
+                pass
+            row['time'] = (time + delta).strftime('%Y-%m-%d %H:%M:%S.%f')
+            sock.sendto(bytes(json.dumps(row), encoding="utf-8"), (UDP_IP, UDP_PORT))
 
-if __name__ == "__main__":
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+def simular_agv(socket):
     puntos = [
         Punto(0, 0),
         Punto(1, 0),
@@ -125,3 +135,14 @@ if __name__ == "__main__":
     agv = AGV(puntos[0], puntos[1])
 
     agv.simular(sock)
+
+if __name__ == "__main__":
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    f = open('/simulator/config.json')
+    data = json.load(f)
+
+    if data['from_csv']:
+        simular_csv(sock, data['csv_file'])
+    else:
+        simular_agv(sock)

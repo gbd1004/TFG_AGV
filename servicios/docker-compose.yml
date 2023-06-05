@@ -3,20 +3,24 @@ services:
     image: influxdb:2.6.1
     ports:
       - "8086:8086"
-    environment:
-      - DOCKER_INFLUXDB_INIT_USERNAME=prueba
-      - DOCKER_INFLUXDB_INIT_PASSWORD=Prueba1234
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=u_nT6lvnTJEfY1xrcGF7E6ypuHKXDLoGOKXm580Q2pyFwNYv8CY_yFGUkCgjPep387EWuhE3p90EQaYFkW5Zww==
-      - DOCKER_INFLUXDB_INIT_ORG=TFG
-      - DOCKER_INFLUXDB_INIT_BUCKET=AGV
-      - DOCKER_INFLUXDB_INIT_MODE=setup
+    env_file:
+      - influxdb_credentials.env
 
   simulator:
     build: simulator/.
     ports: 
       - "5005:5005/udp"
+    env_file:
+      - influxdb_credentials.env
 
   reciever:
     build: reciever/.
     ports:
       - "5004:5004/udp"
+    env_file:
+      - influxdb_credentials.env
+
+  forecasting:
+    build: forecasting/.
+    env_file:
+      - influxdb_credentials.env
