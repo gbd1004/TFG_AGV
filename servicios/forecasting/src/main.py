@@ -22,7 +22,7 @@ def get_influxdb_credentials():
 def query_dataframe(client, bucket) -> DataFrame:
     query = 'from(bucket:"{bucket}")' \
         ' |> range(start: -26s, stop:now())' \
-        ' |> aggregateWindow(every: 50ms, fn: last, createEmpty: false)' \
+        ' |> aggregateWindow(every: 50ms, fn: last, createEmpty: true)' \
         ' |> filter(fn: (r) => r._measurement == "test" and r.type == "value")' \
         ' |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'.format(bucket=bucket)
     
@@ -36,7 +36,7 @@ def query_dataframe(client, bucket) -> DataFrame:
 def get_series(tag: str, df: DataFrame, client, bucket) -> TimeSeries:
     for i in range(0, 25):
         try:
-            series = TimeSeries.from_dataframe(df, "_time", tag, freq="50ms").astype(np.float32)
+            series = TimeSeries.from_dataframe(df[-500:], "_time", tag, freq="50ms").astype(np.float32)
         except:
             time.sleep(0.5)
             df = query_dataframe(client=client, bucket=bucket)
