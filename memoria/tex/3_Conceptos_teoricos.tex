@@ -1,83 +1,126 @@
 \capitulo{3}{Conceptos teóricos}
 
-En aquellos proyectos que necesiten para su comprensión y desarrollo de unos conceptos teóricos de una determinada materia o de un determinado dominio de conocimiento, debe existir un apartado que sintetice dichos conceptos.
+% En aquellos proyectos que necesiten para su comprensión y desarrollo de unos conceptos teóricos de una determinada materia o de un determinado dominio de conocimiento, debe existir un apartado que sintetice dichos conceptos.
 
-Algunos conceptos teóricos de \LaTeX \footnote{Créditos a los proyectos de Álvaro López Cantero: Configurador de Presupuestos y Roberto Izquierdo Amo: PLQuiz}.
+% Algunos conceptos teóricos de \LaTeX \footnote{Créditos a los proyectos de Álvaro López Cantero: Configurador de Presupuestos y Roberto Izquierdo Amo: PLQuiz}.
 
-\section{Secciones}
+% \section{Secciones}
 
-Las secciones se incluyen con el comando section.
+% Las secciones se incluyen con el comando section.
 
-\subsection{Subsecciones}
+% \subsection{Subsecciones}
 
-Además de secciones tenemos subsecciones.
+% Además de secciones tenemos subsecciones.
 
-\subsubsection{Subsubsecciones}
+% \subsubsection{Subsubsecciones}
 
-Y subsecciones. 
-
-
-\section{Referencias}
-
-Las referencias se incluyen en el texto usando cite \cite{wiki:latex}. Para citar webs, artículos o libros \cite{koza92}.
+% Y subsecciones. 
 
 
-\section{Imágenes}
+% \section{Referencias}
 
-Se pueden incluir imágenes con los comandos standard de \LaTeX, pero esta plantilla dispone de comandos propios como por ejemplo el siguiente:
-
-\imagen{escudoInfor}{Autómata para una expresión vacía}{.5}
+% Las referencias se incluyen en el texto usando cite \cite{wiki:latex}. Para citar webs, artículos o libros \cite{koza92}.
 
 
+% \section{Imágenes}
 
-\section{Listas de items}
+% Se pueden incluir imágenes con los comandos standard de \LaTeX, pero esta plantilla dispone de comandos propios como por ejemplo el siguiente:
 
-Existen tres posibilidades:
+% \imagen{escudoInfor}{Autómata para una expresión vacía}{.5}
 
-\begin{itemize}
-	\item primer item.
-	\item segundo item.
-\end{itemize}
 
-\begin{enumerate}
-	\item primer item.
-	\item segundo item.
-\end{enumerate}
 
-\begin{description}
-	\item[Primer item] más información sobre el primer item.
-	\item[Segundo item] más información sobre el segundo item.
-\end{description}
+% \section{Listas de items}
+
+% Existen tres posibilidades:
+
+% \begin{itemize}
+% 	\item primer item.
+% 	\item segundo item.
+% \end{itemize}
+
+% \begin{enumerate}
+% 	\item primer item.
+% 	\item segundo item.
+% \end{enumerate}
+
+% \begin{description}
+% 	\item[Primer item] más información sobre el primer item.
+% 	\item[Segundo item] más información sobre el segundo item.
+% \end{description}
 	
+% \begin{itemize}
+% \item 
+% \end{itemize}
+
+% \section{Tablas}
+
+% Igualmente se pueden usar los comandos específicos de \LaTeX o bien usar alguno de los comandos de la plantilla.
+
+% \tablaSmall{Herramientas y tecnologías utilizadas en cada parte del proyecto}{l c c c c}{herramientasportipodeuso}
+% { \multicolumn{1}{l}{Herramientas} & App AngularJS & API REST & BD & Memoria \\}{ 
+% HTML5 & X & & &\\
+% CSS3 & X & & &\\
+% BOOTSTRAP & X & & &\\
+% JavaScript & X & & &\\
+% AngularJS & X & & &\\
+% Bower & X & & &\\
+% PHP & & X & &\\
+% Karma + Jasmine & X & & &\\
+% Slim framework & & X & &\\
+% Idiorm & & X & &\\
+% Composer & & X & &\\
+% JSON & X & X & &\\
+% PhpStorm & X & X & &\\
+% MySQL & & & X &\\
+% PhpMyAdmin & & & X &\\
+% Git + BitBucket & X & X & X & X\\
+% Mik\TeX{} & & & & X\\
+% \TeX{}Maker & & & & X\\
+% Astah & & & & X\\
+% Balsamiq Mockups & X & & &\\
+% VersionOne & X & X & X & X\\
+% }
+
+Como se ha mencionado en apartados anteriores, los datos recibidos por el AGV se agrupan en series temporales. Conviene por tanto explicar
+que son las series temporales, así como los modelos que se utilizarán para intentar predecirlas.
+
+
+\section{Series temporales}
+
+Una serie temporal es una colección de observaciones obtenidas mediante mediciones repetidas a lo largo del tiempo \cite{influx:timeseries}.
+
+Normalmente, las series temporales presentan patrones que pueden utilizarse para realizar predicciones. Estos patrones son:
 \begin{itemize}
-\item 
+    \item \textbf{Tendencia}. La tendencia existe cuando hay un incremento o decremento del valor medido a largo plazo. Esta tendencia
+        no tiene por qué ser lineal.
+    \item \textbf{Estacionalidad}. El patrón de estacionalidad se presenta cuando una serie temporal se ve afectada por factores estacionales,
+        como puede ser el día de la semana. Siempre tiene una frecuencia fija y conocida.
+    \item \textbf{Ciclos}. Un ciclo ocurre cuando los datos muestran incrementos o decrementos a una frecuencia no fija.
 \end{itemize}
 
-\section{Tablas}
+\imagen{pltEncDerecho.pdf}{Ejemplo de serie temporal}{1}
 
-Igualmente se pueden usar los comandos específicos de \LaTeX o bien usar alguno de los comandos de la plantilla.
+Existen distintos tipos de clasificaciones para las series temporales, según varios puntos de vista \cite{kitagawa2010introduction}, de
+las cuales destacan:
+\begin{itemize}
+    \item \textbf{Continuas o discretas}. Las series temporales continuas son aquellas en las que la información se obtiene, valga la redundancia,
+        de forma continua, normalmente por un dispositivo analógico, como podría ser los datos recibidos de un sismógrafo. Por otro lado,
+        las series temporales discretas son aquellas en las que la información se obtiene en intervalos de tiempo concretos. Estos intervalos 
+        pueden ser equidistantes, o bien ser irregulares. Normalmente, las series temporales medidas por medios digitales son discretas.
+        En nuestro caso, las series temporales enviadas por el AGV son discretas espaciadas en intervalos irregulares, pues el AGV manda dicha
+        información cada varios milisegundos, de manera irregular.
+    \item \textbf{Univariantes o multivariantes}. Aquellas series temporales que tengan solo una observación por cada momento del tiempo son series
+        univariantes. Por contra, aquellas en las que se obtengan de manera simultánea mediciones de dos o más fenómenos son multivariantes.
+        Esto será importante a la hora de escoger que modelo utilizar para realizar predicciones, pues hay modelos que solo soportan series
+        temporales univariantes.
+    \item \textbf{Estacionarias o no estacionarias}. Una serie estacionaria \cite{hyndman2018forecasting} es aquella en la que sus propiedades no dependen del momento
+        en el que se observan. Por ello, aquellas que presenten tendencias o estacionalidad no son estacionarias. Por otra parte, una serie de 
+        ruido blanco es estacionaria: no importa cuándo se observe, debería tener el mismo aspecto en cualquier momento. De manera general, las
+        series estacionarias no tendrán patrones predecibles en el largo plazo, por lo que conviene convertir las series estacionarias en no
+        estacionarias.
+\end{itemize}
 
-\tablaSmall{Herramientas y tecnologías utilizadas en cada parte del proyecto}{l c c c c}{herramientasportipodeuso}
-{ \multicolumn{1}{l}{Herramientas} & App AngularJS & API REST & BD & Memoria \\}{ 
-HTML5 & X & & &\\
-CSS3 & X & & &\\
-BOOTSTRAP & X & & &\\
-JavaScript & X & & &\\
-AngularJS & X & & &\\
-Bower & X & & &\\
-PHP & & X & &\\
-Karma + Jasmine & X & & &\\
-Slim framework & & X & &\\
-Idiorm & & X & &\\
-Composer & & X & &\\
-JSON & X & X & &\\
-PhpStorm & X & X & &\\
-MySQL & & & X &\\
-PhpMyAdmin & & & X &\\
-Git + BitBucket & X & X & X & X\\
-Mik\TeX{} & & & & X\\
-\TeX{}Maker & & & & X\\
-Astah & & & & X\\
-Balsamiq Mockups & X & & &\\
-VersionOne & X & X & X & X\\
-}
+\section{Preprocesado y análisis de series temporales}
+
+\section{Predicción de series temporales}

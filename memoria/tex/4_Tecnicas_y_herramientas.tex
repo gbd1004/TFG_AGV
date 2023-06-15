@@ -3,30 +3,12 @@
 % Esta parte de la memoria tiene como objetivo presentar las técnicas metodológicas y las herramientas de desarrollo que se han utilizado para llevar a cabo el proyecto. Si se han estudiado diferentes alternativas de metodologías, herramientas, bibliotecas se puede hacer un resumen de los aspectos más destacados de cada alternativa, incluyendo comparativas entre las distintas opciones y una justificación de las elecciones realizadas. 
 % No se pretende que este apartado se convierta en un capítulo de un libro dedicado a cada una de las alternativas, sino comentar los aspectos más destacados de cada opción, con un repaso somero a los fundamentos esenciales y referencias bibliográficas para que el lector pueda ampliar su conocimiento sobre el tema.
 
+\section{Metodologías}
+
+\section{Entorno de desarrollo}
+
 \section{Sistema Gestor de Base de Datos}
 
+\section{Predicción}
 
-
-A continuación, se muestra una pequeña comparación de los sistemas gestores de bases de datos planteados para su uso en este trabajo.
-
-\tablaSmallFija{Comparación gestores de bases de datos}{l c c c c}{gestbd}
-{\multicolumn{1}{l}{Gestores} & SQLite & Elastcsearch & InfluxDB & MongoDB \\}
-{
-Relacional & Si & No & No & No \\
-SQL & Sí & No & No & Lectura \\
-Modelo & RDBMS & Search engine & TSDBMS & Document Store \\
-Open Source & Sí & Sí & Sí & Sí \\
-Python & Sí & Sí & Sí & Sí \\
-UDP & No & No & Sí & No \\
-Visor & No & Kibana & Chronograf & Charts \\
-Server Scrips & No & Sí & No & Sí \\
-Docker & No & Sí & Sí & Sí \\
-Linux & Sí & Sí & Sí & Sí \\
-}
-
-Otro punto importante que no se ve reflejado en la tabla, es la disponibilidad de documentación. Todos estos sistemas son bastante conocidos y utilizados
-en sus respectivos campos, por lo que todos disponen de documentación completa y fácil de entender.
-
-Al final, el sistema elegido ha sido InfluxDB. Como se ve en la tabla, InfluxDB es un Sistema Gestor de Bases de Datos de Series Temporales (Time Series Data Base Management System, o TSDBMS).
-En estos tipos de sistemas, el tiempo tiene una especial importancia, pues cada dato tendrá un timestamp asociado. Esto viene muy bien para un sistema dedicado a guardar logs, pues cada mensaje recibido
-tendrá el timestamp del momento en el que se generó.
+\section{Otras herramientas}
