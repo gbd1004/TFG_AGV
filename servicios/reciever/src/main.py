@@ -55,24 +55,19 @@ if __name__ == "__main__":
     while True:
         data, addr = sock.recvfrom(1024)
         data_json = json.loads(data)
-
-        # point = influxdb_client.Point("agv_logs") \
-        #     .tag("vid", str(data_json["id"])) \
-        #     .field("bateria", int(data_json["bateria"])) \
-        #     .field("velocidad", int(data_json["velocidad"])) \
-        #     .field("punto", data_json["punto"]) \
-        #     .field("siguiente_punto", data_json["siguiente_punto"]) \
-        #     .field("pos_x", int(data_json["pos_x"])) \
-        #     .field("pos_y", int(data_json["pos_y"])) \
-        #     .time(data_json["tiempo"])
+        
         ed = int(data_json['???EncoderDerecho'])
         if(ed & 0x80000000):
             ed = -0x100000000 + ed
 
+        ei = int(data_json['???EncoderIzquierdo'])
+        if(ei & 0x80000000):
+            ei = -0x100000000 + ei
+
         point = influxdb_client.Point("test") \
             .tag("type", "value") \
             .field("encoder_derecho", ed) \
-            .field("encoder_izquierdo", int(data_json['???EncoderIzquierdo'])) \
+            .field("encoder_izquierdo", ei) \
             .field("in.current_l", int(data_json['In.CurrentL'])) \
             .field("in.current_h", int(data_json['In.CurrentH'])) \
             .field("in.i_medida_bat", int(data_json['In.I_MedidaBat'])) \
