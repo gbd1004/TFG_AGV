@@ -18,7 +18,9 @@ arquitectura del sistema, así como el desarrollo de los servicios que forman di
 se ha realizado una comparativa de diferentes sistemas gestores de bases de datos con el fin de elegir
 el que mejor se adapte a nuestros requisitos.
 
-\subsection*{Diseño de la arquitectura}
+%TODO AÑADIR REFERENCIA A SOCO
+
+\subsection{Diseño de la arquitectura}
 
 La arquitectura del sistema estudiado se representa en la figura \ref*{fig:Arquitectura}. El sistema
 está formado por los siguientes sistemas software:
@@ -37,7 +39,7 @@ está formado por los siguientes sistemas software:
 
 \imagen{Arquitectura}{Diseño de la arquitectura}{1}
 
-\subsection*{Comparativa de Sistemas Gestores de Bases de Datos}
+\subsection{Comparativa de Sistemas Gestores de Bases de Datos}
 
 Lo primero a tener en cuenta a la hora de elegir un gestor de bases de datos es cuáles son nuestros
 requisitos relacionados con el almacenamiento de los datos. Como hemos comentado anteriormente, el tiempo
@@ -65,15 +67,15 @@ enviadas cada 10 o 20 milisegundos, por lo que una alta precisión temporal es n
     \label{tabla:req}
 \end{table}
 
-\subsubsection*{Metodología de la comparación}
+\subsubsection{Metodología de la comparación}
 
-\paragraph*{Sistemas de gestión de bases de datos bajo estudio}
+\paragraph{Sistemas de gestión de bases de datos bajo estudio}
 
 Lo primero a tener en cuenta es el modelo de la base de datos que se va a utilizar, ya que tendrá una gran importancia
 a la hora de decidir qué sistema de gestión de bases de datos se va a utilizar. Los siguientes modelos \cite{10.5555/3364297} han sido
 tenidos en cuenta: 
 
-\begin{enumerate}
+\begin{itemize}
     \item Bases de datos relacionales: en estos sistemas, la información se almacena en relaciones. Una relación,
         definidas también como tablas, es una colección de tuplas, o filas. Las relaciones se definen por su nombre
         y un número fijo de atributos, o columnas, con tipos de datos fijos. Estos sistemas respetan las propiedades
@@ -90,7 +92,7 @@ tenidos en cuenta:
         un modelo relacional.
     \item Bases de datos de series temporales: estas bases de datos están optimizadas para almacenar series temporales \cite{influx:timeseries}.
         Aunque son típicamente NoSQL, bases de datos de series temporales relacionales existen.
-\end{enumerate}
+\end{itemize}
 
 Cualquiera de estos modelos permiten el manejo de información de series temporales, como la información que recibimos
 de los AGV. Sin embargo, las bases de datos de series temporales están especializadas en este tipo de trabajos, por lo que
@@ -100,18 +102,18 @@ Como selección inicial, se han escogido los cinco sistemas gestores de bases de
 según el ranking DB-Engines \cite{dbengines:rankingTSDBMS}. Este ranking es utilizado en otros estudios, como \cite{10.1007/978-3-030-50426-7_28}.
 Los sistemas gestores de bases de datos elegidos para comparar son:
 
-\begin{description}
-    \item[InfluxDB 2.6.1] Un sistema gestor de bases de datos de series temporales desarrollado por InfluxData. Su
+\begin{itemize}
+    \item \textbf{InfluxDB 2.6.1} Un sistema gestor de bases de datos de series temporales desarrollado por InfluxData. Su
         uso principal es el almacenamiento y obtención de series temporales, creadas en operaciones de monitoreo de IoT,
         información de sensores, etc.
-    \item[kdb+ 4.0] Una base de datos de series temporales relacional desarrollado por KX, usado principalmente en
+    \item \textbf{kdb+ 4.0} Una base de datos de series temporales relacional desarrollado por KX, usado principalmente en
         negociación bursátil de alta frecuencia, para almacenar y para procesar datos a una alta velocidad.
-    \item[Prometheus 2.43.0] Una base de datos de series temporales usada para el monitoreo de eventos y alarmas, que
+    \item \textbf{Prometheus 2.43.0} Una base de datos de series temporales usada para el monitoreo de eventos y alarmas, que
         utiliza un modelo HTTP.
-    \item[Graphite 1.1.10] Una herramienta que almacena, monitoriza y grafica series temporales numéricas.   
-    \item[TimescaleDB 2.10.1] Una base de datos de código abierto, desarrollada como complemento a PostgreSQL con el
+    \item \textbf{Graphite 1.1.10} Una herramienta que almacena, monitoriza y grafica series temporales numéricas.   
+    \item \textbf{TimescaleDB 2.10.1} Una base de datos de código abierto, desarrollada como complemento a PostgreSQL con el
         fin de mejorar el rendimiento y análisis para series temporales.
-\end{description}
+\end{itemize}
 
 Aunque este ranking solo mide la popularidad y ordena los sistemas en función de atributos sociales, es especialmente
 útil para soluciones de código abierto, pues esto generalmente significa que está soportada por una comunidad activa
@@ -152,7 +154,7 @@ Cada test se realiza cinco veces para reducir la variabilidad, tomando la media 
 \paragraph*{Métricas de la comparación} 
 A continuación se detallan las métricas utilizadas para realizar la comparación.
 
-\textbf{Información general, soporte de software y comunidad}
+% \textbf{Información general, soporte de software y comunidad}
 
 Las métricas de información general analizan:
 \begin{itemize}
@@ -180,7 +182,7 @@ La comparación del soporte de la comunidad contiene:
 \end{itemize}
 Estos cuatro últimos campos se usarán para comparar que comunidad es más activa.
 
-\textbf{Modelo de datos e información técnica}
+% \textbf{Modelo de datos e información técnica}
 
 El indicador de rendimiento del modelo de datos compara:
 \begin{itemize}
@@ -204,7 +206,7 @@ El indicador de rendimiento de información técnica se compone de los siguiente
         datos de un endpoint de forma periódica.
 \end{itemize}
 
-\textbf{Análisis de rendimiento}
+% \textbf{Análisis de rendimiento}
 
 Por último, el análisis de rendimiento compara:
 \begin{itemize}
@@ -217,7 +219,7 @@ Por último, el análisis de rendimiento compara:
     \item Latencia: tiempo que tarda en ejecutarse la segunda prueba en milisegundos.
 \end{itemize}
 
-\subsubsection*{Experimentos y resultados}
+\subsubsection{Experimentos y resultados}
 
 \begin{table}[H]
     \begin{center}
@@ -240,7 +242,7 @@ Por último, el análisis de rendimiento compara:
     \end{center}
 \end{table}
 
-\paragraph*{Información general (Tabla \ref*{tabla:gisgbd})} Solo software de código abierto será considerado en este
+\paragraph{Información general (Tabla \ref*{tabla:gisgbd})} Solo software de código abierto será considerado en este
 trabajo. Aunque kdb+ tiene una versión de 32 bits, no se usará y no volverá a aparecer en las siguientes comparaciones.
 Por esta razón también, solo las características de la ``Comunity Edition'' de InfluxDB serán utilizadas en dichas
 comparaciones, y características de la ``Enterprise Edition'', que no es de códigp abierto, no se tendrán en cuenta.
@@ -274,7 +276,7 @@ comparaciones, y características de la ``Enterprise Edition'', que no es de có
     \end{center}
 \end{table}
 
-\paragraph*{Soporte software (Tabla \ref*{tabla:sssgbd})} Todos los sistemas soportan Linux y Python, el sistema operativo 
+\paragraph{Soporte software (Tabla \ref*{tabla:sssgbd})} Todos los sistemas soportan Linux y Python, el sistema operativo 
 y lenguaje utilizados. Solo Graphite no tiene un lenguaje de consultas definido, aunque se pueden realizar utilizando lo que 
 llaman Funciones \cite{graphite-functions}. Sólo InfluxDB soporta plugins para aprendizaje automático. Otros sistemas como
 TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes como Python o R \cite{timescale-forecasting}.
@@ -400,22 +402,23 @@ recursos del sistema. Si en un futuro es necesario escalar InfluxDB puede ser me
 recursos suele significar un menor coste. Sin embargo, TimescaleDB es más flexible, ya que al estar basado en PostgreSQL 
 tiene todas sus características. Cualquiera de estos dos sistemas puede ser perfectamente usado según los requisitos marcados.
 
-\subsubsection*{Elección}
+\subsubsection{Elección}
 
 Al final, el sistema gestor de bases de datos escogido ha sido InfluxDB. Aunque sea más lento que TimescaleDB, tiene
 una velocidad lo suficientemente buena, y al consumir menos recursos la hace una opción más barata en caso de que 
-esta solución se aplique comercialmente. 
-\imagen{interfaz}{Interfaz Chronograf}{1}
+esta solución se aplique comercialmente.
+
 Otro motivo de peso para elegir InfluxDB es que viene por defecto con una interfaz web llamada Chronograf 
 (Figura \ref*{fig:interfaz}) en la que se puede manejar la base de datos, crear gráficas, establecer alarmas, etc.
 
+\imagen{interfaz}{Interfaz Chronograf}{1}
 
-\subsection*{Desarrollo de los servicios}
+\subsection{Desarrollo de los servicios}
 
 Una vez diseñada la arquitectura y el sistema gestor de bases de datos escogido, se procedió a desarrollar los
 sistemas definidos.
 
-\subsubsection*{Simulator}
+\subsubsection{Simulator}
 Inicialmente, no disponía de datos reales del AGV, por lo que la primera versión (Figura \ref*{fig:v1sim}) simplemente generaba datos aleatorios
 con campos aleatorios, y los enviaba al nodo ``Receiver'' por UDP utilizando el puerto 5004.
 
@@ -452,7 +455,7 @@ comportamiento del AGV leyendo los datos de un CSV (Figura \ref*{fig:v2sim}) obt
 Por último, en la versión final, se unificaron los dos procedimientos, de forma que el comportamiento del simulador
 se decide según lo especificado en un archivo de configuración.
 
-\subsubsection*{Receiver}
+\subsubsection{Receiver}
 
 El funcionamiento del nodo ``Reciever'' es muy simple (Figura \ref*{fig:recv}): escucha el puerto UDP 5004, y cuando recibe información, la inserta 
 en la base de datos. Inicialmente, el servicio intentará conectarse a la base de datos. Si esta conexión falla un número
@@ -461,9 +464,30 @@ determinado de veces, el servicio fallará informando de que la conexión no ha 
 \imagen{recv}{Diagrama de flujo del servicio ``Reciever''}{0.5}
 
 \section{Segunda fase}
-\subsection*{Modificación de la arquitectura}
-\subsection*{Comparativa de modelos de predicción}
-\subsection*{Desarrollo del servicio}
 
-% ESTE TITULO ES TEMPORAL
-\section*{Puesta en marcha}
+La segunda fase se centró en el desarrollo y diseño del servicio de predicción de nuevos datos.
+Se ha realizado un análisis comparativo de diferentes modelos predictivos, así como un análisis
+de los datos recibidos por el AGV para hacer la mejor elección.
+
+\subsection{Modificación de la arquitectura}
+
+Ya que se ha pretendido desarrollar una arquitectura lo más modular posible, la predicción de la 
+información se realiza desde un nuevo servicio. Por ende, la arquitectura modificada queda de la 
+siguiente manera:
+
+\imagen{Arquitectura2}{Arquitectura final}{1}
+
+Este nuevo servicio se conecta directamente a la base de datos. Con esta conexión, obtiene la 
+información necesaria para hacer las predicciones, y una vez hechas se insertan en la base de datos 
+para poder ser visualizadas en Chronograf (Figura \ref{fig:interfaz}).
+
+\subsection{Comparativa de modelos de predicción}
+
+% TODO COMPARATIVA MODELOS
+
+\subsection{Desarrollo del servicio}
+
+% TODO DESARROLLO DEL SERVICIO
+
+\section{Puesta en marcha}
+% TODO PUESTA EN MARCHA (REVISAR TITULO)

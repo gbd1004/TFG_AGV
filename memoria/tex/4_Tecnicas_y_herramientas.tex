@@ -5,10 +5,95 @@
 
 \section{Metodologías}
 
+Las siguientes metodologías han sido utilizadas:
+\begin{itemize}
+    \item \textbf{SCRUM}: es un marco de trabajo cuyas características principales son: desarrollo incremental
+        en lugar de una ejecución completa, basar la calidad en el conocimiento de los integrantes del
+        equipo en vez de en la calidad de los procesos y solapar las fases del proyecto.
+
+        En SCRUM, el trabajo se divide en sprints, periodos de tiempo de entre 1 y 4 semanas. Al principio
+        de cada sprint se planifica el trabajo a desarrollar, y se mantienen reuniones diarias que sirven para 
+        mantener la comunicación entre desarrolladores. Al final del sprint se tiene una última reunión en la que
+        se analiza el trabajo realizado.
+
+        En nuestro caso, los sprints han sido de entre 1 y 2 semanas, y no se han tenido las reuniones diarias.
+    \item \textbf{Pomodoro} es un método diseñado para mejorar la productividad mediante una correcta gestión del tiempo.
+        Se establece un tiempo de trabajo con una duración de entre 20 y 30 minutos, y un tiempo de descanso de
+        5 minutos. Después de cuatro ciclos de trabajo/descanso, se realiza un descanso más largo, de unos 15 a 30
+        minutos.
+
+        Este método ha sido utilizado especialmente a la hora de escribir esta memoria y los anexos.
+\end{itemize}
+
+\section{Herramientas de desarrollo}
+
+\subsection{Desarrollo}
+
+El proyecto ha sido desarrollado íntegramente en el lenguaje de programación Python en su versión 3.10.6.
+
+Además, todos los módulos que más tarde se explican han sido desarrollados como contenedores de Docker. Para ello 
+se han utilizado:
+\begin{itemize}
+    \item Docker, en su versión 24.0.2. Docker permite el despliegue de aplicaciones dentro de contenedores, similares
+        a máquinas virtuales, de forma que cada contenedor está aislado del resto del sistema. Docker permite también
+        la ejecución de dichas aplicaciones de forma independiente al sistema operativo, por lo que permite una gran 
+        compatibilidad. 
+    \item Docker-compose versión 2.16.0. Esta herramienta sirve para definir y ejecutar aplicaciones multi-contenedor.
+\end{itemize}
+
+\subsection{Sistema Gestor de Base de Datos}
+
+El sistema gestor de bases de datos escogido ha sido InfluxDB. En la próxima sección se dan los motivos de su 
+elección, así como una comparación con otros sistemas.
+
+InfluxDB es un sistema gestor de bases de datos de series temporales. En InfluxDB, los datos se guardan en series. 
+Una serie es un conjunto de puntos que comparten:
+\begin{itemize}
+    \item Medida (Measurement): equivalente en SQL a una tabla.
+    \item Conjunto de etiquetas (tag set): equivalente en SQL a una columna indexada. Solo pueden ser cadenas de texto.
+        Sirven para almacenar metadatos.
+    \item Conjunto de valores (field set): equivalente en SQL a una columna sin indexar. Guardan los datos.
+\end{itemize}
+Por último, estas series se guardan en ``Buckets'', que son el equivalente en SQL a una base de datos.
+
+\subsection{Predicción}
+
+Como librería utilizada para la predicción de las series temporales se ha utilizado Darts \cite{JMLR:v23:21-1177}.
+Se consideraron otras alternativas, como Loud ML, herramienta desarrollada específicamente para InfluxDB, y 
+Facebook Prophet. La primera fue descartada debido a que el proyecto está abandonado, y la segunda fue descartada 
+debido a que Darts incluye muchos más modelos, incluido el mismo Prophet.
+
+Se ha utilizado también la libreria Optuna para la optimización de los hiperparámetros de los modelos de predicción.
+
 \section{Entorno de desarrollo}
 
-\section{Sistema Gestor de Base de Datos}
+Todo el trabajo ha sido realizado con el editor de texto de Microsoft Visual Studio Code. Esto ha sido así por 
+varios motivos, principalmente mi comodidad con él, pues es el editor de texto que estoy acostumbrado a usar, y 
+la gran cantidad de extensiones existentes que permitan una mejor experiencia de usuario.
 
-\section{Predicción}
+En cuanto a las extensiones utilizadas, caben destacar:
+\begin{itemize}
+    \item Docker: utilizada para un manejo más simple de los contenedores de Docker.
+    \item Python: extensión esencial para el desarrollo en Python, pues ofrece características como un Debugger, 
+        resaltado de la sintaxis, IntelliSense (autocompletado), etc.
+    \item Todo Tree: utilizada para marcar elementos no terminados, de forma que luego sean fáciles de encontrar.
+    \item LaTeX Workshop: permite compilar de forma automática al guardar los archivos de LaTeX, autocompletado, etc.
+    \item LTeX - LanguageTool grammar/spell checkingLTex: como su nombre en inglés indica, esta extensión analiza 
+        errores gramaticales en los archivos de LaTeX.
+\end{itemize}
+
 
 \section{Otras herramientas}
+
+
+\subsection*{Control de versiones}
+
+El proyecto se aloja en la plataforma GitHub, y la herramienta utilizada para el control de versiones es git.
+Inicialmente se empezó a usar ZenHub para llevar el control de los sprints. Sin embargo, debido a un problema de 
+licencias a mitad del desarrollo se dejó de utilizar en favor de simplemente usar el apartado de Issues del repositorio 
+para dicha labor.
+
+\subsection*{Documentos}
+
+La memoria y los anexos han sido desarrollados en LaTeX, utilizando la distribución TeX Live\cite{texlive} para la
+compilación de dichos documentos.
