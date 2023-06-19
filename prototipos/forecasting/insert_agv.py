@@ -23,16 +23,23 @@ def parse_row(row: OrderedDict):
     if(ed & 0x80000000):
         ed = -0x100000000 + ed
 
+    ei = int(row['???EncoderIzquierdo'])
+    if(ei & 0x80000000):
+        ei = -0x100000000 + ei
+
+    sr = int(row['Out.SetSpeedRight']) - 16384
+    sl = int(row['Out.SetSpeedLeft']) - 16384
+
     return Point("test") \
         .tag("type", "value") \
         .field("encoder_derecho", ed) \
-        .field("encoder_izquierdo", int(row['???EncoderIzquierdo'])) \
+        .field("encoder_izquierdo", ei) \
         .field("in.current_l", int(row['In.CurrentL'])) \
         .field("in.current_h", int(row['In.CurrentH'])) \
         .field("in.i_medida_bat", int(row['In.I_MedidaBat'])) \
         .field("in.guide_error", float(row['In.guideError'])) \
-        .field("out.set_speed_right", int(row['Out.SetSpeedRight'])) \
-        .field("out.set_speed_left", int(row['Out.SetSpeedLeft'])) \
+        .field("out.set_speed_right", sr) \
+        .field("out.set_speed_left", sl) \
         .field("out.display", int(row['Out.Display'])) \
         .time(_time)
 

@@ -1,7 +1,7 @@
 import numpy as np
 import optuna
 import torch
-import logging
+import random
 
 from optuna.integration import PyTorchLightningPruningCallback
 from pytorch_lightning.callbacks import EarlyStopping
@@ -15,6 +15,8 @@ from darts import TimeSeries
 from darts.utils.missing_values import fill_missing_values
 from darts.dataprocessing.transformers import Scaler
 from darts.models.forecasting.transformer_model import TransformerModel
+from darts.models.forecasting.nbeats import NBEATSModel
+from darts.models.forecasting.arima import ARIMA
 
 from darts.utils.likelihood_models import GaussianLikelihood
 from darts.metrics import smape
@@ -52,8 +54,8 @@ def get_series(tag: str, df: DataFrame) -> TimeSeries:
 
     return series
 
-def objective(trial):
-    in_len = trial.suggest_categorical("in_len", [50, 100, 200, 300])
+def objective_transformer(trial):
+    in_len = trial.suggest_int("in_len", 10, 500)
     # out_len = trial.suggest_categorical("out_len", [30, 50, 100, 150])
     out_len = VAL_SIZE
     d_model = trial.suggest_categorical("d_model", [16, 34, 64, 128])
@@ -127,9 +129,147 @@ def objective(trial):
         smapes = smape(val_ed_scaled, preds, n_jobs=-1, verbose=True)
         smape_val = np.mean(smapes)
 
+        print(smape_val)
         return smape_val if smape_val != np.nan else float("inf")
     except Exception as e:
-        logging.info(e)
+        print(e)
+        return float("inf")
+
+def objective_nbeats(trial):
+    in_len = trial.suggest_int("in_len", 10, 500)
+    # out_len = trial.suggest_categorical("out_len", [30, 50, 100, 150])
+    out_len = VAL_SIZE
+    generic_architecture = trial.suggest_categorical("generic_architecture", [True, False])
+    if generic_architecture:
+        num_stacks = trial.suggest_int("num_stacks", 1, 20)
+        expansion_coef_dim = trial.suggest_int("expansion_coef_dim", 1, 20)
+        trend_polynomial_degree = None
+        equal_layers = trial.suggest_categorical("equal_layers", [True, False])
+        if equal_layers:
+            layer_widths = trial.suggest_int("layer_widths", 1, 20)
+        else:
+            layer_widths = random.sample(range(1, 20), num_stacks)
+    else:
+        num_stacks = None
+        expansion_coef_dim = None
+        trend_polynomial_degree = trial.suggest_int("expansion_coef_dim", 1, 20)
+        layer_widths = 0
+
+    num_blocks = trial.suggest_int("num_blocks", 1, 15)
+    num_layers = trial.suggest_int("num_layers", 1, 15)
+    dropout = trial.suggest_float("dropout", 0.01, 0.7)
+    activation = trial.suggest_categorical("activation", ["ReLU", "RReLU", "PReLU", "Softplus", "Tanh", "SELU", "LeakyReLU", "Sigmoid"])
+
+    pruner = PyTorchLightningPruningCallback(trial, monitor="val_loss")
+    early_stopper = EarlyStopping("val_loss", min_delta=0.001, patience=10, verbose=True)
+    callbacks = [pruner, early_stopper]
+
+    if torch.cuda.is_available():
+        pl_trainer_kwargs = {
+            "accelerator": "gpu",
+            # "gpus": -1,
+            # "auto_select_gpus": True,
+            "callbacks": callbacks,
+        }
+        num_workers = 4
+    else:
+        pl_trainer_kwargs = {"callbacks": callbacks}
+        num_workers = 0
+
+    model = NBEATSModel(
+        input_chunk_length=in_len,
+        output_chunk_length=out_len,
+        generic_architecture=generic_architecture,
+        num_stacks=num_stacks,
+        num_blocks=num_blocks,
+        num_layers=num_layers,
+        layer_widths=layer_widths,
+        expansion_coefficient_dim=expansion_coef_dim,
+        trend_polynomial_degree=trend_polynomial_degree,
+        dropout=dropout,
+        activation=activation,
+        likelihood=GaussianLikelihood(),
+        pl_trainer_kwargs=pl_trainer_kwargs,
+        model_name="nbeats",
+        force_reset=True,
+        save_checkpoints=True,
+    )
+
+    model_val_set_ed = scaler_ed.transform(series_ed[-(VAL_SIZE + in_len) :])
+    model_val_set_ei = scaler_ed.transform(series_ei[-(VAL_SIZE + in_len) :])
+    model_val_set_sr = scaler_ed.transform(series_sr[-(VAL_SIZE + in_len) :])
+    model_val_set_sl = scaler_ed.transform(series_sl[-(VAL_SIZE + in_len) :])
+    covariates = train_sr_scaled.stack(train_sl_scaled).stack(train_ei_scaled)
+    val_covariates = model_val_set_sr.stack(model_val_set_sl).stack(model_val_set_ei)
+
+    try:
+        model.fit(
+            series=train_ed_scaled,
+            val_series=model_val_set_ed,
+            past_covariates=covariates,
+            val_past_covariates=val_covariates,
+            num_loader_workers=num_workers
+        )
+
+        model = TransformerModel.load_from_checkpoint("transformer_model")
+
+        preds = model.predict(
+            series=train_ed_scaled,
+            past_covariates=covariates,
+            n=out_len
+        )
+        smapes = smape(val_ed_scaled, preds, n_jobs=-1, verbose=True)
+        smape_val = np.mean(smapes)
+
+        print(smape_val)
+        return smape_val if smape_val != np.nan else float("inf")
+    except Exception as e:
+        print(e)
+        return float("inf")
+
+def objective_arima(trial):
+    in_len = trial.suggest_int("in_len", 10, 500)
+    # out_len = trial.suggest_categorical("out_len", [30, 50, 100, 150])
+    out_len = VAL_SIZE
+    p = trial.suggest_int("p", 1, 20)
+    d = trial.suggest_int("d", 1, 20)
+    q = trial.suggest_int("q", 1, 20)
+    trend = trial.suggest_categorical("trend", ['n', 'c', 't', 'ct'])
+
+    model = ARIMA(
+        p=p,
+        d=d,
+        q=q,
+        trend=trend,
+    )
+
+    model_val_set_ed = scaler_ed.transform(series_ed[-(VAL_SIZE + in_len) :])
+    model_val_set_ei = scaler_ed.transform(series_ei[-(VAL_SIZE + in_len) :])
+    model_val_set_sr = scaler_ed.transform(series_sr[-(VAL_SIZE + in_len) :])
+    model_val_set_sl = scaler_ed.transform(series_sl[-(VAL_SIZE + in_len) :])
+    # val = model_val_set_ed.stack(model_val_set_ei).stack(model_val_set_sr).stack(model_val_set_sl)
+    # train = train_ed_scaled.stack(train_ei_scaled).stack(train_sr_scaled).stack(train_sl_scaled)
+    covariates = train_sr_scaled.stack(train_sl_scaled).stack(train_ei_scaled)
+    val_covariates = model_val_set_sr.stack(model_val_set_sl).stack(model_val_set_ei)
+
+    try:
+        model.fit(
+            series=train_ed_scaled,
+        )
+
+        model = TransformerModel.load_from_checkpoint("transformer_model")
+
+        preds = model.predict(
+            series=train_ed_scaled,
+            n=out_len
+        )
+        smapes = smape(val_ed_scaled, preds, n_jobs=-1, verbose=True)
+        smape_val = np.mean(smapes)
+
+        print(smape_val)
+        return smape_val if smape_val != np.nan else float("inf")
+    except Exception as e:
+        print(e)
         return float("inf")
 
 def print_callback(study, trial):
@@ -139,9 +279,9 @@ def print_callback(study, trial):
 df = query_dataframe()
 
 series_ed = get_series('encoder_derecho', df)
-series_ed = fill_missing_values(Diff(lags=1, dropna=False).fit_transform(series=series_ed))
+series_ed = fill_missing_values(Diff(lags=10, dropna=False).fit_transform(series=series_ed))
 series_ei = get_series('encoder_izquierdo', df)
-series_ei = fill_missing_values(Diff(lags=1, dropna=False).fit_transform(series=series_ei))
+series_ei = fill_missing_values(Diff(lags=10, dropna=False).fit_transform(series=series_ei))
 series_sr = get_series('out.set_speed_right', df)
 series_sl = get_series('out.set_speed_left', df)
 
@@ -162,4 +302,6 @@ train_sl_scaled = scaler_sl.fit_transform(train_sl)
 val_sl_scaled = scaler_sl.transform(val_sl)
 
 study = optuna.create_study(direction="minimize")
-study.optimize(objective, n_trials=100, callbacks=[print_callback])
+study.optimize(objective_transformer, n_trials=100, callbacks=[print_callback])
+# study.optimize(objective_nbeats, n_trials=100, callbacks=[print_callback])
+# study.optimize(objective_arima, n_trials=100, callbacks=[print_callback])
