@@ -481,9 +481,124 @@ Este nuevo servicio se conecta directamente a la base de datos. Con esta conexi�
 información necesaria para hacer las predicciones, y una vez hechas se insertan en la base de datos 
 para poder ser visualizadas en Chronograf (Figura \ref{fig:interfaz}).
 
+\subsection{Análisis de los datos}
+
+Antes de hacer nada relativo a la predicción de los datos, necesitamos conocer que datos tenemos y cuáles 
+queremos predecir. Del AGV recibimos los siguientes datos:
+\begin{itemize}
+    \item Tiempo: tiempo que ha pasado en segundos desde que se inicia el AGV.
+    \item Encoder derecho: valor del codificador de la rueda derecha. Cuando el AGV avanza este valor se
+        incrementa, y cuando retrocede se decrementa.
+    \item Encoder izquierdo: igual al anterior, pero con la rueda izquierda.
+    % TODO \item CorrienteL 
+    % TODO \item CorrienteH
+    % TODO \item Medida bateria
+    \item Error de guiado: distancia que el AGV está desviado de la banda magnética por la que se guía.
+    \item Consigna de velocidad derecha: valor de la velocidad enviado a la rueda derecha.
+    \item Consigna de velocidad izquierda: similar al anterior pero con la rueda izquierda.
+    % TODO \item Display
+\end{itemize}
+
+Cabe mencionar que, como los encoders derecho e izquierdo no nos muestran directamente la velocidad de sus 
+ruedas, antes hay que preprocesar dichos datos, restando cada valor con su anterior, obteniendo así el dato de la 
+velocidad.
+
+Nuestra intención es realizar una predicción de los valores encoder derecho y encoder izquierdo para poder 
+compararlos con los obtenidos y detectar posibles errores. Para ello, utilizamos valores anteriores de los 
+mismos datos, así como los valores de las consignas de velocidad derecha e izquierda, pues su correlación 
+es muy alta. Para predecir los valores derechos, y viceversa, se usan también los valores izquierdos, pues aunque su 
+correlación no sea tan alta, también están correlacionados.
+Ya que estos datos se mandan en intervalos de tiempo irregulares, el primer paso es agruparlos en ventanas de 200 milisegundos. 
+Esto es así porque para realizar las predicciones es necesario que los datos de la serie temporal estén distribuidos 
+de manera uniforme.
+
 \subsection{Comparativa de modelos de predicción}
 
 % TODO COMPARATIVA MODELOS
+Los modelos elegidos para la comparación son aquellos brevemente explicados en la sección de conceptos teóricos:
+\begin{itemize}
+    \item ARIMA.
+    \item TCN.
+    \item N-HiTS.
+    \item Transformer Model.
+\end{itemize}
+
+Estos modelos han sido comparados usando las siguientes métricas, también explicados en la sección de conceptos teóricos:
+\begin{itemize}
+    \item MAE 
+    \item MASE 
+    \item DTW
+\end{itemize}
+
+Se van a hacer tres tipos de comparaciones: una comparación univariante en la que solo se prediga un valor, 
+una comparación univariante con covariables en la que solo se prediga un valor, pero se utilicen otros como entrada y 
+una comparación multivariante en la que se predigan todos los valores utilizados como entrada.
+
+
+Para realizar la comparación, excepto en el caso de ARIMA que es un modelo estadístico que no usa redes neuronales, 
+se entrena el modelo durante 200 épocas y se realizan varias predicciones: una 200 milisegundos a futuro, otra 
+1 segundo a futuro y otra 10 segundos a futuro. Este procedimiento se realiza cinco veces y se calcula la media 
+de las métricas como valor final.
+
+\subsubsection*{Comparativa inicial}
+
+Una primera comparativa ha sido realizada con los parámetros por defecto que Darts provee de dichos modelos. 
+Los únicos parámetros especificados han sido la longitud de los datos de entrada y la longitud de los datos de salida 
+en aquellos modelos que lo permitan. Se ha especificado una longitud de entrada de 60 valores 
+(correspondiente a 12 segundos), y una longitud de salida de 10 valores (2 segundos). En los casos con covariables,
+se ha modificado la longitud de salida para la prueba de predicción de 10 segundos, pues, al no hacer la predicción 
+de dichas covariables solo se puede hacer una predicción a futuro, ya que no se poseen los datos para realizar más.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c | c c c | c c c | c c c}
+        \toprule
+        & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+        Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+        \otoprule
+        ARIMA & 40.79 & 226.08 & 3131.79 & - & - & - & - & - & - \\
+        TCN & & & & & & & & & \\
+        N-HiTS & & & & & & & & & \\
+        Transformer & & & & & & & & & \\
+        \bottomrule
+    \end{tabular}
+    \caption{MAE de la comparación inicial}
+    \label{tab:mae_inicial}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c | c c c | c c c | c c c}
+        \toprule
+        & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+        Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+        \otoprule
+        ARIMA & 0.16 & 0.88 & 12.25 & - & - & - & - & - & - \\
+        TCN & & & & & & & & & \\
+        N-HiTS & & & & & & & & & \\
+        Transformer & & & & & & & & & \\
+        \bottomrule
+    \end{tabular}
+    \caption{MASE de la comparación inicial}
+    \label{tab:mase_inicial}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c | c c c | c c c | c c c}
+        \toprule
+        & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+        Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+        \otoprule
+        ARIMA & 40.79 & 185.34 & 2870.88 & - & - & - & - & - & - \\
+        TCN & & & & & & & & & \\
+        N-HiTS & & & & & & & & & \\
+        Transformer & & & & & & & & & \\
+        \bottomrule
+    \end{tabular}
+    \caption{DTW de la comparación inicial}
+    \label{tab:dtw_inicial}
+\end{table}
 
 \subsection{Desarrollo del servicio}
 

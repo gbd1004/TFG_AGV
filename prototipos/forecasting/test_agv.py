@@ -27,13 +27,14 @@ from darts.models.forecasting.prophet_model import Prophet
 from darts.models.forecasting.kalman_forecaster import KalmanForecaster
 from darts.models.forecasting.linear_regression_model import LinearRegressionModel
 from darts.models.forecasting.random_forest import RandomForest
+from darts.models.forecasting.fft import FFT
 from darts.utils.statistics import plot_acf, plot_pacf
 from darts.metrics import mape
 
 import matplotlib.pyplot as plt
 import torch
 
-VAL_SIZE = 330
+VAL_SIZE = 320
 
 torch.set_float32_matmul_precision('high')
 
@@ -71,41 +72,33 @@ series_ed = get_series('encoder_derecho', df)
 # plot_acf(series_ed, max_lag=100)
 # plt.show()
 
-series_ed = fill_missing_values(Diff(lags=10, dropna=False).fit_transform(series=series_ed))
+series_ed.plot()
+plt.show()
+
+series_ed = fill_missing_values(Diff(lags=5, dropna=False).fit_transform(series=series_ed))
+series_ed.plot()
+plt.show()
+
 series_ei = get_series('encoder_izquierdo', df)
-series_ei = fill_missing_values(Diff(lags=10, dropna=False).fit_transform(series=series_ei))
+series_ei = fill_missing_values(Diff(lags=5, dropna=False).fit_transform(series=series_ei))
 series_sr = get_series('out.set_speed_right', df)
 series_sl = get_series('out.set_speed_left', df)
 
-train_ed, val_ed = series_ed[:-VAL_SIZE], series_ed[-VAL_SIZE:]
-
-
-series = series_ed.stack(series_ei).stack(series_sr).stack(series_sl)
-
-series_ed.plot()
-series_sr.plot()
-plt.show()
-
-
-# train.plot()
-
 scaler_ed, scaler_ei, scaler_sr, scaler_sl = Scaler(), Scaler(), Scaler(), Scaler()
-scaler = Scaler()
 
-series_ed_scaled = scaler_ed.fit_transform(series_ed).astype(np.float32)
-series_ei_scaled = scaler_ei.fit_transform(series_ei).astype(np.float32)
-series_sr_scaled = scaler_sr.fit_transform(series_sr).astype(np.float32)
-series_sl_scaled = scaler_sl.fit_transform(series_sl).astype(np.float32)
-series_scaled = scaler.fit_transform(series).astype(np.float32)
+train_ed, val_ed = series_ed[:-VAL_SIZE], series_ed[-VAL_SIZE:]
+train_ei, val_ei = series_ei[:-VAL_SIZE], series_ei[-VAL_SIZE:]
+train_sr, val_sr = series_sr[:-VAL_SIZE], series_sr[-VAL_SIZE:]
+train_sl, val_sl = series_sl[:-VAL_SIZE], series_sl[-VAL_SIZE:]
 
-# train_scaled = scaler.fit_transform(train).astype(np.float32)
-# val_scaled = scaler.fit_transform(val).astype(np.float32)
-train_ed, val_ed = series_ed_scaled[:-VAL_SIZE], series_ed_scaled[-VAL_SIZE:]
-train_ei, val_ei = series_ei_scaled[:-VAL_SIZE], series_ei_scaled[-VAL_SIZE:]
-train_sr, val_sr = series_sr_scaled[:-VAL_SIZE], series_sr_scaled[-VAL_SIZE:]
-train_sl, val_sl = series_sl_scaled[:-VAL_SIZE], series_sl_scaled[-VAL_SIZE:]
-train_scaled, val_scaled = series_scaled[:-VAL_SIZE], series_scaled[-VAL_SIZE:]
-
+train_ed_scaled = scaler_ed.fit_transform(train_ed)
+val_ed_scaled = scaler_ed.transform(val_ed)
+train_ei_scaled = scaler_ei.fit_transform(train_ei)
+val_ei_scaled = scaler_ei.transform(val_ei)
+train_sr_scaled = scaler_sr.fit_transform(train_sr)
+val_sr_scaled = scaler_sr.transform(val_sr)
+train_sl_scaled = scaler_sl.fit_transform(train_sl)
+val_sl_scaled = scaler_sl.transform(val_sl)
 
 # plot_acf(series_ed_scaled)
 # plt.show()
@@ -120,7 +113,7 @@ train_scaled, val_scaled = series_scaled[:-VAL_SIZE], series_scaled[-VAL_SIZE:]
 # plt.legend()
 # plt.show()
 
-out = 200
+out = 300
 # model = KalmanForecaster(dim_x=1000)
 # model = Prophet()
 # model = TransformerModel(
@@ -135,12 +128,13 @@ out = 200
 #     activation="SwiGLU",
 #     norm_type="LayerNorm"
 # )
-model = TransformerModel(input_chunk_length=40, output_chunk_length=10)
+# model = TransformerModel(input_chunk_length=40, output_chunk_length=20)
 # model = TFTModel(input_chunk_length=360, output_chunk_length=20)
 # model = NBEATSModel(input_chunk_length=100, output_chunk_length=out)
-# model = NHiTSModel(input_chunk_length=40, output_chunk_length=10)
+# model = FFT()
+model = NHiTSModel(input_chunk_length=60, output_chunk_length=10)
 # model = RNNModel(input_chunk_length=100, model="LSTM")
-# model = TCNModel(input_chunk_length=100, output_chunk_length=20)
+# model = TCNModel(input_chunk_length=40, output_chunk_length=10)
 # model = ARIMA()
 # model = ARIMA(p=15, d=0, q=10)
 # model = AutoARIMA()
@@ -154,33 +148,34 @@ model = TransformerModel(input_chunk_length=40, output_chunk_length=10)
 covariates = train_sr.stack(train_ei).stack(train_sl)
 multivariate_scaler = Scaler()
 multivariate_series = series_ed.stack(series_ei).stack(series_sl).stack(series_sr)
-multivariate_series = multivariate_scaler.fit_transform(multivariate_series).astype(np.float32)
 multivariate_train, multivariate_val = multivariate_series[:-VAL_SIZE], multivariate_series[-VAL_SIZE:]
+multivariate_train_scaled = multivariate_scaler.fit_transform(multivariate_train).astype(np.float32)
+multivariate_val_scaled = multivariate_scaler.transform(multivariate_val).astype(np.float32)
 # model.fit(train_ed, past_covariates=covariates)
 # model.fit(multivariate_train)
-model.fit(multivariate_train, val_series=multivariate_val, epochs=75)
+model.fit(multivariate_train, val_series=multivariate_val, epochs=200)
 # model.fit(train_ed)
 # model.fit(train_scaled)
 prediction = model.predict(series=multivariate_train, n=40)
-# prediction = model.predict(series=train_scaled, n=VAL_SIZE)
+# prediction = model.predict(n=40)
 # prediction = model.predict(series=train_scaled, n=out)
 # prediction = model.predict(series=train_ed, past_covariates=covariates, n=50)
 # prediction = model.predict(n=out)
 
 # print(prediction)
 
-# pred = scaler.inverse_transform(prediction)
-pred = multivariate_scaler.inverse_transform(prediction)
-# pred = prediction
+# pred = scaler_ed.inverse_transform(prediction)
+# pred = multivariate_scaler.inverse_transform(prediction)
+pred = prediction
 
 # print(pred)
 
 # series_ei.plot()
 # series_sr.plot()
 # series_ed.plot()
-multivariate_scaler.inverse_transform(multivariate_series).plot()
 # train.plot()
 # val.plot()
+multivariate_series.plot()
 pred.plot()
 plt.show()
 

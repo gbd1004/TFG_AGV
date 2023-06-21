@@ -1,87 +1,5 @@
 \capitulo{3}{Conceptos teóricos}
 
-% En aquellos proyectos que necesiten para su comprensión y desarrollo de unos conceptos teóricos de una determinada materia o de un determinado dominio de conocimiento, debe existir un apartado que sintetice dichos conceptos.
-
-% Algunos conceptos teóricos de \LaTeX \footnote{Créditos a los proyectos de Álvaro López Cantero: Configurador de Presupuestos y Roberto Izquierdo Amo: PLQuiz}.
-
-% \section{Secciones}
-
-% Las secciones se incluyen con el comando section.
-
-% \subsection{Subsecciones}
-
-% Además de secciones tenemos subsecciones.
-
-% \subsubsection{Subsubsecciones}
-
-% Y subsecciones. 
-
-
-% \section{Referencias}
-
-% Las referencias se incluyen en el texto usando cite \cite{wiki:latex}. Para citar webs, artículos o libros \cite{koza92}.
-
-
-% \section{Imágenes}
-
-% Se pueden incluir imágenes con los comandos standard de \LaTeX, pero esta plantilla dispone de comandos propios como por ejemplo el siguiente:
-
-% \imagen{escudoInfor}{Autómata para una expresión vacía}{.5}
-
-
-
-% \section{Listas de items}
-
-% Existen tres posibilidades:
-
-% \begin{itemize}
-% 	\item primer item.
-% 	\item segundo item.
-% \end{itemize}
-
-% \begin{enumerate}
-% 	\item primer item.
-% 	\item segundo item.
-% \end{enumerate}
-
-% \begin{description}
-% 	\item[Primer item] más información sobre el primer item.
-% 	\item[Segundo item] más información sobre el segundo item.
-% \end{description}
-	
-% \begin{itemize}
-% \item 
-% \end{itemize}
-
-% \section{Tablas}
-
-% Igualmente se pueden usar los comandos específicos de \LaTeX o bien usar alguno de los comandos de la plantilla.
-
-% \tablaSmall{Herramientas y tecnologías utilizadas en cada parte del proyecto}{l c c c c}{herramientasportipodeuso}
-% { \multicolumn{1}{l}{Herramientas} & App AngularJS & API REST & BD & Memoria \\}{ 
-% HTML5 & X & & &\\
-% CSS3 & X & & &\\
-% BOOTSTRAP & X & & &\\
-% JavaScript & X & & &\\
-% AngularJS & X & & &\\
-% Bower & X & & &\\
-% PHP & & X & &\\
-% Karma + Jasmine & X & & &\\
-% Slim framework & & X & &\\
-% Idiorm & & X & &\\
-% Composer & & X & &\\
-% JSON & X & X & &\\
-% PhpStorm & X & X & &\\
-% MySQL & & & X &\\
-% PhpMyAdmin & & & X &\\
-% Git + BitBucket & X & X & X & X\\
-% Mik\TeX{} & & & & X\\
-% \TeX{}Maker & & & & X\\
-% Astah & & & & X\\
-% Balsamiq Mockups & X & & &\\
-% VersionOne & X & X & X & X\\
-% }
-
 Como se ha mencionado en apartados anteriores, los datos recibidos por el AGV se agrupan en series temporales. Conviene por tanto explicar
 que son las series temporales, así como los modelos que se utilizarán para intentar predecirlas.
 
@@ -130,8 +48,49 @@ datos futuros es una tarea especialmente complicada, y no siempre se obtiene una
 
 Los siguientes modelos se tendrán en cuenta en este trabajo:
 \begin{itemize}
-    \item \textbf{ARIMA.} Este modelo es una combinación de otros tres modelos: 
-    \item \textbf{VARIMA.}
-    \item \textbf{NHitS.}
-    \item \textbf{Transformer Model.}
+    \item \textbf{ARIMA.} Este modelo (Autoregressive Integrated Average) \cite{hyndman2018forecasting} es un enfoque estadístico utilizado para 
+        el análisis y pronostico de series temporales. Es una combinación de tres componentes principales:
+        \begin{itemize}
+            \item Componente autorregresivo (AR): este componente utiliza la información de valores pasados de la
+                serie temporal. Se basa en la idea de que los valores pasados tienen influencia en el futuro. Este 
+                modelo indica cuantos valores pasados se utilizan en la predicción.
+            \item Componente de media móvil (MA): tiene en cuenta el error residual de las predicciones anteriores 
+                para mejorar la precisión, haciendo una media de los errores pasados para predecir los futuros. 
+                Indica cuantos errores pasados se tienen en cuenta.
+            \item Componente de Integración (I): se refiere al proceso de diferenciación de la serie temporal para 
+                hacerla estacionaria. El orden de Integración indica cuántas veces se diferencia la serie temporal.
+        \end{itemize}
+        La combinación de estos tres componentes forman el modelo ARIMA(p, d, q), donde ``p'' representa el orden 
+        del componente autorregresivo, ``d'' es el orden del componente de integración y ``q'' es el orden del componente 
+        de media móvil.
+    \item \textbf{TCN.} Una Red neuronal Convolucional Temporal (Convolutional Temporal Network en inglés) \cite{DBLP:journals/corr/abs-1803-01271} es un tipo de 
+        red neuronal utilizada para analizar series temporales. Las TCN tienen en cuenta la estructura temporal de los datos 
+        y aplican operaciones convolucionales para capturar patrones. Una convolución \cite{matlab:convolucion} es un operador matemático que transforma 
+        dos funciones en una nueva. Un ejemplo de convolución es la media móvil, o un filtro de aumento de nitidez para imágenes.
+
+        TCN utiliza capas convolucionales de una dimensión para aprender características de la serie temporal. Estas 
+        capas son aplicadas sobre ventanas deslizantes de la secuencia para extraer características en diferentes puntos 
+        de tiempo.
+    \item \textbf{N-HiTS.} Este modelo (Neural Hierarchical interpolation for Time Series) es una extensión del modelo 
+        N-BEATS, mejorando su rendimiento y velocidad de entrenamiento \cite{DBLP:journals/corr/abs-2201-12886}. N-BEATS \cite{Oreshkin2020N-BEATS:}
+        está formado por dos componentes: stack y bloque. Un bloque está formado por una red multicapa que predice 
+        valores futuros y pasados. Estos bloques se organizan en pilas (stacks), que agregan las predicciones y errores 
+        residuales. 
+    \item \textbf{Transformer Model.} El Modelo Transformador \cite{DBLP:journals/corr/VaswaniSPUJGKP17} es una red 
+        neuronal que aprende el contexto de la información. Este modelo usa una arquitectura codificador-decodificador,
+        en la que el codificador procesa la entrada de forma iterativa, y el decodificador hace lo mismo con la salida del 
+        codificador.
+    \end{itemize}
+
+Estos modelos serán los utilizados para la comparación en el desarrollo del proyecto. Para ello, se utilizan 
+las siguientes métricas:
+\begin{itemize}
+    \item \textbf{MAE}. Siglas de Mean Absolute Error, o Error Absoluto Medio en español. Mide el error medio
+        de una predicción sin tener en cuenta la dirección de dicho error.
+    \item \textbf{MASE}. El MASE \cite{ibm:docs/metrics} (Mean Absolte Scaled Error), o error absoluto escalado medio, mide como de bueno es 
+        el modelo comparado con un modelo ``ingenuo'' (modelo que predice un valor como su valor previo). Un valor 
+        por encima de 1 significa que nuestro modelo es peor que dicho modelo ingenuo.
+    \item \textbf{DTW}. Siglas de Dynamic Time Warping, es utilizado para medir la similitud entre dos series temporales. Por ejemplo, una predicción 
+        con forma de ecuación lineal puede tener el mismo MAE que otra predicción más irregular, pero esta segunda 
+        puede parecerse más a los datos reales.
 \end{itemize}
