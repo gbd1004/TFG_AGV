@@ -1,4 +1,5 @@
 {
-    "load_model": true,
-    "model_file": "test_model"
+    "load_model": false,
+    "model_file": "test_model",
+    "wait_time_before_train": 20
 }

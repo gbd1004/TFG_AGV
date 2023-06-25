@@ -64,7 +64,8 @@ if __name__ == "__main__":
         if(ei & 0x80000000):
             ei = -0x100000000 + ei
 
-        point = influxdb_client.Point("test") \
+        point = influxdb_client.Point("AGVDATA") \
+            .tag("agvid", data_json['AGVID']) \
             .tag("type", "value") \
             .field("encoder_derecho", ed) \
             .field("encoder_izquierdo", ei) \

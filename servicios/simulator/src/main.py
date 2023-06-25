@@ -15,6 +15,7 @@ UDP_PORT = 5004
 def generar_datos():
     dato = {
         "time": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'),
+        "AGVID": 1,
         "???EncoderDerecho": random.randint(0, 1000000),
         "???EncoderIzquierdo": random.randint(0, 1000000),
         "In.CurrentL": random.randint(200, 240),
@@ -30,13 +31,14 @@ def generar_datos():
 
 def simular_csv(sock, csv_path):
     time = datetime.utcnow()
-    with open("/simulator/" + csv_path) as csvfile:
+    with open("/simulator/data/" + csv_path) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             delta = timedelta(seconds=float(row['time']))
             while datetime.utcnow() < time + delta:
                 pass
             row['time'] = (time + delta).strftime('%Y-%m-%d %H:%M:%S.%f')
+            row['AGVID'] = "Sim_1"
             sock.sendto(bytes(json.dumps(row), encoding="utf-8"), (UDP_IP, UDP_PORT))
 
 def simular_aleatorio(sock):
@@ -53,6 +55,10 @@ if __name__ == "__main__":
     data = json.load(f)
 
     if data['from_csv']:
-        simular_csv(sock, data['csv_file'])
+        if data['loop']:
+            while True:
+                simular_csv(sock, data['csv_file'])
+        else:
+            simular_csv(sock, data['csv_file'])
     else:
-        simular_agv(sock)
+        simular_aleatorio(sock)

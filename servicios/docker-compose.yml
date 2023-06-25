@@ -4,23 +4,34 @@ services:
     ports:
       - "8086:8086"
     env_file:
-      - influxdb_credentials.env
+      - database/influxdb_credentials.env
+    volumes:
+      - ./database/init_scripts:/docker-entrypoint-initdb.d
 
   simulator:
     build: simulator/.
     ports: 
       - "5005:5005/udp"
     env_file:
-      - influxdb_credentials.env
+      - database/influxdb_credentials.env
 
   reciever:
     build: reciever/.
     ports:
       - "5004:5004/udp"
     env_file:
-      - influxdb_credentials.env
+      - database/influxdb_credentials.env
 
   forecasting:
     build: forecasting/.
     env_file:
-      - influxdb_credentials.env
+      - database/influxdb_credentials.env
+    volumes:
+      - ./forecasting/model:/model/
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]

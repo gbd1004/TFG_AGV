@@ -1,4 +1,5 @@
 {
     "from_csv": true,
-    "csv_file": "datos_agv.csv"
+    "csv_file": "datos_agv.csv",
+    "loop": true
 }
