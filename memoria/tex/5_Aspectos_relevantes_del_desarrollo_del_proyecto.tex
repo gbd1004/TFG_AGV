@@ -438,7 +438,7 @@ comportamiento del AGV leyendo los datos de un CSV (Figura \ref*{fig:v2sim}) obt
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics*[width=0.9\textwidth]{v2sim}
+        \includegraphics*[width=\textwidth]{v2sim}
         \caption{Generación por CSV}
         \label{fig:v2sim}
     \end{subfigure}
@@ -512,9 +512,13 @@ Ya que estos datos se mandan en intervalos de tiempo irregulares, el primer paso
 Esto es así porque para realizar las predicciones es necesario que los datos de la serie temporal estén distribuidos 
 de manera uniforme.
 
+Las pruebas realizadas a continuación han sido realizadas únicamente con el encoder derecho, pues al ser muy similar 
+al encoder izquierdo se van a obtener resultados prácticamente idénticos en los dos casos, por lo que no merece 
+la pena realizar las pruebas sobre los dos datos.
+
 \subsection{Comparativa de modelos de predicción}
 
-% TODO COMPARATIVA MODELOS
+% TODO COMPARATIVA MODELOS SOLO QUEDA REALIZAR PRUEBAS
 Los modelos elegidos para la comparación son aquellos brevemente explicados en la sección de conceptos teóricos:
 \begin{itemize}
     \item ARIMA.
@@ -551,58 +555,167 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{c | c c c | c c c | c c c}
-        \toprule
-        & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
-        Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
-        \otoprule
-        ARIMA & 40.79 & 226.08 & 3131.79 & - & - & - & - & - & - \\
-        TCN & & & & & & & & & \\
-        N-HiTS & & & & & & & & & \\
-        Transformer & & & & & & & & & \\
-        \bottomrule
-    \end{tabular}
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & \textbf{65.09} & \textbf{161.66} & 1907.52 & - & - & - & - & - & - \\
+            TCN & 1211.47 & 1288.55 & 2394.42 & 1190.54 & 1296.46 & 2830.52 & 1321.59 & 1313.16 & 2350.11 \\
+            N-HiTS & 135.49 & 353.99 & 1925.49 & 729.24 & 802.57 & 1736.21 & 446.28 & 478.43 & 1045.04 \\
+            Transformer & 213.79 & 426.78 & 2127.07 & 155.12 &  \textbf{188.81} & \textbf{542.05} & 167.89 & 222.10 & 719.10 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
     \caption{MAE de la comparación inicial}
     \label{tab:mae_inicial}
 \end{table}
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{c | c c c | c c c | c c c}
-        \toprule
-        & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
-        Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
-        \otoprule
-        ARIMA & 0.16 & 0.88 & 12.25 & - & - & - & - & - & - \\
-        TCN & & & & & & & & & \\
-        N-HiTS & & & & & & & & & \\
-        Transformer & & & & & & & & & \\
-        \bottomrule
-    \end{tabular}
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & \textbf{0.30} & \textbf{0.74} & 8.83 & - & - & - & - & - & - \\
+            TCN & 5.60 & 5.96 & 11.08 & 5.51 & 6.00 & 13.10 & 6.11 & 6.08 & 10.88 \\
+            N-HiTS & 0.62 & 1.63 & 8.91 & 3.37 & 3.71 & 8.03 & 2.06 & 2.21 & 4.83 \\
+            Transformer & 0.98 & 1.97 & 9.84 & 0.71 & 0.87 & \textbf{2.50} & 0.77 & 1.02 & 3.32 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}    
     \caption{MASE de la comparación inicial}
     \label{tab:mase_inicial}
 \end{table}
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{c | c c c | c c c | c c c}
-        \toprule
-        & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
-        Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
-        \otoprule
-        ARIMA & 40.79 & 185.34 & 2870.88 & - & - & - & - & - & - \\
-        TCN & & & & & & & & & \\
-        N-HiTS & & & & & & & & & \\
-        Transformer & & & & & & & & & \\
-        \bottomrule
-    \end{tabular}
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & \textbf{65.09} & \textbf{128.89} & 1345.79 & - & - & - & - & - & - \\
+            TCN & 1211.47 & 1288.55 & 1193.36 & 1190.54 & 1296.46 & 1945.16 & 1321.59 & 1313.16 & 1217.87 \\
+            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
+            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
     \caption{DTW de la comparación inicial}
     \label{tab:dtw_inicial}
+\end{table}
+
+ARIMA solo soporta modelos univariantes, por lo que no puede ser probado en los ejemplos covariantes y multivariantes.
+
+\subsubsection*{Optimización de los hiperparámetros}
+
+Los resultados del apartado anterior son mejorables. Para ello, es necesario encontrar los parámetros de los 
+modelos que mejor se ajusten a nuestros datos. Esto, sin embargo, no es una tarea simple, pues existe una enorme 
+cantidad de ellos para los modelos que utilicen redes neuronales (TCN, N-HiTS y Transformer). Para la optimización 
+de dichos modelos se ha utilizado una herramienta llamada Optuna. Esta herramienta prueba cada modelo durante 
+varias horas probando diferentes combinaciones de hiperparámetros de manera automática.
+
+Para el caso de ARIMA la optimización es más simple, pues, como se ha explicado en el apartado de conceptos 
+teóricos solo tiene tres parámetros. Además, dichos parámetros pueden optimizarse de manera analítica, utilizando 
+los gráficos de autocorrelación y autocorrelación parcial. El primero de estos muestra como de relacionado está 
+un valor de la serie temporal con sus anteriores, mientras que el segundo muestra la correlación con el valor 
+inmediatamente anterior al actual.
+
+\imagen{acf}{ACF del encoder derecho}{1}
+\imagen{pacf}{PACF del encoder derecho}{1}
+
+Como podemos ver, el valor del ACF decrementa, pero de manera muy lenta, lo que nos indica que necesitamos 
+por lo menos un orden de diferenciación, por lo que el parámetro d será por lo menos de 1. 
+
+\imagen{acf_dif2}{ACF del encoder derecho después de diferenciar}{1}
+\imagen{pacf_dif2}{PACF del encoder derecho después de diferenciar}{1}
+
+Se puede ver también como a partir del elemento 16 no se aprecian valores significativos, por lo que el valor del 
+parámetro p será 16. Estas observaciones nos indican a pensar que el modelo es ARIMA(p, d, 0), ya que se cumplen 
+dichas condiciones:
+\begin{itemize}
+    \item El ACF decae de manera exponencial.
+    \item En el PACF, hay un valor significativo a partir del valor p, pero ninguno más adelante.
+\end{itemize}
+
+Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1, 0).
+
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 38.96 & 133.31 & 1904.27 & - & - & - & - & - & - \\
+            TCN &  &  &  &  &  &  &  &  &  \\
+            N-HiTS &  &  &  &  &  &  &  &  &  \\
+            Transformer &  &  &  &  &  &  &  &  &  \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{MAE de la comparación con optimización}
+    \label{tab:mae_opt}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 0.18 & 0.61 & 8.81 & - & - & - & - & - & - \\
+            TCN &  &  &  &  &  &  &  &  &  \\
+            N-HiTS &  &  &  &  &  &  &  &  &  \\
+            Transformer &  &  &  &  &  &  &  &  &  \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}    
+    \caption{MASE de la comparación con optimización}
+    \label{tab:mase_opt}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 38.96 & 110.17 & 1606.00 & - & - & - & - & - & - \\
+            TCN &  &  &  &  &  &  &  &  &  \\
+            N-HiTS &  &  &  &  &  &  &  &  &  \\
+            Transformer &  &  &  &  &  &  &  &  &  \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{DTW de la comparación con optimización}
+    \label{tab:dtw_opt}
 \end{table}
 
 \subsection{Desarrollo del servicio}
 
 % TODO DESARROLLO DEL SERVICIO
+
+Como se puede ver en la siguiente imagen (Figura \ref{fig:diagrama_forecast}), este servicio carga un modelo desde 
+un archivo o bien lo entrena desde cero. Para poder entrenar dicho modelo, se necesita que la base de datos ya tenga 
+datos cargados, por lo que la rutina de entrenamiento espera algunos minutos antes de empezar a entrenar para que 
+haya los datos necesarios para poder realizar dicha tarea.
+
+Cuando se predicen los datos, estos son insertados a un ``bucket'' de la base de datos diferente al que están los datos.
+Este ``bucket'' tiene un periodo de retención bajo. Esto significa que los datos insertados se eliminan después 
+de cierto tiempo. Esto tiene sentido, ya que no nos interesa guardar las predicciones antiguas.
+
+\imagen{diagrama_forecast}{Diagrama del servicio de predicción.}{0.8}
 
 \section{Puesta en marcha}
 % TODO PUESTA EN MARCHA (REVISAR TITULO)

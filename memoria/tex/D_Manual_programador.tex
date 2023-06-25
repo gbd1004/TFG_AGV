@@ -2,10 +2,74 @@
 
 \section{Introducción}
 
+En este apartado del anexo se detallará la organización de los repositorios del proyecto, así
+como un manual de programador, una guía de instalación y ejecución del mismo y las pruebas realizadas
+al sistema.
+
 \section{Estructura de directorios}
+
+La organización de los directorios queda definida de la siguiente manera:
+
+\dirtree{%
+.1 memoria.
+.2 build.
+.2 img.
+.2 tex.
+}
+
+El directorio memoria guarda todos los archivos relacionados con la memoria y estos anexos. En 
+el subdirectorio build se encuentran los archivos pdf finales, en img se encuentran las imágenes 
+utilizadas y en tex se guardan los archivos de LaTeX de cada uno de las secciones de la memoria y 
+los anexos.
+
+\dirtree{%
+.1 prototipos.
+.2 datos.
+.2 forecasting.
+.2 graphite.
+.2 influxdb.
+.2 mongo.
+.2 prometheus.
+.2 sqlite.
+.2 timescaledb.
+}
+
+En el directorio prototipos se guardan todos los prototipos creados durante la realización del 
+proyecto. Es código realizado de forma rápida con el fin de adecuarme al uso de cada una de las 
+diferentes herramientas consideradas. No tiene mucha más importancia más allá de eso.
+
+\dirtree{%
+.1 rendimiento.
+.2 database.
+.2 forecast.
+}
+
+En el directorio de rendimiento se guarda todo el código de las pruebas de rendimiento realizadas 
+para la comparación de las bases de datos y modelos de predicción. En el subdirectorio de 
+forecast se encuentra también el código utilizado para la optimización de los hiperparámetros de 
+los modelos comparados.
+
+\dirtree{%
+.1 servicios.
+.2 forecasting.
+.3 src.
+.2 reciever.
+.3 src.
+.2 simulator.
+.3 src.
+.3 data.
+}
+
+En el directorio de servicios se encuentra todo el código y archivos de configuración de cada 
+uno de los servicios desarrollados en este proyecto. El código se encuentra en el directorio
+``src'' de dentro de cada uno de los subdirectorios de cada servicio. En la carpteta ``data'',
+dentro del directorio del simulador, se guardan los archivos csv utilizados para leer desde 
+este servicio.
 
 \section{Manual del programador}
 
 \section{Compilación, instalación y ejecución del proyecto}
+
+
 
 \section{Pruebas del sistema}

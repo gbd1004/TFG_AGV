@@ -2,10 +2,102 @@
 
 \section{Introducción}
 
+En esta sección se detalla la organización y flujo de datos del proyecto, el diseño de los diferentes 
+servicios mencionados en apartados anteriores, y un diseño más en profundidad de toda la arquitectura.
+
 \section{Diseño de datos}
 
+Esta sección se divide en otras dos subsecciones: la primera detallará la organización de los datos 
+en la base de datos, y la segunda detallará el flujo de datos entre los diferentes servicios.
+
+\subsection*{Base de datos}
+
+Como se ha especificado en el anexo B, la base de datos elegida es InfluxDB. Esta es una base de datos 
+de series temporales no relacional, por lo que las características de esta base de datos no siguen 
+las de una base de datos relacional.
+
+El elemento de mayor nivel organizativo en InfluxDB es la organización. Una organización es un 
+entorno de trabajo en el que se definen el resto de elementos de la base de datos: usuarios, ``buckets'',
+tareas, etc.
+
+En InfluxDB, los datos se almacenan en lo que se conoce como ``buckets''. La característica principal
+de estos ``buckets'' es que tienen un periodo de retención, es decir, el tiempo que perduran los datos
+almacenados. Así, por ejemplo, un ``bucket'' con un periodo de retención de un minuto, los datos insertados
+hace más de un minuto son automáticamente eliminados. 
+
+Dentro de cada ``bucket'', los datos están organizados según los siguientes elementos:
+\begin{enumerate}
+    \item Time: Al ser InfluxDB una serie de datos de series temporales, este campo cobra 
+        una gran importancia. Este campo almacena el tiempo de cada entrada según el estándar
+        RFC3339 \cite{rfc3339}.
+    \item Field set: El conjunto de campos, o field set, almacena pares de claves y valore: las 
+        claves guardan metadatos y son cadenas de caracteres, y los valores almacenan los datos 
+        propiamente dichos. 
+    \item Tag set: el conjunto de etiquetas, o tag set, almacena, al igual que el field set, pares 
+        de clave-valor. El tag set, sin embargo, solo almacena metadatos, y tanto la clave como el
+        valor almacenan cadenas de caracteres. Este elemento es opcional, aunque es muy recomendado 
+        utilizarlo, pues la etiquetas están indexadas, por lo que las consultas en este tipo de datos 
+        son mucho más rápidas.
+    \item Measurement: la medida, o measurement, actúa como contenedor de los campos anteriores, 
+        y sería el equivalente a una tabla en una base de datos relacional.
+\end{enumerate}
+
+Con esta información en mente, la organización de la base de datos queda definida de la siguiente 
+manera. Se utilizan dos ``buckets'', uno para los datos recibidos por el AGV o por el simulador con 
+un periodo de retención infinito (los datos no se eliminan nunca), y otro para almacenar las predicciones 
+realizadas con un periodo de retención bajo, especificado en un archivo de configuración. 
+
+En cada uno de estos ``buckets'' se almacenan las series temporales siguiendo el esquema de las 
+tablas \ref{tabla:bucket_agv} y \ref{tabla:bucket_pred}
+
+\tablaSmallSinColores{Bucket AGV}{l l l}{bucket_agv}{
+    Elemento & Descripción \\
+}{
+    Measurement & \multicolumn{2}{l}{AGVDATA} \\
+    \midrule
+    & Clave & Valor \\
+    Tag set & agvid & string \\
+    \midrule
+    & Clave & Valor \\
+    \multirow{9}{*}{Field set} & encoder\_izquierdo & int \\
+    & in.current\_l & int \\
+    & in.current\_h & int \\
+    & in.i\_medida\_bat & int \\
+    & in.guide\_error & float \\
+    & out.set\_speed\_right & int \\
+    & out.set\_speed\_left & int \\
+    & out.display & int \\
+}
+
+% TODO Tabla bucket prediccion con ref bucket_pred
+
+\subsection*{Flujo de datos}
+
+La comunicación entre servicios ocurre de tres formas diferentes:
+\begin{itemize}
+    \item 5G Wifi: Los AGV envían datos al ``AGV Coordinator'' como cadenas de bytes a este servicio.
+        Como este servicio no está desarrollado como parte de este proyecto, no se detallará más.
+    \item UDP/JSON: Tanto el ``AGV Coordinator'' como el ``Simulator'' envían los datos codificados en 
+        forma de JSON a través de una conexión UDP. Estos datos son recibidos por el servicio ``Reciever'',
+        que los introducirá en la base de datos.
+    \item Database API: El ``Reciever'' es el encargado de insertar los datos de los AGV o del simulador, 
+        utilizando para ello la API de la base de datos a través de consultas.
+\end{itemize}
+
 \section{Diseño procedimental}
+
+
 
 \section{Diseño arquitectónico}
 
 
+
+% \multirow{9}{*}{Field set} & (encoder_derecho | int) \\
+% & (encoder_izquierdo | int) \\
+% & (in.current_l | int) \\
+% & (in.current_h | int) \\
+% & (in.i_medida_bat | int) \\
+% & (in.guide_error | float) \\
+% & (out.set_speed_right | int) \\
+% & (out.set_speed_left | int) \\
+% & (out.display | int) \\
