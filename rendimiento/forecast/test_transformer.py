@@ -65,10 +65,13 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
     series_ed_scaled = scaler_ed.transform(series_ed)
     train_ei_scaled = scaler_ei.fit_transform(train_ei)
     val_ei_scaled = scaler_ei.transform(val_ei)
+    series_ei_scaled = scaler_ei.transform(series_ei)
     train_sr_scaled = scaler_sr.fit_transform(train_sr)
     val_sr_scaled = scaler_sr.transform(val_sr)
+    series_sr_scaled = scaler_sr.transform(series_sr)
     train_sl_scaled = scaler_sl.fit_transform(train_sl)
     val_sl_scaled = scaler_sl.transform(val_sl)
+    series_sl_scaled = scaler_sl.transform(series_sl)
 
     for salida in [1, 5, 50]:
         m_mae = 0
@@ -76,7 +79,19 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         m_dtw = 0
 
         for i in range(0, 5):
-            model = TransformerModel(input_chunk_length=60, output_chunk_length=10)
+            # model = TransformerModel(input_chunk_length=60, output_chunk_length=10)
+            model = TransformerModel(
+                input_chunk_length=60,
+                output_chunk_length=10,
+                d_model=128,
+                nhead=4,
+                num_encoder_layers=4,
+                num_decoder_layers=3,
+                dim_feedforward=128,
+                dropout=0.02711,
+                activation="SwiGLU",
+                norm_type=None
+            )
 
             pred_length = salida
 
@@ -103,12 +118,27 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
             else:
                 out_length = 10
 
-            model = TransformerModel(input_chunk_length=60, output_chunk_length=out_length)
+            # model = TransformerModel(input_chunk_length=60, output_chunk_length=out_length)
+            model = TransformerModel(
+                input_chunk_length=60,
+                output_chunk_length=out_length,
+                d_model=128,
+                nhead=4,
+                num_encoder_layers=4,
+                num_decoder_layers=3,
+                dim_feedforward=128,
+                dropout=0.02711,
+                activation="SwiGLU",
+                norm_type=None
+            )
 
             pred_length = salida
 
-            model.fit(series=train_ed_scaled, past_covariates=train_sr_scaled, val_series=val_ed_scaled, val_past_covariates=series_ed_scaled, epochs=200, verbose=False)
-            prediction = model.predict(series=train_ed_scaled, past_covariates=train_sr_scaled, n=pred_length)
+            covariates = train_sr_scaled.stack(train_ei_scaled).stack(train_sl_scaled)
+            val_covariates = series_sr_scaled.stack(series_ei_scaled).stack(series_sl_scaled)
+
+            model.fit(series=train_ed_scaled, past_covariates=covariates, val_series=val_ed_scaled, val_past_covariates=val_covariates, epochs=200, verbose=False)
+            prediction = model.predict(series=train_ed_scaled, past_covariates=covariates, n=pred_length)
             prediction = scaler_ed.inverse_transform(prediction)
 
             m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
@@ -125,7 +155,19 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         m_dtw = 0
 
         for i in range(0, 5):
-            model = TransformerModel(input_chunk_length=60, output_chunk_length=10)
+            # model = TransformerModel(input_chunk_length=60, output_chunk_length=10)
+            model = TransformerModel(
+                input_chunk_length=60,
+                output_chunk_length=10,
+                d_model=128,
+                nhead=4,
+                num_encoder_layers=4,
+                num_decoder_layers=3,
+                dim_feedforward=128,
+                dropout=0.02711,
+                activation="SwiGLU",
+                norm_type=None
+            )
 
             multivariate_scaler = Scaler()
             multivariate_series = series_ed.stack(series_ei).stack(series_sl).stack(series_sr)
@@ -138,10 +180,11 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
             model.fit(multivariate_train_scaled, val_series=multivariate_val_scaled, epochs=200, verbose=False)
             prediction = model.predict(series=multivariate_train_scaled, n=pred_length)
             prediction = multivariate_scaler.inverse_transform(prediction)
+            prediction = prediction["encoder_derecho"]
 
-            m_mae += mae(actual_series=multivariate_val[:pred_length], pred_series=prediction)
-            m_mase += mase(actual_series=multivariate_val[:pred_length], pred_series=prediction, insample=multivariate_train)
-            m_dtw += dtw_metric(actual_series=multivariate_val[:pred_length], pred_series=prediction)
+            m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
+            m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
+            m_dtw += dtw_metric(actual_series=val_ed[:pred_length], pred_series=prediction)
 
         f.write("MULTIVARIANTE" + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")

@@ -65,7 +65,18 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         m_dtw = 0
 
         for i in range(0, 5):
-            model = NHiTSModel(input_chunk_length=60, output_chunk_length=10)
+            # model = NHiTSModel(input_chunk_length=60, output_chunk_length=10)
+            model = NHiTSModel(
+                input_chunk_length=53,
+                output_chunk_length=10,
+                num_stacks=4,
+                num_blocks=4,
+                num_layers=2,
+                layer_widths=14,
+                dropout=0.1855,
+                activation="PReLu",
+                MaxPool1d=False
+            )
 
             pred_length = salida
 
@@ -91,12 +102,26 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
             else:
                 out_length = 10
 
-            model = NHiTSModel(input_chunk_length=60, output_chunk_length=out_length)
+            # model = NHiTSModel(input_chunk_length=60, output_chunk_length=out_length)
+            model = NHiTSModel(
+                input_chunk_length=53,
+                output_chunk_length=out_length,
+                num_stacks=4,
+                num_blocks=4,
+                num_layers=2,
+                layer_widths=14,
+                dropout=0.1855,
+                activation="PReLu",
+                MaxPool1d=False
+            )
 
             pred_length = salida
 
-            model.fit(series=train_ed, past_covariates=train_sr, val_series=val_ed, val_past_covariates=series_ed, epochs=200, verbose=False)
-            prediction = model.predict(series=train_ed, past_covariates=train_sr, n=pred_length)
+            covariates = train_sr.stack(train_ei).stack(train_sl)
+            val_covariates = series_sr.stack(series_ei).stack(series_sl)
+
+            model.fit(series=train_ed, past_covariates=covariates, val_series=val_ed, val_past_covariates=val_covariates, epochs=200, verbose=False)
+            prediction = model.predict(series=train_ed, past_covariates=covariates, n=pred_length)
 
             m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
             m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
@@ -112,7 +137,18 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         m_dtw = 0
 
         for i in range(0, 5):
-            model = NHiTSModel(input_chunk_length=60, output_chunk_length=10)
+            # model = NHiTSModel(input_chunk_length=60, output_chunk_length=10)
+            model = NHiTSModel(
+                input_chunk_length=53,
+                output_chunk_length=10,
+                num_stacks=4,
+                num_blocks=4,
+                num_layers=2,
+                layer_widths=14,
+                dropout=0.1855,
+                activation="PReLu",
+                MaxPool1d=False
+            )
 
             multivariate_series = series_ed.stack(series_ei).stack(series_sl).stack(series_sr)
             multivariate_train, multivariate_val = multivariate_series[:-VAL_SIZE], multivariate_series[-VAL_SIZE:]
@@ -121,10 +157,11 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
 
             model.fit(multivariate_train, val_series=multivariate_val, epochs=200, verbose=False)
             prediction = model.predict(series=multivariate_train, n=pred_length)
+            prediction = prediction["encoder_derecho"]
 
-            m_mae += mae(actual_series=multivariate_val[:pred_length], pred_series=prediction)
-            m_mase += mase(actual_series=multivariate_val[:pred_length], pred_series=prediction, insample=multivariate_train)
-            m_dtw += dtw_metric(actual_series=multivariate_val[:pred_length], pred_series=prediction)
+            m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
+            m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
+            m_dtw += dtw_metric(actual_series=val_ed[:pred_length], pred_series=prediction)
 
         f.write("MULTIVARIANTE" + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")

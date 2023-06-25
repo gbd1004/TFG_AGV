@@ -1,0 +1,6 @@
+Transformer
+Best value: 0.0736137107014656, Best params: {'in_len_trans': 60, 'd_model_trans': 128, 'nhead_trans': 4, 'enc_layers_trans': 4, 'dec_layers_trans': 3, 'dim_ffwd_trans': 128, 'dropout_trans': 0.027118069479614853, 'activation_trans': 'SwiGLU', 'norm_type_trans': None}
+N-HiTS
+Best value: 0.0993591770529747, Best params: {'in_len_nhits': 53, 'num_stacks_nhits': 4, 'num_blocks_nhits': 4, 'num_layers_nhits': 2, 'layer_widths_nhits': 14, 'dropout_nhits': 0.18555885565149652, 'activation_nhits': 'PReLU', 'max_pool_1d_nhits': False}
+TCN
+Best value: 0.15135042369365692, Best params: {'in_len_tcn': 123, 'kernel_size_tcn': 4, 'num_filters_tcn': 10, 'weight_norm_tcn': False, 'dilation_base_tcn': 1, 'num_layers_tcn': 7, 'dropout_tcn': 0.21056874576754805}

@@ -48,9 +48,9 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
     df = query_dataframe(client)
 
     series_ed = get_series('encoder_derecho', df)
-    series_ed = fill_missing_values(Diff(lags=10, dropna=False).fit_transform(series=series_ed))
+    series_ed = fill_missing_values(Diff(lags=5, dropna=False).fit_transform(series=series_ed))
     series_ei = get_series('encoder_izquierdo', df)
-    series_ei = fill_missing_values(Diff(lags=10, dropna=False).fit_transform(series=series_ei))
+    series_ei = fill_missing_values(Diff(lags=5, dropna=False).fit_transform(series=series_ei))
     series_sr = get_series('out.set_speed_right', df)
     series_sl = get_series('out.set_speed_left', df)
 
@@ -65,7 +65,8 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
 
     for salida in [1, 5, 50]:
         for i in range(0, 5):
-            model = ARIMA()
+            # model = ARIMA()
+            model = ARIMA(p=16, d=1, q=0)
             model.fit(train_ed)
 
             pred_length = salida
