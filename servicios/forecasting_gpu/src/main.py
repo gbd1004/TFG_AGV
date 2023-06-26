@@ -31,7 +31,7 @@ def query_dataframe(client, bucket, tiempo) -> DataFrame:
     df.drop(columns=['result', 'table', '_start', '_stop'])
     df.drop(df.tail(1).index, inplace=True)
 
-    df['_time'] = df['_time'].values.astype('<M8[us]')
+    df['_time'] = df['_time'].values.astype('<M8[ms]')
     df.head()
     return df
 
@@ -80,7 +80,7 @@ def train_model(client, bucket, config):
 
 def main():
     logging.basicConfig(level=logging.INFO)
-    f = open("/forecasting/config.json")
+    f = open("/forecasting_gpu/config.json")
     config = json.load(f)
     token, org, bucket_agv = get_influxdb_credentials()
     bucket_pred = "Predictions"
@@ -117,8 +117,6 @@ def main():
             covariates = series_sr_scaled.stack(series_sl_scaled)
 
             try:
-                # pred_ed = model.predict(series=series_ed_scaled, past_covariates=covariates_ed, n=50)
-                # pred_ei = model.predict(series=series_ei_scaled, past_covariates=covariates_ei, n=50)
                 pred = model.predict(series=[series_ed_scaled, series_ei_scaled], past_covariates=[covariates, covariates], n=50)
 
                 pred_ed = scaler_ed.inverse_transform(pred[0])

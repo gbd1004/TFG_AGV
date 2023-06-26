@@ -47,17 +47,14 @@ client = InfluxDBClient(url="http://localhost:8086", token=token, org=org)
 query_api = client.query_api()
 
 def query_dataframe() -> DataFrame:
-        # ' |> range(start:2023-05-30, stop:2023-05-31)' \
-        # ' |> filter(fn: (r) => r._measurement == "test" and r.type == "value")' \
     query = 'from(bucket:"AGV")' \
-        ' |> range(start:-300s)' \
-        ' |> filter(fn: (r) => r._measurement == "AGVDATA" and r.type == "value")' \
+        ' |> range(start:2023-05-30, stop:2023-05-31)' \
+        ' |> filter(fn: (r) => r._measurement == "test" and r.type == "value")' \
         ' |> aggregateWindow(every: 200ms, fn: last, createEmpty: false)' \
         ' |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
 
     df = query_api.query_data_frame(query=query)
     df.drop(columns=['result', 'table', '_start', '_stop'])
-    df.drop(df.tail(1).index, inplace=True)
 
     df['_time'] = df['_time'].values.astype('<M8[us]')
     df.head()
@@ -190,7 +187,7 @@ multivariate_series.plot()
 pred.plot()
 plt.show()
 
-model.save("test_model.pt")
+model.save("./prueba/test_model.pt")
 
 # historical = model.historical_forecasts(
 #     multivariate_series, start=0.5, forecast_horizon=500, verbose=True

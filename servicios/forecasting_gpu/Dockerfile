@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.0.0-runtime-ubuntu20.04
+FROM nvidia/cuda:11.8.0-runtime-ubuntu20.04
 RUN apt update && \
     apt install --no-install-recommends -y build-essential python3 python3-pip && \
     apt clean && rm -rf /var/lib/apt/lists/*
@@ -6,7 +6,9 @@ RUN apt update && \
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-WORKDIR /forecasting
+WORKDIR /forecasting_gpu
 COPY . ./
+
+RUN ls /
 
 CMD ["python3", "-u", "src/main.py"]
