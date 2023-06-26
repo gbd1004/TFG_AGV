@@ -20,7 +20,6 @@ def get_influxdb_credentials():
     return token, org, bucket
 
 def query_dataframe(client, bucket, tiempo) -> DataFrame:
-    print(tiempo)
     query = 'from(bucket:"{bucket}")' \
         ' |> range(start: -{tiempo}s)' \
         ' |> aggregateWindow(every: 200ms, fn: mean, createEmpty: true)' \
@@ -56,7 +55,6 @@ def train_model(client, bucket, config):
     logging.info("Esperando {t}s para datos para entrenamiento".format(t=tiempo))
     time.sleep(tiempo)
 
-    # df = query_all_dataframe(client, bucket)
     df = query_dataframe(client, bucket, tiempo)
 
     series_ed, series_ei, series_sl, series_sr = get_all_series(df)
@@ -74,7 +72,7 @@ def train_model(client, bucket, config):
     logging.info("Iniciando entrenamiento")
     model.fit(series=[series_ed_scaled, series_ei_scaled], past_covariates=[covariates, covariates], epochs=200)
 
-    model.save(config["model_file"] + ".pt")
+    model.save("/forecasting_gpu/model/" + config["model_file"] + ".pt")
 
     return scaler_ed, scaler_ei, scaler_sr, scaler_sl, model
 
@@ -89,11 +87,13 @@ def main():
 
     with InfluxDBClient(url="http://database:8086", token=token, org=org, debug=False) as client:
         if config['load_model']:
-            model_path = "/model/" + config['model_file'] + ".pt"
+            model_path = "/forecasting_gpu/model/" + config['model_file'] + ".pt"
             model = TransformerModel.load(model_path)
 
-            time.sleep(15)
-            df = query_dataframe(client, bucket_agv, 15)
+            tiempo = float(config['wait_time_before_load'])
+            logging.info("Esperando {t} segundos para datos para scaler".format(t=tiempo))
+            time.sleep(tiempo)
+            df = query_dataframe(client, bucket_agv, tiempo)
             series_ed, series_ei, series_sl, series_sr = get_all_series(df)
             scaler_ed, scaler_ei, scaler_sr, scaler_sl = Scaler(), Scaler(), Scaler(), Scaler()
             scaler_ed.fit(series_ed)
