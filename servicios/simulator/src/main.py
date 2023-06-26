@@ -1,6 +1,7 @@
 """Servicio dedicado a simular el AGV. De momento solo son datos aleatorios"""
 
 from datetime import datetime, timedelta
+import logging
 import socket
 import random
 import json
@@ -50,15 +51,20 @@ def simular_aleatorio(sock):
 
 if __name__ == "__main__":
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    logging.basicConfig(level=logging.INFO)
 
     f = open('/simulator/config.json')
     data = json.load(f)
 
     if data['from_csv']:
+        logging.info("Simulando desde CSV")
         if data['loop']:
+            logging.info("Ejecución en bucle")
             while True:
                 simular_csv(sock, data['csv_file'])
         else:
+            logging.info("Ejecución única")
             simular_csv(sock, data['csv_file'])
     else:
+        logging.info("Simulando aleatorio")
         simular_aleatorio(sock)
