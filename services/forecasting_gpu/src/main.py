@@ -12,6 +12,7 @@ from influxdb_client import InfluxDBClient, WriteOptions
 import numpy as np
 from pandas import DataFrame
 
+
 def get_influxdb_credentials():
     token = os.getenv('DOCKER_INFLUXDB_INIT_ADMIN_TOKEN')
     org = os.getenv('DOCKER_INFLUXDB_INIT_ORG')
@@ -19,13 +20,15 @@ def get_influxdb_credentials():
 
     return token, org, bucket
 
+
 def query_dataframe(client, bucket, tiempo) -> DataFrame:
     query = 'from(bucket:"{bucket}")' \
         ' |> range(start: -{tiempo}s)' \
         ' |> aggregateWindow(every: 200ms, fn: mean, createEmpty: true)' \
         ' |> filter(fn: (r) => r._measurement == "AGVDATA" and r.type == "value")' \
-        ' |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'.format(bucket=bucket, tiempo=int(tiempo))
-    
+        ' |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'.format(
+            bucket=bucket, tiempo=int(tiempo))
+
     df = client.query_api().query_data_frame(query=query)
     df.drop(columns=['result', 'table', '_start', '_stop'])
     df.drop(df.tail(1).index, inplace=True)
@@ -34,25 +37,32 @@ def query_dataframe(client, bucket, tiempo) -> DataFrame:
     df.head()
     return df
 
+
 def get_series(tag: str, df: DataFrame) -> TimeSeries:
-    series = TimeSeries.from_dataframe(df, "_time", tag, freq="200ms").astype(np.float32)
+    series = TimeSeries.from_dataframe(
+        df, "_time", tag, freq="200ms").astype(np.float32)
     series = fill_missing_values(series=series)
 
     return series
 
+
 def get_all_series(df):
     series_ed = get_series('encoder_derecho', df)
-    series_ed = fill_missing_values(Diff(lags=1, dropna=False).fit_transform(series=series_ed))
+    series_ed = fill_missing_values(
+        Diff(lags=1, dropna=False).fit_transform(series=series_ed))
     series_ei = get_series('encoder_izquierdo', df)
-    series_ei = fill_missing_values(Diff(lags=1, dropna=False).fit_transform(series=series_ei))
+    series_ei = fill_missing_values(
+        Diff(lags=1, dropna=False).fit_transform(series=series_ei))
     series_sr = get_series('out.set_speed_right', df)
     series_sl = get_series('out.set_speed_left', df)
 
     return series_ed, series_ei, series_sl, series_sr
 
+
 def train_model(client, bucket, config):
     tiempo = float(config['wait_time_before_train'])
-    logging.info("Esperando {t}s para datos para entrenamiento".format(t=tiempo))
+    logging.info(
+        "Esperando {t}s para datos para entrenamiento".format(t=tiempo))
     time.sleep(tiempo)
 
     df = query_dataframe(client, bucket, tiempo)
@@ -70,11 +80,13 @@ def train_model(client, bucket, config):
     model = TransformerModel(input_chunk_length=100, output_chunk_length=50)
 
     logging.info("Iniciando entrenamiento")
-    model.fit(series=[series_ed_scaled, series_ei_scaled], past_covariates=[covariates, covariates], epochs=200)
+    model.fit(series=[series_ed_scaled, series_ei_scaled],
+              past_covariates=[covariates, covariates], epochs=200)
 
     model.save("/forecasting_gpu/model/" + config["model_file"] + ".pt")
 
     return scaler_ed, scaler_ei, scaler_sr, scaler_sl, model
+
 
 def main():
     logging.basicConfig(level=logging.INFO)
@@ -87,11 +99,13 @@ def main():
 
     with InfluxDBClient(url="http://database:8086", token=token, org=org, debug=False) as client:
         if config['load_model']:
-            model_path = "/forecasting_gpu/model/" + config['model_file'] + ".pt"
+            model_path = "/forecasting_gpu/model/" + \
+                config['model_file'] + ".pt"
             model = TransformerModel.load(model_path)
 
             tiempo = float(config['wait_time_before_load'])
-            logging.info("Esperando {t} segundos para datos para scaler".format(t=tiempo))
+            logging.info(
+                "Esperando {t} segundos para datos para scaler".format(t=tiempo))
             time.sleep(tiempo)
             df = query_dataframe(client, bucket_agv, tiempo)
             series_ed, series_ei, series_sl, series_sr = get_all_series(df)
@@ -102,22 +116,28 @@ def main():
             scaler_sl.fit(series_sl)
             logging.info("Modelo cargado satisfactoriamente")
         else:
-            scaler_ed, scaler_ei, scaler_sr, scaler_sl, model = train_model(client, bucket_agv, config)
+            scaler_ed, scaler_ei, scaler_sr, scaler_sl, model = train_model(
+                client, bucket_agv, config)
             logging.info("Modelo entrenado satisfactoriamente")
 
         while True:
             df = query_dataframe(client, bucket_agv, 100)
             series_ed, series_ei, series_sl, series_sr = get_all_series(df)
 
-            series_ed_scaled = scaler_ed.transform(series_ed).astype(np.float32)
-            series_ei_scaled = scaler_ei.transform(series_ei).astype(np.float32)
-            series_sr_scaled = scaler_sr.transform(series_sr).astype(np.float32)
-            series_sl_scaled = scaler_sl.transform(series_sl).astype(np.float32)
+            series_ed_scaled = scaler_ed.transform(
+                series_ed).astype(np.float32)
+            series_ei_scaled = scaler_ei.transform(
+                series_ei).astype(np.float32)
+            series_sr_scaled = scaler_sr.transform(
+                series_sr).astype(np.float32)
+            series_sl_scaled = scaler_sl.transform(
+                series_sl).astype(np.float32)
 
             covariates = series_sr_scaled.stack(series_sl_scaled)
 
             try:
-                pred = model.predict(series=[series_ed_scaled, series_ei_scaled], past_covariates=[covariates, covariates], n=50)
+                pred = model.predict(series=[series_ed_scaled, series_ei_scaled], past_covariates=[
+                                     covariates, covariates], n=50)
 
                 pred_ed = scaler_ed.inverse_transform(pred[0])
                 pred_ei = scaler_ei.inverse_transform(pred[1])
@@ -126,12 +146,15 @@ def main():
                     pred_ed = pred_ed.pd_dataframe().reset_index()
                     pred_ei = pred_ei.pd_dataframe().reset_index()
 
-                    write_api.write(bucket=bucket_pred, record=pred_ed, write_precision='ms', data_frame_measurement_name='pred', data_frame_timestamp_column='_time')
-                    write_api.write(bucket=bucket_pred, record=pred_ei, write_precision='ms', data_frame_measurement_name='pred', data_frame_timestamp_column='_time')
+                    write_api.write(bucket=bucket_pred, record=pred_ed, write_precision='ms',
+                                    data_frame_measurement_name='pred', data_frame_timestamp_column='_time')
+                    write_api.write(bucket=bucket_pred, record=pred_ei, write_precision='ms',
+                                    data_frame_measurement_name='pred', data_frame_timestamp_column='_time')
             except Exception as e:
                 logging.error("Error prediciendo")
                 logging.error(e)
             time.sleep(10)
+
 
 if __name__ == "__main__":
     main()
