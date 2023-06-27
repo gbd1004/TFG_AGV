@@ -130,10 +130,9 @@ siguiente manera:
 
 \imagen{Arquitectura2}{Arquitectura final}{1}
 
-Este nuevo servicio se conecta directamente a la base de datos. Con esta conexión, obtiene la 
-información necesaria para hacer las predicciones, y una vez hechas se insertan en la base de datos 
-para poder ser visualizadas en Chronograf (Figura \ref{fig:interfaz}).
-% TODO METER FOTO DE CHRONOGRAF CON PREDICCIONES PORQUE SI
+Este nuevo servicio se conecta directamente a la base de datos de la que extrae la 
+información necesaria para hacer las predicciones. Una vez hechas se insertan en la base de datos 
+para poder ser visualizadas en Chronograf.
 
 \subsection{Análisis de los datos}
 
@@ -153,13 +152,30 @@ queremos predecir. Del AGV recibimos los siguientes datos:
     \item Display: %TODO
 \end{itemize}
 
-Cabe mencionar que, como los encoders derecho e izquierdo no nos muestran directamente la velocidad de sus 
-ruedas, antes hay que preprocesar dichos datos, restando cada valor con su anterior, obteniendo así el dato de la 
-velocidad.
+Cabe mencionar que, como los encoders derecho e izquierdo no nos muestran directamente la velocidad de las 
+ruedas (Figura \ref{fig:datos_enc_derecho_sp}), antes hay que preprocesar dichos datos, restando cada valor con su anterior, obteniendo así el dato de la 
+velocidad (Figura \ref{fig:datos_enc_derecho_dif}).
 
-% TODO INSTERTAR FOTOS DE ENCODER SIN DIFERENCIAR Y DIFERENCIADO
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{enc_derecho}
+        \caption{Sin procesar}
+        \label{fig:datos_enc_derecho_sp}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{enc_derecho_dif}
+        \caption{Después de diferenciación}
+        \label{fig:datos_enc_derecho_dif}
+    \end{subfigure}
+    \caption{Datos del encoder derecho}
+    \label{fig:datos_enc_derecho}
+\end{figure}
 
-Nuestra intención es realizar una predicción de los valores encoder derecho y encoder izquierdo para poder 
+El objetivo es realizar una predicción de los valores encoder derecho y encoder izquierdo para poder 
 compararlos con los obtenidos y detectar posibles errores. Para ello, utilizamos valores anteriores de los 
 mismos datos, así como los valores de las consignas de velocidad derecha e izquierda, pues su correlación 
 es muy alta. Para predecir los valores derechos, y viceversa, se usan también los valores izquierdos, pues aunque su 
@@ -174,24 +190,21 @@ la pena realizar las pruebas sobre los dos datos.
 
 \subsection{Comparativa de modelos de predicción}
 
-% TODO REVISAR
-
 Al igual que con la comparativa de sistemas gestores de bases de datos, una comparativa exhaustiva de los modelos 
 de predicción puede encontrarse en la sección B.6 de los anexos complementarios.
 
 De dicha comparación se sacan las siguientes conclusiones:
 \begin{itemize}
     \item El tiempo empleado para la optimización de los modelos no ha sido suficiente, pues los modelos
-        supuestamente optimizados dan peores resultados.
-    \item El mejor modelo para predicciones a largo plazo es el Transformer por defecto. %TODO REVISAR
+        supuestamente optimizados dan peores resultados, tanto en las métricas como en el tiempo de entrenamiento.
+    \item El mejor modelo para predicciones a largo plazo es el Transformer por defecto, aunque N-HiTS da buenos
+        resultados también con un tiempo de entrenamiento menor.
     \item Para predicciones a corto plazo, ARIMA resulta el mejor modelo.
 \end{itemize}
 
 Ya que nuestra intención es realizar predicciones a relativamente largo plazo, el modelo escogido ha sido el modelo 
-Transformer.
-
-% TODO QUIZAS EXPANDIR ESTO UN POCO
-
+Transformer. Podría haberse escogido también el modelo N-HiTS, pero como el modelo solo se entrena una vez el tiempo 
+de entrenamiento tendrá una menor importancia comparada con el resto de métricas.
 
 \subsection{Desarrollo del servicio}
 
@@ -218,17 +231,17 @@ servicio complementario.
 \imagen{diagrama_forecast}{Diagrama del servicio de predicción.}{0.8}
 
 \section{Puesta en marcha}
-% TODO PUESTA EN MARCHA (REVISAR TITULO)
 
 Cada servicio queda definido en un archivo ``Dockerfile'', que definirá el contenido y acciones de cada uno de los 
 contenedores.
 
-Todos estos servicios se inician utilizando la herramienta docker-compose. Con esta herramienta podremos crear
+Todos estos servicios se inician utilizando la herramienta docker compose. Con esta herramienta podremos crear
 una red virtual a la que se conectan los diferentes servicios para poder comunicarse entre sí, especificar los
-puertos que usa cada contenedor, variables de entorno, volúmenes, etc.
-
-Con esta herramienta podemos también ver los registros de cada contenedor, lo que nos permitirá ver posibles errores 
+puertos que usa cada contenedor, variables de entorno, volúmenes, etc. Con esta herramienta podemos también ver los registros de cada contenedor, lo que nos permitirá ver posibles errores 
 y trazas de información.
 
-Se incluye también la plantilla de un tablero para visualizar los datos de los encoders derecho e izquierdo, así 
-como sus predicciones.
+\imagen{preds}{Plantilla con los gráficos con las predicciones}{1}
+
+En la Figura \ref{fig:preds} podemos observar las predicciones realizadas en naranja y los datos 
+recibidos por el AGV en azul. Una explicación en detalle de como acceder y utilizar esta interfaz se da 
+en la sección E.4 de los anexos. 

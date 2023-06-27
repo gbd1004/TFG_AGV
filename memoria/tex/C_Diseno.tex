@@ -57,9 +57,11 @@ tablas \ref{tabla:bucket_agv} y \ref{tabla:bucket_pred}
     \midrule
     & Clave & Valor \\
     Tag set & agvid & string \\
+    & type & string \\
     \midrule
     & Clave & Valor \\
-    \multirow{9}{*}{Field set} & encoder\_izquierdo & int \\
+    \multirow{9}{*}{Field set} & encoder\_derecho & int \\
+    & encoder\_izquierdo & int \\
     & in.current\_l & int \\
     & in.current\_h & int \\
     & in.i\_medida\_bat & int \\
@@ -69,7 +71,27 @@ tablas \ref{tabla:bucket_agv} y \ref{tabla:bucket_pred}
     & out.display & int \\
 }
 
-% TODO Tabla bucket prediccion con ref bucket_pred
+El bucket AGV contiene un tag para la ID del AGV que mande dichos datos. Esto ahora mismo no se utiliza, pues 
+solo se puede simular y predecir un único AGV, pero se incluye por si en el futuro se decide ampliar para poder 
+trabajar con varios vehículos. 
+
+La otra tag, ``type'', se incluye también para posibles futuros desarrollos. Todos los valores envíados por los 
+vehículos o por el simulador deben tener el valor ``value''. En el futuro, en caso de que quieran almacenarse 
+otros datos externos a los vehículos, o datos procesados de los mismos, se han de introducir con otro valor de 
+esta tag diferente.
+
+\tablaSmallSinColores{Bucket Predictions}{l l l}{bucket_pred}{
+    Elemento & Descripción \\
+}{
+    Measurement & \multicolumn{2}{l}{pred} \\
+    \midrule
+    & Clave & Valor \\
+    \multirow{2}{*}{Field set} & encoder\_derecho & int \\
+    & encoder\_izquierdo & int \\
+}
+
+El bucket de las predicciones es mucho más simple. Simplemente tiene los valores genrados por el servicio de 
+predicciones.
 
 \subsection{Flujo de datos}
 
