@@ -1,9 +1,9 @@
 version: "2"
 plugins:
-  checkstyle:
+  pylint:
     enabled: true
 
 exclude_paths: 
   - memoria/**
   - prototipos/**
-  - redimiento/**
+  - rendimiento/**
