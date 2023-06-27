@@ -7,7 +7,7 @@ un manual del funcionamiento del proyecto.
 
 \section{Requisitos de usuarios}
 
-\subsection*{Requisitos de hardware}
+\subsection{Requisitos de hardware}
 Como ya ha sido mencionado con anterioridad, es muy recomendable utilizar la GPU para acelerar la predicción de 
 los datos. Para ello, se necesita una GPU con soporte para CUDA 11.8 o superior. Dicha compatibilidad puede
 comprobarse en \cite{cuda-compatibility}.
@@ -17,7 +17,7 @@ retrasos a la hora de insertar nuevos datos e incluso cuelgues del sistema, por 
 hardware irán dictados en gran medida por dicho servicio. Según la documentación de InfluxDB \cite{influx:requirements}, para nuestras necesidades 
 estimadas se necesita de una CPU de 2 a 4 núcleos y de 2 a 5 GB de memoria RAM. Un disco SSD también es muy recomendado.
 
-\subsection*{Requisitos de software}
+\subsection{Requisitos de software}
 Para la ejecución del proyecto las únicas herramientas necesarias son Docker \cite{docker-pag} y docker-compose \cite{compose}.
 En cuanto al sistema operativo, el proyecto puede ejecutarse en cualquier sistema operativo que soporte estas aplicaciones.
 
@@ -34,7 +34,7 @@ $ git clone https://github.com/gbd1004/TFG_AGV.git
 Después de clonar el repositorio se navega a la carpeta ``services'' y se ejecuta el siguiente 
 comando para construir las imágenes de los contenedores de cada servicio:
 \begin{lstlisting}[language=bash]
-$ docker-compose build
+$ docker compose build
 \end{lstlisting}
 
 Una vez ejecutados estos comandos tendremos el proyecto listo para ejecutarse.
@@ -43,10 +43,21 @@ Una vez ejecutados estos comandos tendremos el proyecto listo para ejecutarse.
 
 \subsection{Ejecución del proyecto}
 
-Para ejecutar el proyecto se utiliza el siguiente comando desde la carpeta ``services'':
+Para ejecutar el proyecto usando la GPU se utiliza el siguiente comando desde la carpeta ``services'':
 \begin{lstlisting}[language=bash]
-$ docker-compose up --build
+$ docker compose --profile gpu up --build
 \end{lstlisting}
+En caso de que no quiera, o no pueda, usarse la GPU, y por ende se utilice la CPU para el servicio de 
+predicciones, se utiliza el siguiente comando:
+\begin{lstlisting}[language=bash]
+$ docker compose --profile cpu up --build
+\end{lstlisting}
+Por último, mencionar que si no quiere ejecutarse el servicio de predicción basta con ejecutar el mismo comando 
+sin especificar ningún perfil.
+\begin{lstlisting}[language=bash]
+$ docker compose up --build
+\end{lstlisting}
+
 La opción ``--build'' construye las imágenes de los contenedores en caso de que algo haya cambiado o 
 no se haya ejecutado el paso anterior.
 
@@ -55,7 +66,7 @@ del terminal actual.
 
 Para detener la ejecución del proyecto se ejecuta el siguiente comando:
 \begin{lstlisting}[language=bash]
-$ docker-compose down
+$ docker compose down
 \end{lstlisting}
 Se puede añadir también el argumento ``-v'' en caso de que queramos eliminar los volúmenes montados 
 en los contenedores.
@@ -86,12 +97,8 @@ no se cargará correctamente.
 
 \subsubsection{Forecasting}
 
-Tanto la versión con GPU de este servicio como la versión que usa CPU siguen la misma estructura 
-y tienen los mismos archivos de configuración. Estos se encuentran en la carpeta base de cada servicio,
-``./services/forecasting\_gpu'' para el caso que utiliza la GPU y ``./services/forecasting\_cpu'' para 
-el caso que utiliza la CPU. 
-
-En ambos casos, el archivo de configuración se llama ``config.json'' y contiene los siguientes campos:
+El archivo de configuración del servicio de predicción se encuentra en la carpeta ``./services/forecasting'', y 
+se llama ``config.json''. En este archivo aparecen los siguientes campos:
 \begin{itemize}
     \item load\_model: guarda un valor booleano. En caso de ser ``true'' el servicio carga el modelo a entrenar.
         Por contra, si el valor es ``false'' el modelo se entrenará en la ejecución del servicio.
@@ -104,35 +111,6 @@ En ambos casos, el archivo de configuración se llama ``config.json'' y contiene
         datos. Los datos necesitan escalarse, ya que el modelo de predicciones espera valores entre 0 y 1.
 \end{itemize}
 
-En el caso de que quiera utilizarse la GPU para acelerar el entrenamiento de los datos, el servicio de predicción tendrá 
-que configurarse de la siguiente manera en dicho archivo ``docker-compose.yml''.
-\begin{lstlisting}
-forecasting:
-  build: forecasting_gpu/.
-  env_file:
-    - database/influxdb_credentials.env
-  volumes:
-    - ./forecasting_gpu/model:/forecasting_gpu/model
-  deploy:
-    resources:
-      reservations:
-        devices:
-        - driver: nvidia
-          count: 1
-          capabilities: [gpu]
-\end{lstlisting}
-
-Por otra parte, si no pretende usarse la GPU o no se dispone de una compatible, y por tanto se quiere usar la 
-CPU para entrenar los modelos, el servicio de predicción se especifica de la siguiente manera:
-\begin{lstlisting}
-forecasting:
-  build: forecasting_cpu/.
-  env_file:
-    - database/influxdb_credentials.env
-  volumes:
-    - ./forecasting_cpu/model:/forecasting_cpu/model
-\end{lstlisting}
-
 \subsubsection{Reciever}
 
 El archivo de configuración para este servicio se encuentra en el directorio ``./services/reciever'' y 
@@ -143,5 +121,18 @@ contiene solo un único campo:
 \end{itemize}
 
 \subsubsection{Simulator}
+
+El archivo de configuración del servicio de simulación, llamado también ``config.json'', se encuentra en la 
+ruta ``./services/simulator''. Este archivo especifica los siguientes parámetros de configuración:
+\begin{itemize}
+  \item simulate: guarda un valor booleano que especifica si la simulación está activada o desactivada.
+  \item from\_csv: guarda un valor booleano, que en caso de ser ``true'' carga los datos de la simulación desde
+    un csv. En caso de ser ``false'' los datos generados serán completamente aleatorios.
+  \item csv\_file: nombre del archivo csv a cargar en caso de que se necesite.
+  \item loop: valor booleano que especifica si, en caso de simular desde un CSV, al acabar de recorrer dicho fichero 
+    vuelve a ejecutarse el simulador o no.
+\end{itemize}
+
+\subsection{Entorno de usuario}
 
 % TODO

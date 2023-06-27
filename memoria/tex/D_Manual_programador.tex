@@ -50,11 +50,10 @@ forecast se encuentra también el código utilizado para la optimización de los
 los modelos comparados.
 
 \dirtree{%
-.1 servicios.
-.2 forecasting\_cpu.
-.3 model.
-.3 src.
-.2 forecasting\_gpu.
+.1 services.
+.2 forecasting.
+.3 cpu.
+.3 gpu.
 .3 model.
 .3 src.
 .2 reciever.
@@ -68,8 +67,8 @@ En el directorio de servicios se encuentra todo el código y archivos de configu
 uno de los servicios desarrollados en este proyecto. El código se encuentra en el directorio
 ``src'' de dentro de cada uno de los subdirectorios de cada servicio. En la carpeta ``data'',
 dentro del directorio del simulador, se guardan los archivos csv utilizados para leer desde 
-este servicio. En los subdirectorios forecasting\_cpu y forecasting\_gpu se encuentra el directorio
-``model'' en el que se guarda tanto el modelo entrenado como el modelo a cargar.
+este servicio. En los subdirectorios ``cpu'' y ``gpu'' dentro del servicio de predicción se 
+encuentran los Dockerfiles de las respectivas versiones de este servicio.
 
 \section{Manual del programador}
 
@@ -84,7 +83,7 @@ Como todos los servicios se ejecutan de manera virtualizada dentro de contenedor
 \begin{itemize}
     \item Git: para clonar el repositorio.
     \item Docker: para crear los contenedores de cada servicio.
-    \item Docker-compose: para ejecutar todos los contenedores creados.
+    \item Docker compose: para ejecutar todos los contenedores creados.
     \item Nvidia-docker: en caso de realizar el entrenamiento del modelo usando GPU.
 \end{itemize}
 
@@ -96,13 +95,13 @@ a demás de las anteriores:
     \item Darts
 \end{itemize}
 
-\subsubsection*{Git}
+\subsubsection{Git}
 
 Git es necesario para poder interactuar con el repositorio, pues nos permite clonarlo, crear nuevas ramas,
 subir cambios, etc. Git puede ser encontrado en \cite{git}.
 
 
-\subsubsection*{Docker}
+\subsubsection{Docker}
 
 Docker \cite{docker-pag} es una herramienta que permite ejecutar procesos en contenedores. Un contenedor es un proceso aislado del 
 resto del sistema, similar a una máquina virtual. Para ello, se crea lo que se conoce como imagen, que es una especie 
@@ -133,25 +132,25 @@ En este Dockerfile se especifica una imagen que se utilizara como base. Estas im
 DockerHub. Después se instalan las dependencias necesarias, se expone un puerto para poder comunicarse con otros 
 contenedores y por último se ejecuta el proceso correspondiente.
 
-\subsubsection*{Docker-compose}
+\subsubsection{Docker compose}
 
 Docker-compose \cite{compose} es una herramienta diseñada para definir y ejecutar aplicaciones conformadas por varios contenedores
 de Docker. Los contenedores y redes virtuales de dicha aplicación se definen en un archivo YAML, que se utilizará 
 para crear, ejecutar o detener todos los contenedores con un simple comando.
 
-\subsubsection*{Nvidia-docker}
+\subsubsection{Nvidia-docker}
 
 Esta herramienta \cite{nvidia-docker} desarrollada por Nvidia permite a los contenedores de Docker utilizar la GPU del sistema. Gracias
 a esto se puede acelerar el entrenamiento de los modelos de manera sustancial.
 
-\subsubsection*{Python}
+\subsubsection{Python}
 
 Python es uno de los lenguajes de programación más utilizados de forma general, y el más utilizado para aplicaciones 
-de ciencia de datos y aprendizaje automático. Python es también un lenguaje interpretado, por lo que al no ser necesario 
-compilarlo para su ejecución, el proceso de despliegue del código en los contenedores de Docker se simplifica bastante.
+de ciencia de datos y aprendizaje automático. Al ser un lenguaje interpretado no es necesario compilarlo para su ejecución, 
+por lo que el proceso de despliegue del código en los contenedores de Docker se simplifica bastante.
 Python puede ser descargado en \cite{python310}.
 
-\subsubsection*{InfluxDB}
+\subsubsection{InfluxDB}
 
 InfluxDB es un sistema gestor de bases de datos para series temporales. Si bien se puede instalar de forma local,
 es muy recomendable por comodidad ejecutarlo en un contenedor de Docker a partir de la imagen oficial \cite{influx:docker}.
@@ -166,49 +165,29 @@ El primer paso para la instalación del proyecto es clonar el repositorio de Git
 $ git clone https://github.com/gbd1004/TFG_AGV.git
 \end{lstlisting}
 
-Después de esto, el siguiente paso es navegar al directorio ``services'' y configurar el archivo ``docker-compose.yml''. 
-En el caso de que quiera utilizarse la GPU para acelerar el entrenamiento de los datos, el servicio de predicción tendrá 
-que configurarse de la siguiente manera en dicho archivo.
+Una vez clonado el repositorio, se procederá a la ejecución del mismo. Para la ejecución del sistema y de 
+todos los servicios, utilizando la GPU para el servicio de predicción, se ejecuta el siguiente comando:
 \begin{lstlisting}
-forecasting:
-  build: forecasting_gpu/.
-  env_file:
-    - database/influxdb_credentials.env
-  volumes:
-    - ./forecasting_gpu/model:/forecasting_gpu/model
-  deploy:
-    resources:
-      reservations:
-        devices:
-        - driver: nvidia
-          count: 1
-          capabilities: [gpu]
+$ docker compose --profile gpu up --build
 \end{lstlisting}
-Cabe mencionar que para poder utilizar la GPU para acelerar el entrenamiento, se ha de contar con una GPU que soporte
-CUDA en su versión 11.8.
-
-Por otra parte, si no pretende usarse la GPU o no se dispone de una compatible, y por tanto se quiere usar la 
-CPU para entrenar los modelos, el servicio de predicción se especifica de la siguiente manera:
+En el caso de que se quiera ejecutar el servicio de predicción de forma que utilice la CPU, se ejecuta el 
+siguiente comando:
 \begin{lstlisting}
-forecasting:
-  build: forecasting_cpu/.
-  env_file:
-    - database/influxdb_credentials.env
-  volumes:
-    - ./forecasting_cpu/model:/forecasting_cpu/model
+$ docker compose --profile cpu up --build
 \end{lstlisting}
 
-Una vez configurado el sistema, se procederá a la ejecución del mismo. Para la ejecución del sistema y de 
-todos los servicios, se ejecuta el siguiente comando:
+Se puede ejecutar también el sistema sin ejecuar el servicio de predicción. Para ello basta con no especificar 
+un perfil concreto en el comando:
 \begin{lstlisting}
-$ docker-compose up --build
+$ docker compose up --build
 \end{lstlisting}
+
 En el caso de que quiera ejecutarse de forma desacoplada al terminal actual y sin ver los registros, se añade 
 la opción ``-d'' al comando anterior.
 
 Para detener los servicios se ha de ejecutar el siguiente comando:
 \begin{lstlisting}
-$ docker-compose down
+$ docker compose down
 \end{lstlisting}
 
 \section{Pruebas del sistema}

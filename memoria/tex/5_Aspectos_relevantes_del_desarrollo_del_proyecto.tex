@@ -22,7 +22,7 @@ el que mejor se adapte a nuestros requisitos.
 
 \subsection{Diseño de la arquitectura}
 
-La arquitectura del sistema estudiado se representa en la figura \ref*{fig:Arquitectura}. El sistema
+La arquitectura del sistema estudiado se representa en la figura \ref{fig:Arquitectura}. El sistema
 está formado por los siguientes sistemas software:
 \begin{description}
     \item [AGV Coordinator] Es un servicio encargado de recibir la información enviada por los AGV a
@@ -66,13 +66,13 @@ sistemas definidos. Todos estos sistemas se ejecutan cada uno en su contenedor d
 se comunican entre sí a través de una red especificada en el archivo de configuración de docker-compose.
 
 \subsubsection{Simulator}
-Inicialmente, no disponía de datos reales del AGV, por lo que la primera versión (Figura \ref*{fig:v1sim}) simplemente generaba datos aleatorios
+Inicialmente, no disponía de datos reales del AGV, por lo que la primera versión (Figura \ref{fig:v1sim}) simplemente generaba datos aleatorios
 con campos aleatorios, y los enviaba al nodo ``Receiver'' por UDP utilizando el puerto 5004.
 
 Después, se intentó desarrollar un simulador capaz de, valga la redundancia, simular el comportamiento de un AGV. Sin
 embargo, una vez dispuse de datos reales del AGV, esta idea se descartó, pues simular dicha información de forma
 precisa iba a ser demasiado complejo, y se escapa del objetivo de este proyecto. Por tanto, se decidió simular el
-comportamiento del AGV leyendo los datos de un CSV (Figura \ref*{fig:v2sim}) obtenido a partir de uno real.
+comportamiento del AGV leyendo los datos de un CSV (Figura \ref{fig:v2sim}) obtenido a partir de uno real.
 
 \begin{figure}
     \centering
@@ -104,7 +104,7 @@ se decide según lo especificado en un archivo de configuración.
 
 \subsubsection{Receiver}
 
-El funcionamiento del nodo ``Reciever'' es muy simple (Figura \ref*{fig:recv}): escucha el puerto UDP 5004, y cuando recibe información, la inserta 
+El funcionamiento del nodo ``Reciever'' es muy simple (Figura \ref{fig:recv}): escucha el puerto UDP 5004, y cuando recibe información, la inserta 
 en la base de datos. Inicialmente, el servicio intentará conectarse a la base de datos. Si esta conexión falla un número
 determinado de veces, el servicio fallará informando de que la conexión no ha podido realizarse.
 

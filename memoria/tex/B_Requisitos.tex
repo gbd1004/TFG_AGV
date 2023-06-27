@@ -158,7 +158,7 @@ Aunque este ranking solo mide la popularidad y ordena los sistemas en función d
 útil para soluciones de código abierto, pues esto generalmente significa que está soportada por una comunidad activa
 con muchos colaboradores involucrados en añadir nueva funcionalidad y corregir errores.
 
-\subsubsection*{Procedimiento de la comparación}
+\subsubsection{Procedimiento de la comparación}
 La comparación y el filtrado de los modelos seleccionados ha sido realizados en tres pasos secuenciales:
 \begin{enumerate}
     \item Información general, soporte software y apoyo de la comunidad.
@@ -182,7 +182,7 @@ que de esta manera se obtiene un mejor rendimiento que si se insertasen de uno e
 de la misma forma con todos los diferentes gestores, las medidas son tomadas de lo que reporta el estado del contenedor
 de Docker en el que se ejecutan dichos sistemas.
 
-En el segundo test (Figura \ref*{fig:DiagramaTests2}) se mide la latencia de inserción. Esto es, el tiempo que tarda
+En el segundo test (Figura \ref{fig:DiagramaTests2}) se mide la latencia de inserción. Esto es, el tiempo que tarda
 en estar disponible una entrada después de su inserción. Para esto, un script de Python, formado por dos hilos, ha sido creado.
 El primero de esos hilos realiza la inserción en la base de datos y el otro intenta obtener dicha entrada en un bucle.
 En el momento en el que dicha entrada se obtiene, se anota dicho tiempo y se resta del momento en le que se insertó
@@ -190,7 +190,7 @@ la entrada. Este test se realiza 200 veces y se hace una media con los resultado
 
 Cada test se realiza cinco veces para reducir la variabilidad, tomando la media de dichas ejecuciones como valor final.
 
-\subsubsection*{Métricas de la comparación} 
+\subsubsection{Métricas de la comparación} 
 A continuación se detallan las métricas utilizadas para realizar la comparación.
 
 % \textbf{Información general, soporte de software y comunidad}
@@ -281,7 +281,7 @@ Por último, el análisis de rendimiento compara:
     \end{center}
 \end{table}
 
-\subsubsection{Información general (Tabla \ref*{tabla:gisgbd})} Solo software de código abierto será considerado en este
+\subsubsection{Información general (Tabla \ref{tabla:gisgbd})} Solo software de código abierto será considerado en este
 trabajo. Aunque kdb+ tiene una versión de 32 bits, no se usará y no volverá a aparecer en las siguientes comparaciones.
 Por esta razón también, solo las características de la ``Comunity Edition'' de InfluxDB serán utilizadas en dichas
 comparaciones, y características de la ``Enterprise Edition'', que no es de códigp abierto, no se tendrán en cuenta.
@@ -315,7 +315,7 @@ comparaciones, y características de la ``Enterprise Edition'', que no es de có
     \end{center}
 \end{table}
 
-\subsubsection{Soporte software (Tabla \ref*{tabla:sssgbd})} Todos los sistemas soportan Linux y Python, el sistema operativo 
+\subsubsection{Soporte software (Tabla \ref{tabla:sssgbd})} Todos los sistemas soportan Linux y Python, el sistema operativo 
 y lenguaje utilizados. Solo Graphite no tiene un lenguaje de consultas definido, aunque se pueden realizar utilizando lo que 
 llaman Funciones \cite{graphite-functions}. Sólo InfluxDB soporta plugins para aprendizaje automático. Otros sistemas como
 TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes como Python o R \cite{timescale-forecasting}.
@@ -340,7 +340,7 @@ TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes
     \end{center}
 \end{table}
 
-\subsubsection*{Soporte de la comunidad (Tabla \ref*{tabla:cssgbd})} Como muestra la tabla, todos los proyectos son muy
+\subsubsection{Soporte de la comunidad (Tabla \ref{tabla:cssgbd})} Como muestra la tabla, todos los proyectos son muy
 activos a excepción de Graphite.
 
 \begin{table}[H]
@@ -366,7 +366,7 @@ activos a excepción de Graphite.
     \end{center}
 \end{table}
 
-\subsubsection*{Comparación del modelo de datos (Tabla \ref*{tabla:dmsgbd})} Tanto InfluxDB como Prometheus utilizan un modelo 
+\subsubsection{Comparación del modelo de datos (Tabla \ref{tabla:dmsgbd})} Tanto InfluxDB como Prometheus utilizan un modelo 
 multidimensional. Este modelo puede verse como un modelo clave-valor multidimensional: las entradas de datos están formados 
 por un campo que describe la información almacenada (``nombre de la métrica'' para Prometheus y ``medida'' para InfluxDB) 
 y un set de pares clave-valor asociados con un timestamp. La principal diferencia es que las entradas en el modelo de InfluxDB 
@@ -407,7 +407,7 @@ para nuestras necesidades, ya que se requiere almacenar todos los datos enviados
     \end{center}
 \end{table}
 
-\subsubsection*{Comparativa información técnica (Tabla \ref*{tabla:tisgbd})} En InfluxDB, la consistencia es eventual. Según
+\subsubsection{Comparativa información técnica (Tabla \ref{tabla:tisgbd})} En InfluxDB, la consistencia es eventual. Según
 la documentación, se prioriza el rendimiento de lectura y escritura antes que una fuerte consistencia. Se asegura, sin 
 embargo, que la información es eventualmente consistente \cite{influx:consistency}.
 
@@ -422,9 +422,9 @@ haciendo imposible obtener datos de un momento concreto, y la forma de inserció
 con nuestras necesidades, ya que es necesario poder insertar datos en cualquier momento. Por esto, solo estos dos
 sistemas se compararán en la prueba de rendimiento.
 
-\subsubsection*{Análisis del rendimiento} La prueba se realizó con un procesador AMD Ryzen 5 3600 y 32 GB de RAM. Ya que 
+\subsubsection{Análisis del rendimiento} La prueba se realizó con un procesador AMD Ryzen 5 3600 y 32 GB de RAM. Ya que 
 este modelo de CPU tiene 12 hilos, el uso de la CPU puede ser tan alto como 1200\% (Uso CPU = Hilos * 100). Los resultados
-de esta prueba se muestran en la tabla \ref*{tabla:ptsgbd}.
+de esta prueba se muestran en la tabla \ref{tabla:ptsgbd}.
 
 \tablaSmallFija{Resultados de la prueba de rendimiento}{l c c}{ptsgbd}{
 System & InfluxDB & TimescaleDB \\
@@ -448,7 +448,7 @@ una velocidad lo suficientemente buena, y al consumir menos recursos la hace una
 esta solución se aplique comercialmente.
 
 Otro motivo de peso para elegir InfluxDB es que viene por defecto con una interfaz web llamada Chronograf 
-(Figura \ref*{fig:interfaz}) en la que se puede manejar la base de datos, crear gráficas, establecer alarmas, etc. 
+(Figura \ref{fig:interfaz}) en la que se puede manejar la base de datos, crear gráficas, establecer alarmas, etc. 
 Para realizar esto mismo con TimescaleDB, es necesario utilizar otra herramienta, como podría ser Grafana \cite{Web:Grafana:Docs}
 
 \imagen{interfaz}{Interfaz Chronograf}
@@ -485,7 +485,7 @@ se entrena el modelo durante 200 épocas y se realizan varias predicciones: una 
 1 segundo a futuro y otra 10 segundos a futuro. Este procedimiento se realiza cinco veces y se calcula la media 
 de las métricas como valor final.
 
-\subsection*{Comparativa inicial}
+\subsection{Comparativa inicial}
 
 Una primera comparativa ha sido realizada con los parámetros por defecto que Darts provee de dichos modelos. 
 Los únicos parámetros especificados han sido la longitud de los datos de entrada y la longitud de los datos de salida 
@@ -595,7 +595,7 @@ basado en redes neuronales, no necesita del mismo entrenamiento que el resto de 
 es sustancialmente más pequeño. Sin embargo, es el modelo más lento a la hora de predecir nuevos datos, por lo que no es 
 el mejor en caso de que queramos incluir dichas predicciones en el software del AGV.
 
-\subsection*{Optimización de los hiperparámetros}
+\subsection{Optimización de los hiperparámetros}
 
 Los resultados del apartado anterior son potencialmente mejorables. Para ello, es necesario encontrar los parámetros de los 
 modelos que mejor se ajusten a nuestros datos. Esto, sin embargo, no es una tarea simple, pues existe una enorme 
