@@ -1,3 +1,4 @@
+import time
 from pandas import DataFrame
 from influxdb_client import InfluxDBClient, Point, WriteOptions
 import numpy as np
@@ -77,6 +78,8 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         m_mae = 0
         m_mase = 0
         m_dtw = 0
+        t_entrenamiento = 0
+        t_prediccion = 0
 
         for i in range(0, 5):
             # model = TCNModel(input_chunk_length=60, output_chunk_length=10)
@@ -93,22 +96,34 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
 
             pred_length = salida
 
+            start_fit = time.time()
             model.fit(train_ed_scaled, val_series=val_ed_scaled, epochs=200, verbose=False)
+            end_fit = time.time()
+            t_entrenamiento += end_fit - start_fit
+
+            start_pred = time.time()
             prediction = model.predict(series=train_ed_scaled, n=pred_length)
+            end_pred = time.time()
+            t_prediccion = end_pred - start_pred
+
             prediction = scaler_ed.inverse_transform(prediction)
 
             m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
             m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
             m_dtw += dtw_metric(actual_series=val_ed[:pred_length], pred_series=prediction)
 
-        f.write("UNIVARIANTE" + str(salida * 0.2) + "\n")
+        f.write("UNIVARIANTE " + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")
         f.write("MASE: " + str(m_mase / 5) + "\n")
-        f.write("DTW: " + str(m_dtw / 5) + "\n\n")
+        f.write("DTW: " + str(m_dtw / 5) + "\n")
+        f.write("Tiempo entrenamiento " + str(t_entrenamiento / 5) + "s\n")
+        f.write("Tiempo prediccion " + str(t_prediccion / 5) + "s\n\n")
         
         m_mae = 0
         m_mase = 0
         m_dtw = 0
+        t_entrenamiento = 0
+        t_prediccion = 0
 
         for i in range(0, 5):
             if salida == 50:
@@ -133,8 +148,16 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
             covariates = train_sr_scaled.stack(train_ei_scaled).stack(train_sl_scaled)
             val_covariates = series_sr_scaled.stack(series_ei_scaled).stack(series_sl_scaled)
 
+            start_fit = time.time()
             model.fit(series=train_ed_scaled, past_covariates=covariates, val_series=val_ed_scaled, val_past_covariates=val_covariates, epochs=200, verbose=False)
+            end_fit = time.time()
+            t_entrenamiento += end_fit - start_fit
+
+            start_pred = time.time()
             prediction = model.predict(series=train_ed_scaled, past_covariates=covariates, n=pred_length)
+            end_pred = time.time()
+            t_prediccion = end_pred - start_pred
+
             prediction = scaler_ed.inverse_transform(prediction)
 
             m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
@@ -144,11 +167,15 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         f.write("COVARIANTE " + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")
         f.write("MASE: " + str(m_mase / 5) + "\n")
-        f.write("DTW: " + str(m_dtw / 5) + "\n\n")
+        f.write("DTW: " + str(m_dtw / 5) + "\n")
+        f.write("Tiempo entrenamiento " + str(t_entrenamiento / 5) + "s\n")
+        f.write("Tiempo prediccion " + str(t_prediccion / 5) + "s\n\n")
 
         m_mae = 0
         m_mase = 0
         m_dtw = 0
+        t_entrenamiento = 0
+        t_prediccion = 0
 
         for i in range(0, 5):
             # model = TCNModel(input_chunk_length=60, output_chunk_length=10)
@@ -171,8 +198,16 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
 
             pred_length = salida
 
+            start_fit = time.time()
             model.fit(multivariate_train_scaled, val_series=multivariate_val_scaled, epochs=200, verbose=False)
+            end_fit = time.time()
+            t_entrenamiento += end_fit - start_fit
+
+            start_pred = time.time()
             prediction = model.predict(series=multivariate_train_scaled, n=pred_length)
+            end_pred = time.time()
+            t_prediccion = end_pred - start_pred
+
             prediction = multivariate_scaler.inverse_transform(prediction)
             prediction = prediction["encoder_derecho"]
 
@@ -180,9 +215,11 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
             m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
             m_dtw += dtw_metric(actual_series=val_ed[:pred_length], pred_series=prediction)
 
-        f.write("MULTIVARIANTE" + str(salida * 0.2) + "\n")
+        f.write("MULTIVARIANTE " + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")
         f.write("MASE: " + str(m_mase / 5) + "\n")
-        f.write("DTW: " + str(m_dtw / 5) + "\n\n")
+        f.write("DTW: " + str(m_dtw / 5) + "\n")
+        f.write("Tiempo entrenamiento " + str(t_entrenamiento / 5) + "s\n")
+        f.write("Tiempo prediccion " + str(t_prediccion / 5) + "s\n\n")
 
     f.close()

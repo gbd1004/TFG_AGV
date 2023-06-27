@@ -1,3 +1,4 @@
+import time
 from pandas import DataFrame
 from influxdb_client import InfluxDBClient, Point, WriteOptions
 import numpy as np
@@ -63,6 +64,8 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         m_mae = 0
         m_mase = 0
         m_dtw = 0
+        t_entrenamiento = 0
+        t_prediccion = 0
 
         for i in range(0, 5):
             # model = NHiTSModel(input_chunk_length=60, output_chunk_length=10)
@@ -74,27 +77,38 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
                 num_layers=2,
                 layer_widths=14,
                 dropout=0.1855,
-                activation="PReLu",
+                activation="PReLU",
                 MaxPool1d=False
             )
 
             pred_length = salida
 
+            start_fit = time.time()
             model.fit(train_ed, val_series=val_ed, epochs=200, verbose=False)
+            end_fit = time.time()
+            t_entrenamiento += end_fit - start_fit
+
+            start_pred = time.time()
             prediction = model.predict(series=train_ed, n=pred_length)
+            end_pred = time.time()
+            t_prediccion = end_pred - start_pred
 
             m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
             m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
             m_dtw += dtw_metric(actual_series=val_ed[:pred_length], pred_series=prediction)
 
-        f.write("UNIVARIANTE" + str(salida * 0.2) + "\n")
+        f.write("UNIVARIANTE " + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")
         f.write("MASE: " + str(m_mase / 5) + "\n")
-        f.write("DTW: " + str(m_dtw / 5) + "\n\n")
+        f.write("DTW: " + str(m_dtw / 5) + "\n")
+        f.write("Tiempo entrenamiento " + str(t_entrenamiento / 5) + "s\n")
+        f.write("Tiempo prediccion " + str(t_prediccion / 5) + "s\n\n")
         
         m_mae = 0
         m_mase = 0
         m_dtw = 0
+        t_entrenamiento = 0
+        t_prediccion = 0
 
         for i in range(0, 5):
             if salida == 50:
@@ -111,7 +125,7 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
                 num_layers=2,
                 layer_widths=14,
                 dropout=0.1855,
-                activation="PReLu",
+                activation="PReLU",
                 MaxPool1d=False
             )
 
@@ -120,8 +134,15 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
             covariates = train_sr.stack(train_ei).stack(train_sl)
             val_covariates = series_sr.stack(series_ei).stack(series_sl)
 
+            start_fit = time.time()
             model.fit(series=train_ed, past_covariates=covariates, val_series=val_ed, val_past_covariates=val_covariates, epochs=200, verbose=False)
+            end_fit = time.time()
+            t_entrenamiento += end_fit - start_fit
+
+            start_pred = time.time()
             prediction = model.predict(series=train_ed, past_covariates=covariates, n=pred_length)
+            end_pred = time.time()
+            t_prediccion = end_pred - start_pred
 
             m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
             m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
@@ -130,11 +151,15 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         f.write("COVARIANTE " + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")
         f.write("MASE: " + str(m_mase / 5) + "\n")
-        f.write("DTW: " + str(m_dtw / 5) + "\n\n")
+        f.write("DTW: " + str(m_dtw / 5) + "\n")
+        f.write("Tiempo entrenamiento " + str(t_entrenamiento / 5) + "s\n")
+        f.write("Tiempo prediccion " + str(t_prediccion / 5) + "s\n\n")
 
         m_mae = 0
         m_mase = 0
         m_dtw = 0
+        t_entrenamiento = 0
+        t_prediccion = 0
 
         for i in range(0, 5):
             # model = NHiTSModel(input_chunk_length=60, output_chunk_length=10)
@@ -146,7 +171,7 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
                 num_layers=2,
                 layer_widths=14,
                 dropout=0.1855,
-                activation="PReLu",
+                activation="PReLU",
                 MaxPool1d=False
             )
 
@@ -155,17 +180,27 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
 
             pred_length = salida
 
+            start_fit = time.time()
             model.fit(multivariate_train, val_series=multivariate_val, epochs=200, verbose=False)
+            end_fit = time.time()
+            t_entrenamiento += end_fit - start_fit
+
+            start_pred = time.time()
             prediction = model.predict(series=multivariate_train, n=pred_length)
+            end_pred = time.time()
+            t_prediccion = end_pred - start_pred
+
             prediction = prediction["encoder_derecho"]
 
             m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
             m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
             m_dtw += dtw_metric(actual_series=val_ed[:pred_length], pred_series=prediction)
 
-        f.write("MULTIVARIANTE" + str(salida * 0.2) + "\n")
+        f.write("MULTIVARIANTE " + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")
         f.write("MASE: " + str(m_mase / 5) + "\n")
-        f.write("DTW: " + str(m_dtw / 5) + "\n\n")
+        f.write("DTW: " + str(m_dtw / 5) + "\n")
+        f.write("Tiempo entrenamiento " + str(t_entrenamiento / 5) + "s\n")
+        f.write("Tiempo prediccion " + str(t_prediccion / 5) + "s\n\n")
 
     f.close()

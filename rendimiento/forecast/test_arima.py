@@ -1,3 +1,4 @@
+import time
 from pandas import DataFrame
 from influxdb_client import InfluxDBClient, Point, WriteOptions
 import numpy as np
@@ -62,16 +63,24 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
     m_mae = 0
     m_mase = 0
     m_dtw = 0
+    t_entrenamiento = 0
+    t_prediccion = 0
 
     for salida in [1, 5, 50]:
         for i in range(0, 5):
             # model = ARIMA()
             model = ARIMA(p=16, d=1, q=0)
+            start_fit = time.time()
             model.fit(train_ed)
+            end_fit = time.time()
+            t_entrenamiento += end_fit - start_fit
 
             pred_length = salida
 
+            start_pred = time.time()
             prediction = model.predict(series=train_ed, n=pred_length)
+            end_pred = time.time()
+            t_prediccion = end_pred - start_pred
 
             m_mae += mae(actual_series=val_ed[:pred_length], pred_series=prediction)
             m_mase += mase(actual_series=val_ed[:pred_length], pred_series=prediction, insample=train_ed)
@@ -80,4 +89,7 @@ with InfluxDBClient(url="http://localhost:8086", token=token, org=org) as client
         f.write("UNIVARIABLE " + str(salida * 0.2) + "\n")
         f.write("MAE: " + str(m_mae / 5) + "\n")
         f.write("MASE: " + str(m_mase / 5) + "\n")
-        f.write("DTW: " + str(m_dtw / 5) + "\n\n")
+        f.write("DTW: " + str(m_dtw / 5) + "\n")
+        f.write("Tiempo entrenamiento " + str(t_entrenamiento / 5) + "s\n")
+        f.write("Tiempo prediccion " + str(t_prediccion / 5) + "s\n\n")
+    f.close()

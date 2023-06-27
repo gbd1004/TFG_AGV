@@ -2,39 +2,738 @@
 
 \section{Introducción}
 
-Una muestra de cómo podría ser una tabla de casos de uso:
+% Una muestra de cómo podría ser una tabla de casos de uso:
 
-% Caso de Uso 1 -> Consultar Experimentos.
-\begin{table}[p]
-	\centering
-	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
-		\toprule
-		\textbf{CU-1}    & \textbf{Ejemplo de caso de uso}\\
-		\toprule
-		\textbf{Versión}              & 1.0    \\
-		\textbf{Autor}                & Alumno \\
-		\textbf{Requisitos asociados} & RF-xx, RF-xx \\
-		\textbf{Descripción}          & La descripción del CU \\
-		\textbf{Precondición}         & Precondiciones (podría haber más de una) \\
-		\textbf{Acciones}             &
-		\begin{enumerate}
-			\def\labelenumi{\arabic{enumi}.}
-			\tightlist
-			\item Pasos del CU
-			\item Pasos del CU (añadir tantos como sean necesarios)
-		\end{enumerate}\\
-		\textbf{Postcondición}        & Postcondiciones (podría haber más de una) \\
-		\textbf{Excepciones}          & Excepciones \\
-		\textbf{Importancia}          & Alta o Media o Baja... \\
-		\bottomrule
-	\end{tabularx}
-	\caption{CU-1 Nombre del caso de uso.}
-\end{table}
+% % Caso de Uso 1 -> Consultar Experimentos.
+% \begin{table}[p]
+% 	\centering
+% 	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+% 		\toprule
+% 		\textbf{CU-1}    & \textbf{Ejemplo de caso de uso}\\
+% 		\toprule
+% 		\textbf{Versión}              & 1.0    \\
+% 		\textbf{Autor}                & Alumno \\
+% 		\textbf{Requisitos asociados} & RF-xx, RF-xx \\
+% 		\textbf{Descripción}          & La descripción del CU \\
+% 		\textbf{Precondición}         & Precondiciones (podría haber más de una) \\
+% 		\textbf{Acciones}             &
+% 		\begin{enumerate}
+% 			\def\labelenumi{\arabic{enumi}.}
+% 			\tightlist
+% 			\item Pasos del CU
+% 			\item Pasos del CU (añadir tantos como sean necesarios)
+% 		\end{enumerate}\\
+% 		\textbf{Postcondición}        & Postcondiciones (podría haber más de una) \\
+% 		\textbf{Excepciones}          & Excepciones \\
+% 		\textbf{Importancia}          & Alta o Media o Baja... \\
+% 		\bottomrule
+% 	\end{tabularx}
+% 	\caption{CU-1 Nombre del caso de uso.}
+% \end{table}
+
+En esta sección de los anexos se especifican los requisitos, tanto funcionales como no funcionales, que el sistema 
+debe de cumplir.
+
+Se incluye en esta sección también la comparativa entre sistemas gestores de bases de datos y modelos de predicción 
+acordes a dichos requisitos.
 
 \section{Objetivos generales}
 
-\section{Catalogo de requisitos}
+El proyecto ha de cumplir los siguientes objetivos generales:
+\begin{enumerate}
+	\item Desarrollar un sistema capaz de almacenar, monitorizar y predecir los datos enviados por los AGV.
+	\item Desarrollar los servicios del sistema de la forma más modular posible, de forma que sea factible modificar
+		funcionalidades del sistema.
+	\item Realizar un estudio de las herramientas a utilizar con el fin de obtener el sistema más eficiente posible.
+	\item El funcionamiento de los servicios que componen el sistema han de ser configurables a través de archivos de
+		configuración.
+\end{enumerate}
+
+\section{Catálogo de requisitos}
+
+\subsection{Requisitos funcionales}
+
+Se muestran a continuación los requisitos obtenidos a partir del análisis de los objetivos generales mencionados anteriormente.
+\begin{itemize}
+	\item \textbf{RF-1 Gestión de datos:} el sistema tiene que ser capaz de almacenar los datos enviados por el AGV.
+	\begin{itemize}
+		\item \textbf{RF-1.1 Inserción de datos:} los datos tienen que poder insertarse en cualquier momento a la base de datos.
+		\item \textbf{RF-1.2 Visualización de datos:} el usuario debe poder ser capaz de visualizar los datos del AGV y las
+			predicciones realizadas.
+	\end{itemize}
+	\item \textbf{RF-2 Predicción de datos:} el sistema tiene que poder generar predicciones a partir de los datos almacenados.
+	\begin{itemize}
+		\item \textbf{RF-2.1 Configuración de entrenamiento: } el usuario debe ser capaz de especificar en un archivo de configuración
+			si se quiere entrenar un nuevo modelo o cargarlo desde un archivo.
+		\item \textbf{RF-2.2 Cargar modelo desde archivo: } el usuario debe ser capaz de especificar en un archivo de configuración
+			el nombre del archivo del modelo a cargar.
+	\end{itemize}
+	\item \textbf{RF-3 Simulación de datos:} el sistema ha de poder simular datos en caso de no disponer de un AGV.
+	\begin{itemize}
+		\item \textbf{RF-3.1 Simulación aleatoria:} el simulador tiene que ser capaz de generar datos aleatorios.
+		\item \textbf{RF-3.2 Simulación desde CSV:} el simulador debe poder leer los datos desde un archivo CSV con
+			información real de un AGV.
+		\item \textbf{RF-3.3 Desactivado desde configuración:} el usuario debe ser capaz de activar o desactivar el simulador 
+			desde un archivo de configuración.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Requisitos no funcionales}
+\begin{itemize}
+	\item \textbf{RNF-1 Modularidad:} el sistema ha de desarrollarse de forma que los servicios que lo integran sean lo más 
+		modulares posible.
+	\item \textbf{RNF-2 Escalabilidad:} el sistema ha de estar desarrollado de manera que permita ser escalable en el futuro.
+	\item \textbf{RNF-3 Licencias:} todas las herramientas utilizadas deben ser de código abierto.
+	\item \textbf{RNF-4 Compatibilidad de hardware:} el sistema ha de soportar aquellos sistemas con una GPU Nvidia con soporte para CUDA
+		11.8. Para aquellos sistemas que no cumplan este requisito, se ha de poder realizar el entrenamiento de los modelos
+		usando la CPU.
+	\item \textbf{RNF-5 Compatibilidad de software:} todas las herramientas software utilizadas han de tener un buen soporte
+		para Python y GNU/Linux.
+	\item \textbf{RNF-6 Rendimiento:} el sistema tiene que ser capaz de almacenar los datos del AGV en tiempo real, así como
+		tener un buen rendimiento a la hora de realizar las predicciones.
+	\item \textbf{RNF-7 Base de datos:} las entradas de la base de datos han de poder insertarse con el timestamp del momento
+		en el que dichos datos fueron generados en el AGV. Este timestamp a demás, debe tener una precisión en el rango de
+		los milisegundos.
+	\item \textbf{RNF-8 Predicción:} el modelo de predicción ha de generar resultados aceptables 10 segundos en el futuro.
+\end{itemize}
 
 \section{Especificación de requisitos}
 
+% TODO
 
+\section{Estudio del sistema gestor de bases de datos}
+
+Teniendo en cuenta los requisitos descritos en las secciones anteriores, se realiza una comparación para elegir el sistema 
+gestor de bases de datos que mejor cumpla dichos requisitos.
+
+\subsection{Metodología de la comparación}
+
+\subsubsection{Sistemas de gestión de bases de datos bajo estudio}
+
+Lo primero a tener en cuenta es el modelo de la base de datos que se va a utilizar, ya que tendrá una gran importancia
+a la hora de decidir qué sistema de gestión de bases de datos se va a utilizar. Los siguientes modelos \cite{10.5555/3364297} han sido
+tenidos en cuenta: 
+
+\begin{itemize}
+    \item Bases de datos relacionales: en estos sistemas, la información se almacena en relaciones. Una relación,
+        definidas también como tablas, es una colección de tuplas, o filas. Las relaciones se definen por su nombre
+        y un número fijo de atributos, o columnas, con tipos de datos fijos. Estos sistemas respetan las propiedades
+        ACID (Atomicity, Consistency, Isolation y Durability), y tienen operaciones básicas definidas, como la selección,
+        proyección y unión.
+    \item Bases de datos de documentos: la principal característica de estas bases de datos es la organización de los datos
+        de forma libre, sin seguir ningún esquema. Esto significa, por contrario que en las bases de datos relacionales,
+        las entradas no poseen una estructura uniforme, las columnas pueden tener más de un valor e incluso pueden almacenar
+        estructuras anidadas.
+    \item Bases de datos de Clave-valor: son las bases de datos más simples y solo almacenan pares clave-valor. Normalmente
+        no son factibles para aplicaciones complejas, pero normalmente presentan un gran rendimiento debido a su
+        simplicidad.
+    \item Motores de búsqueda: su uso principal es la búsqueda de datos, y son típicamente NoSQL, es decir, que no siguen
+        un modelo relacional.
+    \item Bases de datos de series temporales: estas bases de datos están optimizadas para almacenar series temporales \cite{influx:timeseries}.
+        Aunque son típicamente NoSQL, bases de datos de series temporales relacionales existen.
+\end{itemize}
+
+Cualquiera de estos modelos permiten el manejo de información de series temporales, como la información que recibimos
+de los AGV. Sin embargo, las bases de datos de series temporales están especializadas en este tipo de trabajos, por lo que
+las hace perfectas para nuestras necesidades.
+
+Como selección inicial, se han escogido los cinco sistemas gestores de bases de datos de series temporales más temporales
+según el ranking DB-Engines \cite{dbengines:rankingTSDBMS}. Este ranking es utilizado en otros estudios, como \cite{10.1007/978-3-030-50426-7_28}.
+Los sistemas gestores de bases de datos elegidos para comparar son:
+
+\begin{itemize}
+    \item \textbf{InfluxDB 2.6.1} Un sistema gestor de bases de datos de series temporales desarrollado por InfluxData. Su
+        uso principal es el almacenamiento y obtención de series temporales, creadas en operaciones de monitoreo de IoT,
+        información de sensores, etc.
+    \item \textbf{kdb+ 4.0} Una base de datos de series temporales relacional desarrollado por KX, usado principalmente en
+        negociación bursátil de alta frecuencia, para almacenar y para procesar datos a una alta velocidad.
+    \item \textbf{Prometheus 2.43.0} Una base de datos de series temporales usada para el monitoreo de eventos y alarmas, que
+        utiliza un modelo HTTP.
+    \item \textbf{Graphite 1.1.10} Una herramienta que almacena, monitoriza y grafica series temporales numéricas.   
+    \item \textbf{TimescaleDB 2.10.1} Una base de datos de código abierto, desarrollada como complemento a PostgreSQL con el
+        fin de mejorar el rendimiento y análisis para series temporales.
+\end{itemize}
+
+Aunque este ranking solo mide la popularidad y ordena los sistemas en función de atributos sociales, es especialmente
+útil para soluciones de código abierto, pues esto generalmente significa que está soportada por una comunidad activa
+con muchos colaboradores involucrados en añadir nueva funcionalidad y corregir errores.
+
+\subsubsection*{Procedimiento de la comparación}
+La comparación y el filtrado de los modelos seleccionados ha sido realizados en tres pasos secuenciales:
+\begin{enumerate}
+    \item Información general, soporte software y apoyo de la comunidad.
+    \item Modelo de datos y especificaciones técnicas.
+    \item Prueba de rendimiento.
+\end{enumerate}
+
+En los primeros dos pasos, los sistemas comparados que no cumplan los requisitos especificados en secciones anteriores
+han sido descartados. Después, con los sistemas restantes, se ha realizado una prueba de rendimiento con el fin de
+tomar la decisión final. A su vez, esta prueba se divide en otras dos pruebas.
+
+\imagen{DiagramaTests1}{Procedimiento de la prueba de inserción}
+\imagen{DiagramaTests2}{Procedimiento de la prueba de latencia}
+
+El primer test, (Figura \ref{fig:DiagramaTests1}) mide el uso de CPU y RAM del sistema cuando se insertan datos de forma
+masiva, así como el tiempo tomado y el número de inserciones por segundo realizadas. En total, 300.000 entradas son enviadas,
+formadas por los siguientes campos: timestamp, id del vehículo, batería, velocidad, posición en la coordenada x, posición
+en la coordenada y, temperatura y voltaje. Para realizar la prueba de manera más realista, los datos se insertan en la
+base de datos en tandas de 5.000. Para ello se almacenan primero en un buffer controlado por el servicio ``Receiver'', ya
+que de esta manera se obtiene un mejor rendimiento que si se insertasen de uno en uno. Para medir el uso de CPU y de RAM
+de la misma forma con todos los diferentes gestores, las medidas son tomadas de lo que reporta el estado del contenedor
+de Docker en el que se ejecutan dichos sistemas.
+
+En el segundo test (Figura \ref*{fig:DiagramaTests2}) se mide la latencia de inserción. Esto es, el tiempo que tarda
+en estar disponible una entrada después de su inserción. Para esto, un script de Python, formado por dos hilos, ha sido creado.
+El primero de esos hilos realiza la inserción en la base de datos y el otro intenta obtener dicha entrada en un bucle.
+En el momento en el que dicha entrada se obtiene, se anota dicho tiempo y se resta del momento en le que se insertó
+la entrada. Este test se realiza 200 veces y se hace una media con los resultados.
+
+Cada test se realiza cinco veces para reducir la variabilidad, tomando la media de dichas ejecuciones como valor final.
+
+\subsubsection*{Métricas de la comparación} 
+A continuación se detallan las métricas utilizadas para realizar la comparación.
+
+% \textbf{Información general, soporte de software y comunidad}
+
+Las métricas de información general analizan:
+\begin{itemize}
+    \item Organización: que organización o compañía es responsable del desarrollo y mantenimiento del sistema.
+    \item Año de lanzamiento: en que año se lanzó inicialmente.
+    \item Última versión: en que año se lanzó la última versión.
+    \item Licencia: que tipo de licencia tiene el software: código abierto (OSS), o licencia comercial.
+\end{itemize}
+El indicador de rendimiento del soporte de software analiza:
+\begin{itemize}
+    \item Sistema Operativo: qué sistemas operativos se soportan.
+    \item Soporte para Python: como el sistema está implementado en Python, nos interesa que el sistema tenga
+        buen soporte de este lenguaje.
+    \item Lenguaje de consultas: que lenguaje de consultas soporta el sistema.
+    \item Plugins para aprendizaje automático: si el sistema soporta plugins que simplifiquen la predicción de nuevos
+        datos.
+\end{itemize}
+La comparación del soporte de la comunidad contiene:
+\begin{itemize}
+    \item Número de estrellas del repositorio de GitHub: como forma de medir su popularidad.
+    \item Pull requests: número de pull requests enviadas en el último mes.
+    \item Pull requests aceptadas: número de pull requests aceptadas en el último mes.
+    \item Issues: número de issues creados en el último mes.
+    \item Issues cerrados: número de issues cerrados en el último mes.
+\end{itemize}
+Estos cuatro últimos campos se usarán para comparar que comunidad es más activa.
+
+% \textbf{Modelo de datos e información técnica}
+
+El indicador de rendimiento del modelo de datos compara:
+\begin{itemize}
+    \item Modelo de datos: que modelo concreto implementa cada sistema.
+    \item Esquema: un esquema puede verse como una plantilla que define como se almacena la información. Este campo
+        compara si la organización de los datos es estricta (esquema fijo) o no (esquema libre).
+    \item Índices secundarios: si el sistema soporta índices secundarios para un mejor rendimiento de consultas o no.
+    \item Precisión temporal: unidad mínima de tiempo que puede tener una entrada.
+\end{itemize}
+
+El indicador de rendimiento de información técnica se compone de los siguientes campos:
+\begin{itemize}
+    \item Scripts de servidor: si el sistema es capaz de ejecutar scripts en el servidor o no.
+    \item Método de partición: si se soportan o no métodos de partición para una mayor escalabilidad.
+    \item Replicación: que métodos de replicación soporta.
+    \item Consistencia: si la información escrita es consistente o no.
+    \item Conformidad con ACID: si el sistema sigue los principios ACID o no.
+    \item Concurrencia: si el sistema soporta accesos concurrentes o no.
+    \item Durabilidad: si la información es persistente, incluso si falla.
+    \item Método de inserción: si la información se introduce mediante una consulta de inserción o extrayendo los
+        datos de un endpoint de forma periódica.
+\end{itemize}
+
+% \textbf{Análisis de rendimiento}
+
+Por último, el análisis de rendimiento compara:
+\begin{itemize}
+    \item Tiempo de inserción: tiempo que se tarda en hacer la prueba de inserción en segundos.
+    \item Tasa de transferencia: número de inserciones por segundo.
+    \item Uso de la CPU: uso de la CPU del contenedor de Docker en el que se ejecuta base de datos durante 
+        la primera prueba.
+    \item Uso de RAM: uso de RAM del contenedor de Docker en el que se ejecuta la base de datos durante la
+        primera prueba.
+    \item Latencia: tiempo que tarda en ejecutarse la segunda prueba en milisegundos.
+\end{itemize}
+
+\subsection{Experimentos y resultados}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{adjustbox}{max width=\textwidth}
+            \rowcolors{2}{gray!35}{}
+            \begin{tabular}{l c c c c}
+                \toprule
+                Systems & Organization & Launch year & Latest version & License \\
+                \otoprule
+                InfluxDB    & InfluxData & 2013 & 2023 & OSS \\
+                db+        & Kx Systems & 2000 & 2020 & Comercial \\
+                Prometheus  & -          & 2015 & 2023 & OSS \\
+                Graphite    & -          & 2006 & 2022 & OSS \\
+                TimescaleDB & Timescale  & 2017 & 2023 & OSS \\
+                \bottomrule
+            \end{tabular}
+        \end{adjustbox}
+        \caption{Comparativa de información general}
+        \label{tabla:gisgbd}
+    \end{center}
+\end{table}
+
+\subsubsection{Información general (Tabla \ref*{tabla:gisgbd})} Solo software de código abierto será considerado en este
+trabajo. Aunque kdb+ tiene una versión de 32 bits, no se usará y no volverá a aparecer en las siguientes comparaciones.
+Por esta razón también, solo las características de la ``Comunity Edition'' de InfluxDB serán utilizadas en dichas
+comparaciones, y características de la ``Enterprise Edition'', que no es de códigp abierto, no se tendrán en cuenta.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{adjustbox}{max width=\textwidth}
+            \begin{tabular}{l c c c c}
+                \toprule
+                System & OS & Python & Query language & ML Plugins\\
+                \otoprule
+                & Linux &                       &  \\
+                \multirow{-2}{*}{InfluxDB} & OS x  & \multirow{-2}{*}{Sí} & \multirow{-2}{*}{Flux and InfluxQL} & \multirow{-2}{*}{Loud ML} \\
+                \rowcolor{gray!35}
+                                            & Linux   &                        & & \\
+                \rowcolor{gray!35}
+                \multirow{-2}{*}{Prometheus} & Windows & \multirow{-2}{*}{Sí}  & \multirow{-2}{*}{PromQL} & \multirow{-2}{*}{No}\\
+                                        & Linux &                       &  & \\
+                \multirow{-2}{*}{Graphite} & Unix  & \multirow{-2}{*}{Sí}  & \multirow{-2}{*}{No} & \multirow{-2}{*}{No} \\
+                \rowcolor{gray!35}
+                                            & Linux   &                             & & \\
+                \rowcolor{gray!35}
+                                            & OS X    &                             & & \\
+                \rowcolor{gray!35}
+                \multirow{-3}{*}{TimescaleDB} & Windows & \multirow{-3}{*}{Sí} & \multirow{-3}{*}{SQL} & \multirow{-3}{*}{No} \\
+                \bottomrule
+            \end{tabular}
+        \end{adjustbox}
+        \caption{Soporte software}
+        \label{tabla:sssgbd}
+    \end{center}
+\end{table}
+
+\subsubsection{Soporte software (Tabla \ref*{tabla:sssgbd})} Todos los sistemas soportan Linux y Python, el sistema operativo 
+y lenguaje utilizados. Solo Graphite no tiene un lenguaje de consultas definido, aunque se pueden realizar utilizando lo que 
+llaman Funciones \cite{graphite-functions}. Sólo InfluxDB soporta plugins para aprendizaje automático. Otros sistemas como
+TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes como Python o R \cite{timescale-forecasting}.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{adjustbox}{max width=\textwidth}
+            \rowcolors{2}{gray!35}{}
+            \begin{tabular}{l c c c c c c}
+                \toprule
+                Sistemas & Estrellas GitHub & Pull requests & Pull requests aceptadas & Issues & Issues cerrados \\
+                \otoprule
+                InfluxDB    & 25.2k & 26 & 22 & 37 & 13 \\
+                Prometheus  & 47.4k & 75 & 53 & 42 & 20\\
+                Graphite & 5.6k & 0 & 0 & 0 & 0 \\
+                TimescaleDB & 14.7k & 105 & 83 & 67 & 46 \\
+                \bottomrule
+            \end{tabular}
+        \end{adjustbox}
+        \caption{Soporte de la comunidad}
+        \label{tabla:cssgbd}
+    \end{center}
+\end{table}
+
+\subsubsection*{Soporte de la comunidad (Tabla \ref*{tabla:cssgbd})} Como muestra la tabla, todos los proyectos son muy
+activos a excepción de Graphite.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{adjustbox}{max width=\textwidth}
+            \begin{tabular}{l c c c c c}
+                \toprule
+                \multirow{2}{*}{Sistema} & \multirow{2}{*}{Modelo} & \multirow{2}{*}{Esquema} & \multirow{2}{*}{Tipado} & Índice & Precisión\\
+                &&&& secundario & temporal \\
+                \otoprule
+                &&& Numéricos && \\
+                \multirow{-2}{*}{InfluxDB}    & \multirow{-2}{*}{Multidimensional} & \multirow{-2}{*}{Libre} & y strings & \multirow{-2}{*}{No} & \multirow{-2}{*}{Nanosegundos} \\
+                \rowcolor{gray!35}
+                Prometheus  & Multidimensional & Sí & Numéricos & No & Milisegundos \\
+                Graphite    & Key-Value & Sí & Numéricos & No & Segundos \\
+                \rowcolor{gray!35}
+                TimescaleDB & Relacional & Sí & Tipos SQL & Sí & Nanosegundos \\
+                \bottomrule
+            \end{tabular}
+        \end{adjustbox}
+        \caption{Comparativa del modelo de datos}
+        \label{tabla:dmsgbd}
+    \end{center}
+\end{table}
+
+\subsubsection*{Comparación del modelo de datos (Tabla \ref*{tabla:dmsgbd})} Tanto InfluxDB como Prometheus utilizan un modelo 
+multidimensional. Este modelo puede verse como un modelo clave-valor multidimensional: las entradas de datos están formados 
+por un campo que describe la información almacenada (``nombre de la métrica'' para Prometheus y ``medida'' para InfluxDB) 
+y un set de pares clave-valor asociados con un timestamp. La principal diferencia es que las entradas en el modelo de InfluxDB 
+están formados por la medida, un set de etiquetas y un set de valores, en vez de solo un set de pares clave-valor. 
+Estas etiquetas guardan metadatos en forma de cadenas de caracteres, son opcionales y están indexados, mientras que el set de 
+valores guardan la información, no están indexados y están asociados con un timestamp.
+
+Graphite agrega los datos de manera automática en ventanas de un segundo o más. Este comportamiento no es el deseado 
+para nuestras necesidades, ya que se requiere almacenar todos los datos enviados.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{adjustbox}{max width=\textwidth}
+            \begin{tabular}{l c c c c}
+                \toprule
+                Sistema & InfluxDB & Prometheus & Graphite & TimescaleDB \\
+                \otoprule
+                Scripts del servidor & No & No & No & Sí \\
+                \rowcolor{gray!35}
+                Particionamiento & No & Sharding & No & Sí \\
+                Replicación & No & Sí & No & Sí \\
+                \rowcolor{gray!35}
+                Consistencia & Eventual & No & No & Innmediata \\
+                ACID& No & No & No & Sí \\
+                \rowcolor{gray!35}
+                Concurrencia & Sí & Sí & Sí & Sí \\
+                Durabilidad & Sí & Sí & Sí & Sí \\
+                \rowcolor{gray!35}
+                Permisos                   & Permisos vía    &                      &                      & Derechos \\
+                \rowcolor{gray!35}
+                de usuario & cuentas & \multirow{-2}{*}{No} & \multirow{-2}{*}{No} & estandar SQL \\
+                Método inserción & Push & Pull & Push & Push \\
+                \bottomrule
+            \end{tabular}
+        \end{adjustbox}
+        \caption{Comparativa de información técnica}
+        \label{tabla:tisgbd}
+    \end{center}
+\end{table}
+
+\subsubsection*{Comparativa información técnica (Tabla \ref*{tabla:tisgbd})} En InfluxDB, la consistencia es eventual. Según
+la documentación, se prioriza el rendimiento de lectura y escritura antes que una fuerte consistencia. Se asegura, sin 
+embargo, que la información es eventualmente consistente \cite{influx:consistency}.
+
+En bases de datos típicas, la información se inserta a través de algún tipo de consulta desde fuera. Por otro lado, 
+Prometheus escucha a un endpoint en el que se publican los datos y se obtienen en intervalos fijos de tiempo. Esto 
+significa que la inserción solo ocurrirá cuando Prometheus escuche a dicho endpoint, por lo que la información no se 
+puede insertar en cualquier momento. Un método más típico existe, pero no es recomendado y no es posible especificar 
+timestamps \cite{prom:pushgateway}.
+
+Solo InfluxDB y TimescaleDB cumplen todos los requisitos, ya que Graphite agrega los datos en ventanas de 1 segundo,
+haciendo imposible obtener datos de un momento concreto, y la forma de inserción de Prometheus le hace incompatible 
+con nuestras necesidades, ya que es necesario poder insertar datos en cualquier momento. Por esto, solo estos dos
+sistemas se compararán en la prueba de rendimiento.
+
+\subsubsection*{Análisis del rendimiento} La prueba se realizó con un procesador AMD Ryzen 5 3600 y 32 GB de RAM. Ya que 
+este modelo de CPU tiene 12 hilos, el uso de la CPU puede ser tan alto como 1200\% (Uso CPU = Hilos * 100). Los resultados
+de esta prueba se muestran en la tabla \ref*{tabla:ptsgbd}.
+
+\tablaSmallFija{Resultados de la prueba de rendimiento}{l c c}{ptsgbd}{
+System & InfluxDB & TimescaleDB\\
+}{
+    Tiempo inserción (s) & 24.13 & \textbf{1.16} \\
+    Tasa inserción (I/s) & 12432.66 & \textbf{258620.69} \\
+    Uso CPU (\%) & \textbf{15.05} & 55.32 \\
+    Uso RAM (MB) & \textbf{219.85} & 373.73 \\
+    Latencia (ms) & 3.37 & \textbf{0.22} \\
+}
+
+Como se puede observar, InfluxDB es más lento en todos las pruebas que TimescaleDB, pero este último utiliza más 
+recursos del sistema. Si en un futuro es necesario escalar InfluxDB puede ser mejor opción, ya que un menor uso de 
+recursos suele significar un menor coste. Sin embargo, TimescaleDB es más flexible, ya que al estar basado en PostgreSQL 
+tiene todas sus características. Cualquiera de estos dos sistemas puede ser perfectamente usado según los requisitos marcados.
+
+\subsection{Elección}
+
+Al final, el sistema gestor de bases de datos escogido ha sido InfluxDB. Aunque sea más lento que TimescaleDB, tiene
+una velocidad lo suficientemente buena, y al consumir menos recursos la hace una opción más barata en caso de que 
+esta solución se aplique comercialmente.
+
+Otro motivo de peso para elegir InfluxDB es que viene por defecto con una interfaz web llamada Chronograf 
+(Figura \ref*{fig:interfaz}) en la que se puede manejar la base de datos, crear gráficas, establecer alarmas, etc. 
+Para realizar esto mismo con TimescaleDB, es necesario utilizar otra herramienta, como podría ser Grafana \cite{Web:Grafana:Docs}
+
+\imagen{interfaz}{Interfaz Chronograf}
+
+\section{Estudio del modelo de predicción}
+
+Los modelos elegidos para la comparación son los siguientes:
+\begin{itemize}
+    \item ARIMA.
+    \item TCN.
+    \item N-HiTS.
+    \item Transformer Model.
+\end{itemize}
+
+Estos modelos han sido comparados usando las siguientes métricas:
+\begin{itemize}
+    \item MAE 
+    \item MASE 
+    \item DTW
+\end{itemize}
+
+Tanto los modelos elegidos como las métricas utilizadas para compararlos son explicados en más detalle en el apartado 3 Conceptos
+Teóricos en la memoria.
+
+Se van a hacer tres tipos de comparaciones: una comparación univariante en la que solo se prediga un valor, 
+una comparación univariante con covariables en la que solo se prediga un valor, pero se utilicen otros como entrada y 
+una comparación multivariante en la que se predigan todos los valores utilizados como entrada.
+
+
+Para realizar la comparación, excepto en el caso de ARIMA que es un modelo estadístico que no usa redes neuronales, 
+se entrena el modelo durante 200 épocas y se realizan varias predicciones: una 200 milisegundos a futuro, otra 
+1 segundo a futuro y otra 10 segundos a futuro. Este procedimiento se realiza cinco veces y se calcula la media 
+de las métricas como valor final.
+
+\subsection*{Comparativa inicial}
+
+Una primera comparativa ha sido realizada con los parámetros por defecto que Darts provee de dichos modelos. 
+Los únicos parámetros especificados han sido la longitud de los datos de entrada y la longitud de los datos de salida 
+en aquellos modelos que lo permitan. Se ha especificado una longitud de entrada de 60 valores 
+(correspondiente a 12 segundos), y una longitud de salida de 10 valores (2 segundos). En los casos con covariables,
+se ha modificado la longitud de salida para la prueba de predicción de 10 segundos, pues, al no hacer la predicción 
+de dichas covariables solo se puede hacer una predicción a futuro, ya que no se poseen los datos para realizar más.
+
+%TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 38.961 & 133.312 & 1904.280 & - & - & - & - & - & - \\
+            TCN & 2049.558 & 1879.284 & 2212.124 & 1332.981 & 1216.949 & 2103.126 & 1259.278 & 1279.760 & 2210.197 \\
+            N-HiTS & 135.49 & 353.99 & 1925.49 & 729.24 & 802.57 & 1736.21 & 446.28 & 478.43 & 1045.04 \\
+            Transformer & 213.79 & 426.78 & 2127.07 & 155.12 &  \textbf{188.81} & \textbf{542.05} & 167.89 & 222.10 & 719.10 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{MAE de los modelos por defecto}
+    \label{tab:mae_inicial}
+\end{table}
+
+%TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 0.180 & 0.617 & 8.817 & - & - & - & - & - & - \\
+            TCN & 5.60 & 5.96 & 11.08 & 5.51 & 6.00 & 13.10 & 6.11 & 6.08 & 10.88 \\
+            N-HiTS & 0.62 & 1.63 & 8.91 & 3.37 & 3.71 & 8.03 & 2.06 & 2.21 & 4.83 \\
+            Transformer & 0.98 & 1.97 & 9.84 & 0.71 & 0.87 & \textbf{2.50} & 0.77 & 1.02 & 3.32 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}    
+    \caption{MASE de los modelos por defecto}
+    \label{tab:mase_inicial}
+\end{table}
+
+%TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 38.961 & 110.171 & 1606.009 & - & - & - & - & - & - \\
+            TCN & 1211.47 & 1288.55 & 1193.36 & 1190.54 & 1296.46 & 1945.16 & 1321.59 & 1313.16 & 1217.87 \\
+            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
+            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{DTW de los modelos por defecto}
+    \label{tab:dtw_inicial}
+\end{table}
+
+% TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 0.909 & 1.851 & 2.842 & - & - & - & - & - & - \\
+            TCN & 1211.47 & 1288.55 & 1193.36 & 1190.54 & 1296.46 & 1945.16 & 1321.59 & 1313.16 & 1217.87 \\
+            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
+            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{Tiempo en segundos de entrenamiento de los modelos por defecto}
+    \label{tab:te_inicial}
+\end{table}
+
+% TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 0.014 & 0.014 & 0.012 & - & - & - & - & - & - \\
+            TCN & 53.76 & 53.70 & 54.50 & 64.85 & 65.26 & 62.68 & 52.04 & 52.07 & 52.51 \\
+            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
+            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{Tiempo en segundos de la predicción de los modelos por defecto}
+    \label{tab:tp_inicial}
+\end{table}
+
+ARIMA solo soporta modelos univariantes, por lo que no puede ser probado en los ejemplos covariantes y multivariantes.
+
+\subsection*{Optimización de los hiperparámetros}
+
+Los resultados del apartado anterior son potencialmente mejorables. Para ello, es necesario encontrar los parámetros de los 
+modelos que mejor se ajusten a nuestros datos. Esto, sin embargo, no es una tarea simple, pues existe una enorme 
+cantidad de ellos para los modelos que utilicen redes neuronales (TCN, N-HiTS y Transformer). Para la optimización 
+de dichos modelos se ha utilizado una herramienta llamada Optuna. Esta herramienta prueba cada modelo durante 
+varias horas probando diferentes combinaciones de hiperparámetros de manera automática.
+
+Para el caso de ARIMA la optimización es más simple, pues, como se ha explicado en el apartado de conceptos 
+teóricos solo tiene tres parámetros. Además, dichos parámetros pueden optimizarse de manera analítica, utilizando 
+los gráficos de autocorrelación y autocorrelación parcial. El primero de estos muestra como de relacionado está 
+un valor de la serie temporal con sus anteriores, mientras que el segundo muestra la correlación con el valor 
+inmediatamente anterior al actual.
+
+\imagen{acf}{ACF del encoder derecho}{1}
+\imagen{pacf}{PACF del encoder derecho}{1}
+
+Como podemos ver, el valor del ACF decrementa, pero de manera muy lenta, lo que nos indica que necesitamos 
+por lo menos un orden de diferenciación, por lo que el parámetro d será por lo menos de 1. 
+
+\imagen{acf_dif2}{ACF del encoder derecho después de diferenciar}{1}
+\imagen{pacf_dif2}{PACF del encoder derecho después de diferenciar}{1}
+
+Se puede ver también como a partir del elemento 16 no se aprecian valores significativos, por lo que el valor del 
+parámetro p será 16. Estas observaciones nos indican a pensar que el modelo es ARIMA(p, d, 0), ya que se cumplen 
+dichas condiciones:
+\begin{itemize}
+    \item El ACF decae de manera exponencial.
+    \item En el PACF, hay un valor significativo a partir del valor p, pero ninguno más adelante.
+\end{itemize}
+
+Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1, 0).
+
+%TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & \textbf{38.96} & \textbf{133.31} & \textbf{1904.28} & - & - & - & - & - & - \\
+            TCN & 2049.56 & 1879.28 & 2212.12 & 1332.98 & 1216.95 & 2103.13 & 1259.28 & 1279.76 & 2210.20 \\
+            N-HiTS & 253.03 & 423.77 & 2092.37 & 611.20 & 596.62 & 2161.81 & 404.18 & 606.40 & 1960.48 \\
+            Transformer & 1271.46 & 1102.82 & 2325.74 & 1619.26 & 629.60 & 2496.53 & 1798.26 & 1003.21 & 3022.88 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{MAE de los modelos optimizados}
+    \label{tab:mae_opt}
+\end{table}
+
+%TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & \textbf{0.18} & \textbf{0.62} & \textbf{8.82} & - & - & - & - & - & - \\
+            TCN & 9.49 & 8.70 & 10.24 & 6.17 & 5.63 & 9.74 & 5.83 & 5.93 & 10.23 \\
+            N-HiTS & 1.17 & 1.96 & 9.69 & 2.83 & 2.76 & 10.01 & 1.87 & 2.81 & 9.08 \\
+            Transformer & 5.89 & 5.11 & 10.77 & 7.50 & 2.92 & 11.56 & 8.33 & 4.65 & 14.00 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}    
+    \caption{MASE de los modelos optimizados}
+    \label{tab:mase_opt}
+\end{table}
+
+%TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & \textbf{38.96} & \textbf{110.17} & 1606.01 & - & - & - & - & - & - \\
+            TCN & 2049.56 & 1879.28 & 1124.79 & 1332.98 & 1216.95 & 1380.77 & 1259.28 & 1279.76 & 1118.86 \\
+            N-HiTS & 253.03 & 423.77 & \textbf{942.39} & 611.20 & 596.62 & 1276.69 & 404.18 & 606.40 & 1142.36 \\
+            Transformer & 1271.46 & 1102.82 & 1457.90 & 1619.26 & 623.03 & 1501.03 & 1798.26 & 1003.21 & 2019.35 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{DTW de los modelos optimizados}
+    \label{tab:dtw_opt}
+\end{table}
+
+% TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 0.91 & 1.85 & 2.84 & - & - & - & - & - & - \\
+            TCN & 53.76 & 53.70 & 54.50 & 64.85 & 65.26 & 62.68 & 52.04 & 52.07 & 52.51 \\
+            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
+            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{Tiempo de entrenamiento en segundos de los modelos optimizados}
+    \label{tab:te_opt}
+\end{table}
+
+% TODO
+\begin{table}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{c | c c c | c c c | c c c}
+            \toprule
+            & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
+            Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
+            \otoprule
+            ARIMA & 0.01 & 0.01 & 0.01 & - & - & - & - & - & - \\
+            TCN & 53.76 & 53.70 & 54.50 & 64.85 & 65.26 & 62.68 & 52.04 & 52.07 & 52.51 \\
+            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
+            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            \bottomrule
+        \end{tabular}
+    \end{adjustbox}
+    \caption{Tiempo de predicción en segundos de los modelos optimizados}
+    \label{tab:tp_opt}
+\end{table}
+
+Como se puede observar, excepto en ARIMA, la optimización arroja peores resultados que los modelos por defecto. Esto 
+se puede deber principalmente a dos factores:
+\begin{enumerate}
+    \item Los modelos por defecto son lo suficientemente buenos.
+    \item El tiempo de ejecución de la optimización no ha sido el suficiente, por lo que no se han encontrado las 
+        mejores combinaciones de hiperparámetros.
+\end{enumerate}
+
+Por todo esto, como queremos realizar predicciones a relativamente largo plazo (10 segundos), el modelo escogido 
+finalmente será el Transformer con los hiperparámetros por defecto.
