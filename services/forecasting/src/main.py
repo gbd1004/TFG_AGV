@@ -60,7 +60,7 @@ def get_all_series(dataframe):
 
 def train_model(client, bucket, config):
     tiempo = int(config['wait_time_before_train'])
-    logging.info(f"Esperando {tiempo}s para datos para entrenamiento")
+    logging.info('Esperando %ss para datos para entrenamiento', tiempo)
     time.sleep(tiempo)
 
     print(bucket, tiempo)
@@ -104,10 +104,12 @@ def main():
             model = TransformerModel.load(model_path)
 
             tiempo = int(config['wait_time_before_load'])
-            logging.info(f"Esperando {tiempo} segundos para datos para scaler")
+            logging.info(
+                'Esperando %s segundos para datos para scaler', tiempo)
             time.sleep(tiempo)
             dataframe = query_dataframe(client, bucket_agv, tiempo)
-            series_ed, series_ei, series_sl, series_sr = get_all_series(dataframe)
+            series_ed, series_ei, series_sl, series_sr = get_all_series(
+                dataframe)
             scaler_ed, scaler_ei, scaler_sr, scaler_sl = Scaler(), Scaler(), Scaler(), Scaler()
             scaler_ed.fit(series_ed)
             scaler_ei.fit(series_ei)
@@ -121,7 +123,8 @@ def main():
 
         while True:
             dataframe = query_dataframe(client, bucket_agv, 100)
-            series_ed, series_ei, series_sl, series_sr = get_all_series(dataframe)
+            series_ed, series_ei, series_sl, series_sr = get_all_series(
+                dataframe)
 
             series_ed_scaled = scaler_ed.transform(
                 series_ed).astype(np.float32)
@@ -135,23 +138,28 @@ def main():
             covariates = series_sr_scaled.stack(series_sl_scaled)
 
             try:
-                pred = model.predict(series=[series_ed_scaled, series_ei_scaled], past_covariates=[
-                                     covariates, covariates], n=50)
+                pred = model.predict(series=[series_ed_scaled, series_ei_scaled],
+                                     past_covariates=[covariates, covariates], n=50)
 
                 pred_ed = scaler_ed.inverse_transform(pred[0])
                 pred_ei = scaler_ei.inverse_transform(pred[1])
                 logging.info("Prediccion realizada correctamente")
-                with client.write_api(write_options=WriteOptions(batch_size=500, flush_interval=100)) as write_api:
+
+                write_options = WriteOptions(
+                    batch_size=500, flush_interval=100)
+                with client.write_api(write_options=write_options) as write_api:
                     pred_ed = pred_ed.pd_dataframe().reset_index()
                     pred_ei = pred_ei.pd_dataframe().reset_index()
 
                     write_api.write(bucket=bucket_pred, record=pred_ed, write_precision='ms',
-                                    data_frame_measurement_name='pred', data_frame_timestamp_column='_time')
+                                    data_frame_measurement_name='pred',
+                                    data_frame_timestamp_column='_time')
                     write_api.write(bucket=bucket_pred, record=pred_ei, write_precision='ms',
-                                    data_frame_measurement_name='pred', data_frame_timestamp_column='_time')
-            except Exception as e:
+                                    data_frame_measurement_name='pred',
+                                    data_frame_timestamp_column='_time')
+            except Exception as exc:
                 logging.error("Error prediciendo")
-                logging.error(e)
+                logging.error(exc)
             time.sleep(10)
 
 

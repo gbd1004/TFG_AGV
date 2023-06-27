@@ -1,12 +1,12 @@
-"""Servicio dedicado a simular el AGV. De momento solo son datos aleatorios"""
+"""Servicio dedicado a simular el AGV"""
 
 from datetime import datetime, timedelta
 import logging
 import socket
 import random
 import json
+import sys
 import time
-import itertools
 import csv
 
 UDP_IP = "reciever"
@@ -34,14 +34,14 @@ def generar_datos():
 
 
 def simular_csv(sock, csv_path):
-    time = datetime.utcnow()
-    with open("/simulator/data/" + csv_path) as csvfile:
+    actual_time = datetime.utcnow()
+    with open("/simulator/data/" + csv_path, "r", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             delta = timedelta(seconds=float(row['time']))
-            while datetime.utcnow() < time + delta:
+            while datetime.utcnow() < actual_time + delta:
                 pass
-            row['time'] = (time + delta).strftime('%Y-%m-%d %H:%M:%S.%f')
+            row['time'] = (actual_time + delta).strftime('%Y-%m-%d %H:%M:%S.%f')
             row['AGVID'] = "Sim_1"
             sock.sendto(bytes(json.dumps(row), encoding="utf-8"),
                         (UDP_IP, UDP_PORT))
@@ -55,16 +55,16 @@ def simular_aleatorio(sock):
         sock.sendto(bytes(datos, encoding="utf-8"), (UDP_IP, UDP_PORT))
 
 
-if __name__ == "__main__":
+def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     logging.basicConfig(level=logging.INFO)
 
-    f = open('/simulator/config.json')
-    data = json.load(f)
+    with open('/simulator/config.json', "r", encoding="utf-8") as file:
+        data = json.load(file)
 
     if not data['simulate']:
         logging.info("Simulación desactivada, saliendo...")
-        quit()
+        sys.exit()
 
     if data['from_csv']:
         logging.info("Simulando desde CSV")
@@ -78,3 +78,7 @@ if __name__ == "__main__":
     else:
         logging.info("Simulando aleatorio")
         simular_aleatorio(sock)
+
+
+if __name__ == "__main__":
+    main()
