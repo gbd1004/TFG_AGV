@@ -168,7 +168,7 @@ Ya que estos datos se mandan en intervalos de tiempo irregulares, el primer paso
 Esto es así porque para realizar las predicciones es necesario que los datos de la serie temporal estén distribuidos 
 de manera uniforme.
 
-Las pruebas realizadas a continuación han sido realizadas únicamente con el encoder derecho, pues al ser muy similar 
+Las pruebas realizadas a los modelos han sido realizadas únicamente con el encoder derecho, pues al ser muy similar 
 al encoder izquierdo se van a obtener resultados prácticamente idénticos en los dos casos, por lo que no merece 
 la pena realizar las pruebas sobre los dos datos.
 
@@ -211,9 +211,9 @@ Este ``bucket'' tiene un periodo de retención bajo. Esto significa que los dato
 de cierto tiempo, pues no nos interesa guardar predicciones antiguas.
 
 Existen dos versiones de este servicio: una utiliza una GPU de Nvidia para entrenar y la otra utiliza la CPU. Entrenar con
-GPU es mucho más rápido que con CPU, por lo que siempre que se disponga de una es muy recomendable utilizar la versión de GPU.
+GPU es mucho más rápido que con CPU, por lo que siempre que se disponga de una es muy recomendable utilizar esta versión.
 En caso de no disponer de una GPU, o de disponer de una que no soporte la versión 11.8 de CUDA, siempre puede utilizarse el 
-servicio de CPU.
+servicio complementario.
 
 \imagen{diagrama_forecast}{Diagrama del servicio de predicción.}{0.8}
 

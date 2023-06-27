@@ -427,7 +427,7 @@ este modelo de CPU tiene 12 hilos, el uso de la CPU puede ser tan alto como 1200
 de esta prueba se muestran en la tabla \ref*{tabla:ptsgbd}.
 
 \tablaSmallFija{Resultados de la prueba de rendimiento}{l c c}{ptsgbd}{
-System & InfluxDB & TimescaleDB\\
+System & InfluxDB & TimescaleDB \\
 }{
     Tiempo inserción (s) & 24.13 & \textbf{1.16} \\
     Tasa inserción (I/s) & 12432.66 & \textbf{258620.69} \\
@@ -468,6 +468,8 @@ Estos modelos han sido comparados usando las siguientes métricas:
     \item MAE 
     \item MASE 
     \item DTW
+    \item Tiempo de entrenamiento.
+    \item Tiempo de predicción.
 \end{itemize}
 
 Tanto los modelos elegidos como las métricas utilizadas para compararlos son explicados en más detalle en el apartado 3 Conceptos
@@ -492,7 +494,6 @@ en aquellos modelos que lo permitan. Se ha especificado una longitud de entrada 
 se ha modificado la longitud de salida para la prueba de predicción de 10 segundos, pues, al no hacer la predicción 
 de dichas covariables solo se puede hacer una predicción a futuro, ya que no se poseen los datos para realizar más.
 
-%TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -501,10 +502,10 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 38.961 & 133.312 & 1904.280 & - & - & - & - & - & - \\
-            TCN & 2049.558 & 1879.284 & 2212.124 & 1332.981 & 1216.949 & 2103.126 & 1259.278 & 1279.760 & 2210.197 \\
-            N-HiTS & 135.49 & 353.99 & 1925.49 & 729.24 & 802.57 & 1736.21 & 446.28 & 478.43 & 1045.04 \\
-            Transformer & 213.79 & 426.78 & 2127.07 & 155.12 &  \textbf{188.81} & \textbf{542.05} & 167.89 & 222.10 & 719.10 \\
+            ARIMA & \textbf{65.099} & \textbf{161.666} & 1907.520 & - & - & - & - & - & - \\
+            TCN & 1171.997 & 1332.097 & 2384.317 & 1319.644 & 1309.481 & 2917.175 & 1332.920 & 1253.553 & 2375.751 \\
+            N-HiTS & 89.323 & 426.071 & 2051.014 & 527.865 & 731.733 & 1625.994 & 467.818 & 455.427 & 1200.268 \\
+            Transformer & 420.348 & 269.185 & 1856.455 & 234.741 & 178.082 & 779.017 & 189.326 & 364.382 & \textbf{651.375} \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -512,7 +513,6 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
     \label{tab:mae_inicial}
 \end{table}
 
-%TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -521,10 +521,10 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 0.180 & 0.617 & 8.817 & - & - & - & - & - & - \\
-            TCN & 5.60 & 5.96 & 11.08 & 5.51 & 6.00 & 13.10 & 6.11 & 6.08 & 10.88 \\
-            N-HiTS & 0.62 & 1.63 & 8.91 & 3.37 & 3.71 & 8.03 & 2.06 & 2.21 & 4.83 \\
-            Transformer & 0.98 & 1.97 & 9.84 & 0.71 & 0.87 & \textbf{2.50} & 0.77 & 1.02 & 3.32 \\
+            ARIMA & \textbf{0.301} & \textbf{0.749} & 8.832 & - & - & - & - & - & - \\
+            TCN & 5.427 & 6.168 & 11.040 & 6.110 & 6.063 & 13.507 & 6.172 & 5.804 & 11.000 \\
+            N-HiTS & 0.414 & 1.973 & 9.497 & 2.444 & 3.388 & 7.529 & 2.166 & 2.109 & 5.558 \\
+            Transformer & 1.946 & 1.246 & 8.596 & 1.087 & 0.825 & 3.607 & 0.877 & 1.687 & \textbf{3.016} \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}    
@@ -532,7 +532,6 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
     \label{tab:mase_inicial}
 \end{table}
 
-%TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -541,10 +540,10 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 38.961 & 110.171 & 1606.009 & - & - & - & - & - & - \\
-            TCN & 1211.47 & 1288.55 & 1193.36 & 1190.54 & 1296.46 & 1945.16 & 1321.59 & 1313.16 & 1217.87 \\
-            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
-            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            ARIMA & \textbf{65.099} & \textbf{128.896} & 1345.799 & - & - & - & - & - & - \\
+            TCN & 1171.997 & 1332.097 & 1200.933 & 1319.644 & 1309.481 & 2112.024 & 1332.920 & 1253.553 & 1190.241 \\
+            N-HiTS & 89.323 & 426.071 & 862.970 & 527.865 & 731.733 & 970.195 & 467.818 & 455.427 & 599.107 \\
+            Transformer & 420.348 & 252.468 & 593.228 & 234.741 & 133.774 & \textbf{262.340} & 189.326 & 343.909 & 269.327 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -552,7 +551,6 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
     \label{tab:dtw_inicial}
 \end{table}
 
-% TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -561,18 +559,17 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 0.909 & 1.851 & 2.842 & - & - & - & - & - & - \\
-            TCN & 1211.47 & 1288.55 & 1193.36 & 1190.54 & 1296.46 & 1945.16 & 1321.59 & 1313.16 & 1217.87 \\
-            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
-            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            ARIMA & \textbf{0.346} & \textbf{0.747} & \textbf{1.110} & - & - & - & - & - & - \\
+            TCN & 38.761 & 42.199 & 40.709 & 48.929 & 54.908 & 51.291 & 39.916 & 40.346 & 40.380 \\
+            N-HiTS & 41.019 & 41.613 & 40.470 & 53.496 & 53.334 & 50.245 & 41.693 & 41.385 & 39.363 \\
+            Transformer & 119.819 & 127.825 & 125.355 & 134.100 & 138.126 & 133.646 & 122.732 & 129.830 & 122.162 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
-    \caption{Tiempo en segundos de entrenamiento de los modelos por defecto}
+    \caption{Tiempo de entrenamiento en segundos de los modelos por defecto}
     \label{tab:te_inicial}
 \end{table}
 
-% TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -581,18 +578,22 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 0.014 & 0.014 & 0.012 & - & - & - & - & - & - \\
-            TCN & 53.76 & 53.70 & 54.50 & 64.85 & 65.26 & 62.68 & 52.04 & 52.07 & 52.51 \\
-            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
-            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            ARIMA & 0.009 & 0.009 & 0.009 & - & - & - & - & - & - \\
+            TCN & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 \\
+            N-HiTS & 0.003 & 0.003 & 0.004 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.004 \\
+            Transformer & 0.004 & 0.004 & 0.007 & 0.005 & 0.004 & 0.005 & \textbf{<0.001} & \textbf{<0.001} & \textbf{<0.001} \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
-    \caption{Tiempo en segundos de la predicción de los modelos por defecto}
+    \caption{Tiempo de predicción en segundos  de los modelos por defecto}
     \label{tab:tp_inicial}
 \end{table}
 
 ARIMA solo soporta modelos univariantes, por lo que no puede ser probado en los ejemplos covariantes y multivariantes.
+Como conclusiones, se puede decir que ARIMA genera los mejores resultados a corto plazo. También, al no ser un modelo 
+basado en redes neuronales, no necesita del mismo entrenamiento que el resto de modelos, por lo que el tiempo de entrenamiento 
+es sustancialmente más pequeño. Sin embargo, es el modelo más lento a la hora de predecir nuevos datos, por lo que no es 
+el mejor en caso de que queramos incluir dichas predicciones en el software del AGV.
 
 \subsection*{Optimización de los hiperparámetros}
 
@@ -627,7 +628,6 @@ dichas condiciones:
 
 Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1, 0).
 
-%TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -636,10 +636,10 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{38.96} & \textbf{133.31} & \textbf{1904.28} & - & - & - & - & - & - \\
-            TCN & 2049.56 & 1879.28 & 2212.12 & 1332.98 & 1216.95 & 2103.13 & 1259.28 & 1279.76 & 2210.20 \\
-            N-HiTS & 253.03 & 423.77 & 2092.37 & 611.20 & 596.62 & 2161.81 & 404.18 & 606.40 & 1960.48 \\
-            Transformer & 1271.46 & 1102.82 & 2325.74 & 1619.26 & 629.60 & 2496.53 & 1798.26 & 1003.21 & 3022.88 \\
+            ARIMA & \textbf{38.961} & \textbf{133.312} & 1904.280 & - & - & - & - & - & - \\
+            TCN & 1964.383 & 1664.512 & 2301.540 & 1246.520 & 1288.028 & 2032.812 & 1306.301 & 1351.884 & 2309.763 \\
+            N-HiTS & 224.531 & 410.060 & 2076.162 & 567.246 & 570.008 & 2242.317 & 490.646 & 611.851 & \textbf{1879.377} \\
+            Transformer & 810.602 & 740.833 & 2128.102 & 913.553 & 1078.878 & 2483.066 & 492.486 & 646.667 & 2266.571 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -647,7 +647,6 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
     \label{tab:mae_opt}
 \end{table}
 
-%TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -656,10 +655,10 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{0.18} & \textbf{0.62} & \textbf{8.82} & - & - & - & - & - & - \\
-            TCN & 9.49 & 8.70 & 10.24 & 6.17 & 5.63 & 9.74 & 5.83 & 5.93 & 10.23 \\
-            N-HiTS & 1.17 & 1.96 & 9.69 & 2.83 & 2.76 & 10.01 & 1.87 & 2.81 & 9.08 \\
-            Transformer & 5.89 & 5.11 & 10.77 & 7.50 & 2.92 & 11.56 & 8.33 & 4.65 & 14.00 \\
+            ARIMA & \textbf{0.180} & \textbf{0.617} & 8.817 & - & - & - & - & - & - \\
+            TCN & 9.096 & 7.707 & 10.657 & 5.772 & 5.964 & 9.413 & 6.049 & 6.260 & 10.695 \\
+            N-HiTS & 1.040 & 1.899 & 9.613 & 2.627 & 2.639 & 10.383 & 2.272 & 2.833 & \textbf{8.702} \\
+            Transformer & 3.753 & 3.430 & 9.854 & 4.230 & 4.996 & 11.497 & 2.280 & 2.994 & 10.495 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}    
@@ -667,7 +666,6 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
     \label{tab:mase_opt}
 \end{table}
 
-%TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -676,10 +674,10 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{38.96} & \textbf{110.17} & 1606.01 & - & - & - & - & - & - \\
-            TCN & 2049.56 & 1879.28 & 1124.79 & 1332.98 & 1216.95 & 1380.77 & 1259.28 & 1279.76 & 1118.86 \\
-            N-HiTS & 253.03 & 423.77 & \textbf{942.39} & 611.20 & 596.62 & 1276.69 & 404.18 & 606.40 & 1142.36 \\
-            Transformer & 1271.46 & 1102.82 & 1457.90 & 1619.26 & 623.03 & 1501.03 & 1798.26 & 1003.21 & 2019.35 \\
+            ARIMA & \textbf{38.961} & \textbf{110.171} & 1606.009 & - & - & - & - & - & - \\
+            TCN & 1964.383 & 1664.512 & 1108.831 & 1246.520 & 1288.028 & 1291.965 & 1306.301 & 1351.884 & 1266.140 \\
+            N-HiTS & 224.531 & 410.060 & \textbf{940.509} & 567.246 & 570.008 & 1416.521 & 490.646 & 611.851 & 1179.411 \\
+            Transformer & 810.602 & 740.833 & 1018.206 & 913.553 & 1078.878 & 1851.306 & 492.486 & 646.667 & 1181.562 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -687,7 +685,6 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
     \label{tab:dtw_opt}
 \end{table}
 
-% TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -696,10 +693,10 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 0.91 & 1.85 & 2.84 & - & - & - & - & - & - \\
-            TCN & 53.76 & 53.70 & 54.50 & 64.85 & 65.26 & 62.68 & 52.04 & 52.07 & 52.51 \\
-            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
-            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            ARIMA & \textbf{0.843} & \textbf{1.610} & \textbf{2.410} & - & - & - & - & - & - \\
+            TCN & 50.430 & 50.648 & 52.969 & 60.830 & 61.489 & 64.225 & 48.641 & 49.186 & 53.759 \\
+            N-HiTS & 140.357 & 141.576 & 168.711 & 154.149 & 166.998 & 161.123 & 141.904 & 174.071 & 142.991 \\
+            Transformer & 185.125 & 174.690 & 186.759 & 189.849 & 199.023 & 186.065 & 191.429 & 195.641 & 189.349 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -707,7 +704,6 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
     \label{tab:te_opt}
 \end{table}
 
-% TODO
 \begin{table}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth}
@@ -716,10 +712,10 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 0.01 & 0.01 & 0.01 & - & - & - & - & - & - \\
-            TCN & 53.76 & 53.70 & 54.50 & 64.85 & 65.26 & 62.68 & 52.04 & 52.07 & 52.51 \\
-            N-HiTS & 135.49 & 347.68 & 852.25 & 729.24 & 802.57 & 1097.82 & 446.28 & 459.72 & 580.90 \\
-            Transformer & 213.79 & 419.45 & 587.69 & 155.12 & 174.44 & \textbf{197.11} & 167.89 & 207.46 & 281.88 \\
+            ARIMA & 0.014 & 0.015 & 0.015 & - & - & - & - & - & - \\
+            TCN & 0.003 & 0.003 & 0.004 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.006 \\
+            N-HiTS & 0.005 & 0.033 & 0.006 & 0.005 & 0.004 & 0.004 & 0.005 & 0.004 & 0.006 \\
+            Transformer & 0.004 & 0.004 & 0.006 & 0.004 & 0.004 & 0.005 & \textbf{<0.001} & \textbf{<0.001} & \textbf{<0.001} \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -735,5 +731,13 @@ se puede deber principalmente a dos factores:
         mejores combinaciones de hiperparámetros.
 \end{enumerate}
 
+En cuanto a ARIMA, a cambio de obtener mejores resultados tanto el tiempo de entrenamiento como el de predicción 
+son algo más del doble de grandes. Tampoco supone un gran problema, ya que a la hora de entrenar solo 
+supone unos segundos más, y en el caso de la predicción el aumento está en el rango de los milisegundos.
+
 Por todo esto, como queremos realizar predicciones a relativamente largo plazo (10 segundos), el modelo escogido 
 finalmente será el Transformer con los hiperparámetros por defecto.
+
+En el caso de que en un futuro quieran integrarse estas predicciones en el propio software del AGV con el fin 
+de mejorar su rendimiento, habría que estudiar si usar ARIMA por sus buenos resultados a corto plazo, o bien 
+utilizar el modelo Transformer por sus bajos tiempos de predicción.
