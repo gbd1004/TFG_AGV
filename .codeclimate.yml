@@ -2,3 +2,8 @@ version: "2"
 plugins:
   checkstyle:
     enabled: true
+
+exclude_paths: 
+  - memoria/**
+  - prototipos/**
+  - redimiento/**
