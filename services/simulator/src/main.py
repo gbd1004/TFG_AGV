@@ -13,6 +13,8 @@ UDP_IP = "reciever"
 UDP_PORT = 5004
 
 # Funcion temporal para generar datos
+
+
 def generar_datos():
     dato = {
         "time": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'),
@@ -30,6 +32,7 @@ def generar_datos():
 
     return json.dumps(dato)
 
+
 def simular_csv(sock, csv_path):
     time = datetime.utcnow()
     with open("/simulator/data/" + csv_path) as csvfile:
@@ -40,7 +43,9 @@ def simular_csv(sock, csv_path):
                 pass
             row['time'] = (time + delta).strftime('%Y-%m-%d %H:%M:%S.%f')
             row['AGVID'] = "Sim_1"
-            sock.sendto(bytes(json.dumps(row), encoding="utf-8"), (UDP_IP, UDP_PORT))
+            sock.sendto(bytes(json.dumps(row), encoding="utf-8"),
+                        (UDP_IP, UDP_PORT))
+
 
 def simular_aleatorio(sock):
     while True:
@@ -48,6 +53,7 @@ def simular_aleatorio(sock):
         t_espera = random.randint(5, 20)
         time.sleep(t_espera / 1000)
         sock.sendto(bytes(datos, encoding="utf-8"), (UDP_IP, UDP_PORT))
+
 
 if __name__ == "__main__":
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

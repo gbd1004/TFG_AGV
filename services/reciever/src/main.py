@@ -10,12 +10,14 @@ UDP_IP = "0.0.0.0"
 UDP_PORT = 5004
 URL = "http://database:8086"
 
+
 def get_influxdb_credentials():
     token = os.getenv('DOCKER_INFLUXDB_INIT_ADMIN_TOKEN')
     org = os.getenv('DOCKER_INFLUXDB_INIT_ORG')
     bucket = os.getenv('DOCKER_INFLUXDB_INIT_BUCKET')
 
     return token, org, bucket
+
 
 def get_dbconn(token, org):
     client = influxdb_client.InfluxDBClient(
@@ -26,6 +28,7 @@ def get_dbconn(token, org):
 
     return client
 
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
@@ -34,10 +37,9 @@ if __name__ == "__main__":
 
     token, org, bucket = get_influxdb_credentials()
 
-    f = open('/reciever/config.json')
-    data = json.load(f)
+    with open('/reciever/config.json', "r", encoding="utf-8") as file:
+        data = json.load(file)
     max_retries = int(data['max_retries'])
-
 
     connected = False
     retries = 0
@@ -46,10 +48,12 @@ if __name__ == "__main__":
 
     while not connected and retries < max_retries:
         try:
-            write_options = influxdb_client.WriteOptions(batch_size=1000, flush_interval=1_000, retry_interval=5_000)
+            write_options = influxdb_client.WriteOptions(
+                batch_size=1000, flush_interval=1_000, retry_interval=5_000)
             write_api = client.write_api(write_options=write_options)
             connected = True
-        except:
+        except Exception as e:
+            logging.warn(e)
             retries += 1
             time.sleep(0.5)
 
@@ -57,12 +61,13 @@ if __name__ == "__main__":
         logging.critical("Fallo con la conexión a la base de datos")
         sys.exit()
 
-    logging.info("Conexión a la base de datos realizada con éxito. Reintentos: " + str(retries))
+    logging.info(
+        f"Conexión a la base de datos realizada con éxito. Reintentos: {retries}")
 
     while True:
         data, addr = sock.recvfrom(1024)
         data_json = json.loads(data)
-        
+
         ed = int(data_json['???EncoderDerecho'])
         if(ed & 0x80000000):
             ed = -0x100000000 + ed
@@ -84,5 +89,5 @@ if __name__ == "__main__":
             .field("out.set_speed_left", int(data_json['Out.SetSpeedLeft'])) \
             .field("out.display", int(data_json['Out.Display'])) \
             .time(data_json['time'])
-        
+
         write_api.write(bucket=bucket, org=org, record=point)
