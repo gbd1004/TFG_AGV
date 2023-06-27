@@ -22,12 +22,14 @@ services:
     env_file:
       - database/influxdb_credentials.env
 
-  forecasting:
-    build: forecasting_gpu/.
+  forecasting_gpu:
+    build:
+      context: forecasting/
+      dockerfile: gpu/Dockerfile
     env_file:
       - database/influxdb_credentials.env
     volumes:
-      - ./forecasting_gpu/model:/forecasting_gpu/model
+      - ./forecasting/model:/forecasting/model
     deploy:
       resources:
         reservations:
@@ -35,10 +37,14 @@ services:
           - driver: nvidia
             count: 1
             capabilities: [gpu]
+    profiles: ["gpu"]
   
-  # forecasting:
-  #   build: forecasting_cpu/.
-  #   env_file:
-  #     - database/influxdb_credentials.env
-  #   volumes:
-  #     - ./forecasting_cpu/model:/forecasting_cpu/model
+  forecasting_cpu:
+    build:
+      context: forecasting/
+      dockerfile: cpu/Dockerfile
+    env_file:
+      - database/influxdb_credentials.env
+    volumes:
+      - ./forecasting/model:/forecasting/model
+    profiles: ["cpu"]

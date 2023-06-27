@@ -1,6 +1,0 @@
-{
-    "load_model": false,
-    "model_file": "test_model",
-    "wait_time_before_train": 290,
-    "wait_time_before_load": 60
-}
