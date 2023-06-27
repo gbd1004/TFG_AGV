@@ -22,52 +22,50 @@ def get_influxdb_credentials():
 
 
 def query_dataframe(client, bucket, tiempo) -> DataFrame:
-    query = 'from(bucket:"{bucket}")' \
-        ' |> range(start: -{tiempo}s)' \
+    query = f'from(bucket:"{bucket}")' \
+        f' |> range(start: -{tiempo}s)' \
         ' |> aggregateWindow(every: 200ms, fn: mean, createEmpty: true)' \
         ' |> filter(fn: (r) => r._measurement == "AGVDATA" and r.type == "value")' \
-        ' |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'.format(
-            bucket=bucket, tiempo=int(tiempo))
+        ' |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
 
-    df = client.query_api().query_data_frame(query=query)
-    df.drop(columns=['result', 'table', '_start', '_stop'])
-    df.drop(df.tail(1).index, inplace=True)
+    dataframe = client.query_api().query_data_frame(query=query)
+    dataframe.drop(columns=['result', 'table', '_start', '_stop'])
+    dataframe.drop(dataframe.tail(1).index, inplace=True)
 
-    df['_time'] = df['_time'].values.astype('<M8[ms]')
-    df.head()
-    return df
+    dataframe['_time'] = dataframe['_time'].values.astype('<M8[ms]')
+    dataframe.head()
+    return dataframe
 
 
-def get_series(tag: str, df: DataFrame) -> TimeSeries:
+def get_series(tag: str, dataframe: DataFrame) -> TimeSeries:
     series = TimeSeries.from_dataframe(
-        df, "_time", tag, freq="200ms").astype(np.float32)
+        dataframe, "_time", tag, freq="200ms").astype(np.float32)
     series = fill_missing_values(series=series)
 
     return series
 
 
-def get_all_series(df):
-    series_ed = get_series('encoder_derecho', df)
+def get_all_series(dataframe):
+    series_ed = get_series('encoder_derecho', dataframe)
     series_ed = fill_missing_values(
         Diff(lags=1, dropna=False).fit_transform(series=series_ed))
-    series_ei = get_series('encoder_izquierdo', df)
+    series_ei = get_series('encoder_izquierdo', dataframe)
     series_ei = fill_missing_values(
         Diff(lags=1, dropna=False).fit_transform(series=series_ei))
-    series_sr = get_series('out.set_speed_right', df)
-    series_sl = get_series('out.set_speed_left', df)
+    series_sr = get_series('out.set_speed_right', dataframe)
+    series_sl = get_series('out.set_speed_left', dataframe)
 
     return series_ed, series_ei, series_sl, series_sr
 
 
 def train_model(client, bucket, config):
     tiempo = float(config['wait_time_before_train'])
-    logging.info(
-        "Esperando {t}s para datos para entrenamiento".format(t=tiempo))
+    logging.info(f"Esperando {tiempo}s para datos para entrenamiento")
     time.sleep(tiempo)
 
-    df = query_dataframe(client, bucket, tiempo)
+    dataframe = query_dataframe(client, bucket, tiempo)
 
-    series_ed, series_ei, series_sl, series_sr = get_all_series(df)
+    series_ed, series_ei, series_sl, series_sr = get_all_series(dataframe)
     scaler_ed, scaler_ei, scaler_sr, scaler_sl = Scaler(), Scaler(), Scaler(), Scaler()
 
     series_ed_scaled = scaler_ed.fit_transform(series_ed).astype(np.float32)
@@ -90,8 +88,8 @@ def train_model(client, bucket, config):
 
 def main():
     logging.basicConfig(level=logging.INFO)
-    f = open("/forecasting_gpu/config.json")
-    config = json.load(f)
+    with open("/forecasting_gpu/config.json", "r") as file:
+        config = json.load(file)
     token, org, bucket_agv = get_influxdb_credentials()
     bucket_pred = "Predictions"
 
@@ -104,8 +102,7 @@ def main():
             model = TransformerModel.load(model_path)
 
             tiempo = float(config['wait_time_before_load'])
-            logging.info(
-                "Esperando {t} segundos para datos para scaler".format(t=tiempo))
+            logging.info(f"Esperando {tiempo} segundos para datos para scaler")
             time.sleep(tiempo)
             df = query_dataframe(client, bucket_agv, tiempo)
             series_ed, series_ei, series_sl, series_sr = get_all_series(df)
