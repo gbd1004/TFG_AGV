@@ -156,7 +156,49 @@ InfluxDB es un sistema gestor de bases de datos para series temporales. Si bien 
 es muy recomendable por comodidad ejecutarlo en un contenedor de Docker a partir de la imagen oficial \cite{influx:docker}.
 
 \subsection{Contribuciones}
-% TODO GUIA DE AÑADIR NUEVAS FEATURES
+
+\subsubsection{Estructura del repositorio}
+El repositorio está compuesto de dos ramas principales:
+\begin{itemize}
+    \item Main: la rama principal, con la última versión estable.
+    \item Develop: la rama sobre la que se desarrolla.
+\end{itemize}
+
+\subsubsection{Proceso de contribución}
+El proceso para contribuir y añadir nuevas características o arreglar problemas es el siguiente:
+\begin{enumerate}
+    \item Crear una nueva rama desde la rama ``develop''. Esta rama deberá seguir la siguiente convención de 
+        nombres:
+        \begin{itemize}
+            \item Nueva característica: en el caso de que la contribución sea una nueva característica,
+                la rama deberá llamarse ``feat/nombreCaracteristica''.
+            \item Corrección de error: si la contribución es el arreglo de un error, deberá llamarse ``fix/numeroError''.
+                Los números de los errores estarán definidos en el apartado Issues del repositorio de GitHub.
+            \item Corrección de estilo: si la contribución es un cambio estilístico o que 
+                no afecte al funcionamiento, la rama deberá llamarse ``style/nombreServicio'', utilizando el nombre 
+                del servicio al que afecta.
+        \end{itemize}
+    \item Refactorizar hasta que pase la prueba de estilo de código.
+    \item Crear la pull reques para incorporar la rama creada en develop.
+\end{enumerate}
+
+\subsubsection{Reporte de errores}
+Para reportar un error, se seguirá la siguiente convención:
+\begin{itemize}
+    \item Título: el nombre del error queda definido como ``[BUG] Título''.
+    \item Descripción: deberá añadirse una descripción breve del error, en la que deberán incluirse trazas del 
+        programa y pasos para reproducir el error.
+    \item Etiqueta: deberá asignarse la etiqueta de ``bug'' en el apartado ``Labels'' a la hora de crear el 
+        error en GitHub.
+\end{itemize}
+
+\subsubsection{Sugerencias de nuevas características}
+Las sugerencias se publicarán en el apartado de ``Issues'' del repositorio y deberán seguir el siguiente formato:
+\begin{itemize}
+    \item Título: el título deberá seguir el siguiente formato: ``[FEAT] Título''.
+    \item Descripción: deberá contener una descripción que diga a que servicios afecta la nueva característica y 
+        que ventajas supone su implementación.
+\end{itemize}
 
 \section{Compilación, instalación y ejecución del proyecto}
 
@@ -190,6 +232,72 @@ Para detener los servicios se ha de ejecutar el siguiente comando:
 $ docker compose down
 \end{lstlisting}
 
+Para crear las imágenes de los contenedores de los servicios sin ejecutarlos, se introduce el siguiente comando:
+\begin{lstlisting}
+$ docker compose build
+\end{lstlisting}
+
 \section{Pruebas del sistema}
 
-% TODO
+En este proyecto, se han realizado pruebas de forma manual debido a la complejidad y naturaleza única 
+del código que se ha desarrollado. El sistema presenta características altamente personalizadas y requiere 
+interacciones específicas que no son fáciles de simular en pruebas automáticas. Además, la configuración 
+del entorno y las dependencias externas hacen que las pruebas automatizadas sean complicadas de implementar 
+de manera efectiva.
+
+\subsection{Pruebas realizadas}
+
+Las siguientes pruebas han sido realizadas:
+\begin{itemize}
+    \item Predicciones con GPU entrenando un nuevo modelo.
+    \item Predicciones con GPU usando un modelo ya entrenado.
+    \item Predicciones con CPU usando un nuevo modelo.
+    \item Predicciones con CPU usando un modelo ya entrenado
+\end{itemize}
+
+Para ello se inician todos los servicios como se ha visto en el apartado anterior de esta sección de los anexos.
+
+\subsection{Mensajes de registro}
+
+En todas las pruebas deben verse los mensajes de que los servicios ``Simulator'' (Figura \ref{fig:sim_load}) y ``Reciever'' (Figura \ref{fig:recv_load}) han cargado correctamente
+y los valores mostrados concuerdan con lo especificado en los archivos de configuración.
+
+\imagen{sim_load}{Mensaje de carga del servicio ``Simulator''}
+\imagen{recv_load}{Menasaje de carga del servicio ``Reciever''}
+
+En el caso de utilizar la versión con GPU, en los registros del sistema deberá aparecer el mensaje de que CUDA ha 
+cargado corretamente (Figura \ref{fig:cuda_load}). En el caso de utilizar CPU, este mensaje no aparece en el 
+registro.
+
+\imagen{cuda_load}{Registro de CUDA}
+
+Para los casos en los que se cargue el modelo de uno ya entrenado, se deben ver los siguientes mensajes en el registro 
+(Figuras \ref{fig:wait_load} y \ref{fig:load_model})
+
+\imagen{wait_load}{Mensaje de espera para el escalador}
+\imagen{load_model}{Mensaje de carga del modelo}
+
+En los casos en los que se entrene un nuevo modelo, aparcen los siguientes registros (Figuras \ref{fig:train_model} y \ref{fig:wait_train}).
+
+\imagen{wait_train}{Mensaje espera para el entrenamiento}
+\imagen{train_model}{Mensaje de entrenamiento del modelo}
+
+En estos dos últimas figuras (\ref{fig:load_model} y \ref{fig:train_model}) se puede obvservar también si hay 
+una GPU disponible para su utilización, o bien se utiliza la CPU.
+
+Por último, por cada predicción realizada con éxito, el siguiente mensaje debería verse en los registros (Figura \ref{fig:pred_exito}).
+
+\imagen{pred_exito}{Mensaje de éxito en la predicción}
+
+\subsection{Visualización de los datos}
+
+Después de que las primeras predicciones empiecen a generarse, deberían poder verse utilizando la plantilla guardada en
+``services/databse/predicciones\_dashboard.json''. Para ello, se inicia sesión en la aplicación web de la base de 
+datos, alojada en la dirección ``localhost:8086''. Después, se pincha en el apartado de ``Dashboards'' y dentro se 
+pincha en ``Import Dashboard'', dentro de ``Create dashboard''.
+
+Una vez importado el tablero, se puede configurar el rango temporal de los datos a visualizar, así como cada cuanto 
+se refrescan las gráficas incluidas. En estos gráficos (Figura \ref{fig:preds}) deberían verse en azul los datos reales 
+del AGV y en naranja las predicciones realizadas.
+
+\imagen{preds}{Predicciones y datos reales}
