@@ -113,3 +113,33 @@ La comunicación entre servicios ocurre de tres formas diferentes:
 \section{Diseño arquitectónico}
 
 % TODO
+
+Debido a la simplicidad del código utilizado en el proyecto, se ha decidido seguir un enfoque de programación 
+funcional, más que programación orientada a objetos. Por esto, no podrán definirse diagramas típicos de UML como 
+puede ser un diagrama de clases.
+
+\subsection{Diseño de paquetes}
+
+El código del proyecto ha sido organizado seǵun el servicio al que pertenecen. De esta forma se simplifica la organización,
+consiguiendo un proyecto con un código más facil de leer y de mantener.
+
+\imagenSized{diagrama_paquetes}{Diagrama de paquetes}{0.45}
+
+Como se puede ver en la Figura \ref{fig:diagrama_paquetes}, existen cuatro paquetes, uno por cada servicio:
+\begin{itemize}
+    \item Database: contiene los scripts que se ejecutan al iniciar la base de datos.
+    \item Simulator: contiene el código y archivos de configuración relacionados con el simulador.
+    \item Reciever: contiene el código y archivos de configuración del servicio ``Reciever''.
+    \item Forecasting: contiene el código y archivos de configuración del servicio de predicción.
+\end{itemize}
+
+\subsection{Diseño de despliegue}
+
+Un diagrama de despliegue muestra la arquitectura de ejecución de sistemas que representan la asignación, o despliegue,
+de artefactos de software a objetivos de despliegue \cite{uml:deploy}. La Figura \ref{fig:deploy_diag} muestra el 
+diagrama de despliegue del sistema.
+
+Cada nodo normalmente representa un dispositivo hardware o un entorno de ejecución de software, y las asociaciones 
+representan las comunicaciones entre nodos.
+
+\imagenSized{deploy_diag}{Diagrama de despliegue}{0.8}

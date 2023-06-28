@@ -12,6 +12,7 @@
 \usepackage{dirtree}
 \usepackage{adjustbox}
 
+
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
 \RequirePackage{xtab}
@@ -53,6 +54,16 @@
 	\begin{figure}[!h]
 		\centering
 		\includegraphics[width=0.9\textwidth]{#1}
+		\caption{#2}\label{fig:#1}
+	\end{figure}
+	\FloatBarrier
+}
+
+\usepackage{graphicx}
+\newcommand{\imagenSized}[3]{
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[width=#3\textwidth]{#1}
 		\caption{#2}\label{fig:#1}
 	\end{figure}
 	\FloatBarrier

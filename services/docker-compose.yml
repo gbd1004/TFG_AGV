@@ -4,7 +4,7 @@ services:
     ports:
       - "8086:8086"
     env_file:
-      - database/influxdb_credentials.env
+      - influxdb_credentials.env
     volumes:
       - ./database/init_scripts:/docker-entrypoint-initdb.d
 
@@ -13,21 +13,21 @@ services:
     ports: 
       - "5005:5005/udp"
     env_file:
-      - database/influxdb_credentials.env
+      - influxdb_credentials.env
 
   reciever:
     build: reciever/.
     ports:
       - "5004:5004/udp"
     env_file:
-      - database/influxdb_credentials.env
+      - influxdb_credentials.env
 
   forecasting_gpu:
     build:
       context: forecasting/
       dockerfile: gpu/Dockerfile
     env_file:
-      - database/influxdb_credentials.env
+      - influxdb_credentials.env
     volumes:
       - ./forecasting/model:/forecasting/model
     deploy:
@@ -44,7 +44,7 @@ services:
       context: forecasting/
       dockerfile: cpu/Dockerfile
     env_file:
-      - database/influxdb_credentials.env
+      - influxdb_credentials.env
     volumes:
       - ./forecasting/model:/forecasting/model
     profiles: ["cpu"]

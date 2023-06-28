@@ -79,7 +79,7 @@ de cada uno de ellos.
 \subsubsection{Database}
 El archivo de configuración de la base de datos se encuentra en el directorio ``./services/database'' 
 y se llama ``influxdb\_credentials.env''. Este archivo de variables de entorno se carga en el servicio 
-de la base de datos y en todos los servicios que tengan conexión con dicha la base de datos.
+de la base de datos y en todos los servicios que tengan conexión con dicha base de datos.
 
 El contenido es el siguiente:
 \begin{itemize}
@@ -93,7 +93,8 @@ El contenido es el siguiente:
     \item DOCKER\_INFLUXDB\_INIT\_MODE: Modo en el que se inicia la base de datos.
 \end{itemize}
 De todos estos campos, el único que no es configurable es el último, pues sin este valor la base de datos 
-no se cargará correctamente.
+no se cargará correctamente. Tampoco se recomienda cambiar el campo DOCKER\_INFLUXDB\_INIT\_BUCKET, aunque 
+el sistema no debería tener problemas en el caso de que se especifique otro nombre para el bucker de datos del AGV.
 
 \subsubsection{Forecasting}
 
@@ -102,11 +103,11 @@ se llama ``config.json''. En este archivo aparecen los siguientes campos:
 \begin{itemize}
     \item load\_model: guarda un valor booleano. En caso de ser ``true'' el servicio carga el modelo a entrenar.
         Por contra, si el valor es ``false'' el modelo se entrenará en la ejecución del servicio.
-    \item model\_file: nombre del modelo a cargar. Es también el nombre que tendrá el modelo guardado cuando 
-        en el caso de que se entrene en vez de cargarlo.
+    \item model\_file: nombre del modelo a cargar. Es también el nombre que tendrá el modelo guardado en el caso 
+        de que se entrene el modelo.
     \item wait\_time\_before\_train: tiempo a esperar antes de entrenar para dar tiempo a que haya datos que 
-        utilizar en la base de datos para dicho entrenamiento. Cuanto más alto sea este valor, más preciso será 
-        el modelo, pero también más tiempo tardará en entrenarse.
+        utilizar en la base de datos. Cuanto más alto sea este valor, más preciso será el modelo, pero también
+        más tiempo tardará en entrenarse.
     \item wait\_time\_before\_load: tiempo a esperar antes de cargar el modelo para poder ajustar el escalador de los
         datos. Los datos necesitan escalarse, ya que el modelo de predicciones espera valores entre 0 y 1.
 \end{itemize}
