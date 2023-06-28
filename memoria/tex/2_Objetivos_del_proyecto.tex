@@ -1,8 +1,25 @@
 \capitulo{2}{Objetivos del proyecto}
 
-% Este apartado explica de forma precisa y concisa cuales son los objetivos que se persiguen con la realización del proyecto. Se puede distinguir entre los objetivos marcados por los requisitos del software a construir y los objetivos de carácter técnico que plantea a la hora de llevar a la práctica el proyecto.
-Como con cualquier proyecto relacionado con temas industriales o de producción, los principales objetivos
-de este proyecto son claros: mejorar la eficiencia y reducir costes. Todo esto es posible gracias a la 
-correcta realización de predicciones que permitan cosas como, por ejemplo, mantenimiento predictivo. 
+El objetivo principal de este trabajo es el de desarrollar un sistema dedicado a un entorno profesional, capaz 
+de mejorar la eficiencia y reducir costes en procesos industriales.
 
-% TODO
+Este proyecto ha sido diseñado como un microservicio. Las aplicaciones diseñadas de esta manera se dividen 
+en elementos más pequeños e independientes entre sí, y que deben comunicarse y coordinarse. De esta 
+forma, se consigue que la aplicación sea modular, más facil de escalar, de mantener y de desarrollar.
+
+Al dividir la aplicación en lo que a efectos prácticos son aplicaciones más simples, se consigue un código 
+mucho más sencillo, por lo que el diseño del propio código se simplifica. En nuestro caso, se ha utilizado 
+un enfoque de programación funcional, en vez de programación orientada a objetos, pues la simplicidad del propio 
+código hace que esta última metodología no sea la más apropiada.
+
+Los objetivos pueden quedar resumidos en la siguiente lista:
+\begin{itemize}
+    \item Desarrollar la aplicación como un microservicio.
+    \item Utilizar Docker para agrupar cada servicio en su contenedor independiente.
+    \item Utilizar un enfoque de programación funcional.
+    \item Realizar un estudio comparativo de sistemas gestores de bases de datos.
+    \item Realizar otro estudio comparando modelos de predicción de series temporales.
+    \item Hacer uso de Git como herramienta de control de versiones.
+    \item Utilizar herramientas de integración continua como CodeClimate.
+    \item Aplicar la metodología ágil durante el desarrollo del software.
+\end{itemize}

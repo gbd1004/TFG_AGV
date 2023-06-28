@@ -1,7 +1,6 @@
 \capitulo{1}{Introducción}
 
 % Descripción del contenido del trabajo y del estrucutra de la memoria y del resto de materiales entregados.
-% TODO REVISAR
 
 Los AGV, Autonomous Guided Vehicles por sus siglas en inglés, son complejos sistemas robóticos, 
 capaces de moverse en un entorno concreto, cuyo uso es transportar cargas pesadas en fábricas o 
@@ -27,8 +26,55 @@ tipo de base de datos puede usarse para almacenar esta información generada por
 ya que se trata de series temporales, es preferible utilizar bases de datos para series temporales
 para optimizar el rendimiento del sistema.
 
-En este trabajo, por tanto, se propone un sistema capaz de almacenar la información recibida por dichos 
-AGV, y, posteriormente, realizar las predicciones pertinentes sobre dicha información. Se propone también
-la creación de un simulador capaz de generar datos en caso de no tener ningún AGV disponible. Para ello,
-será necesario realizar una comparación de diferentes sistemas gestores de bases de datos, así como de
-los modelos de predicción que se consideren usar, para conseguir con ello el sistema más óptimo posible.
+Estos datos pueden ser posteriormente analizados y utilizados para entrenar un modelo basado en técnicas 
+estadísticas o en redes neuronales, que sirva para predecir los indicadores de rendimiento de estos vehículos.
+Con estas predicciones, se pueden detectar errores con mucha mayor antelación, lo que puede permitir tomar 
+mediadas que no sería factible tomar de otra manera. De esta forma, se pueden conseguir reducir el número 
+de errores críticos que supongan una parada del sistema, reduciendo considerablemente los costes y aumentando 
+la productividad.
+
+Este proyecto está enfocado a utilizarse en un entorno industrial, por lo que su principal objetivo es claro:
+reducir costes a partir de una mejora de la eficiencia del sistema. Por ello, escoger la base de datos más 
+óptima para esta tarea, así como el mejor modelo para realizar las predicciones son tareas esenciales. Es por 
+esto que este trabajo está muy centrado precisamente en dichas tareas de investigación.
+
+\subsection{Estrucutra de la memoria}
+
+Esta memoria segurá la siguiente estructura:
+\begin{itemize}
+    \item \textbf{Introducción:} contiene una breve descripción del trabajo, así como una guía de contenidos del mismo.
+    \item \textbf{Obtetivos del proyecto:} detalla los objetivos principales del proyecto.
+    \item \textbf{Conceptos teóricos:} explicación de varios conceptos necesarios para una mejor comprensión del
+        proyecto.
+    \item \textbf{Técnicas y herramientas:} metodologías y técnicas utilizadas durante todo el desarrollo del 
+        trabajo.
+    \item \textbf{Aspectos relevantes del desarrollo:} descripción del proceso de desarrollo, con los aspectos
+        más relevantes del mismo.
+    \item \textbf{Trabajos relacionados:} exposición y comparativa con otros trabajos relacionados.
+    \item \textbf{Conclusiones y líneas de trabajo futuras:} conclusiones obtenidas durante el desarrollo, así
+        como ideas a futuro para la mejora del mismo.
+\end{itemize}
+
+Junto a la memoria, se incluye a demás unos anexos que incluyen:
+\begin{itemize}
+    \item \textbf{Plan de proyecto:} contiene la planificación temporal y un estudio de viabilidad legal y
+        económica.
+    \item \textbf{Requisitos:} describe los requisitos funcionales y no funcionales del sistema, así como una
+        comparativa de gestores de bases de datos y modelos de predicción, basándose en dichos requisitos.
+    \item \textbf{Diseño:} se define el diseño de los datos, procedimental y arquitectónico del sistema.
+    \item \textbf{Manual del programador:} recoge los aspectos más importantes para futuros programadores del suistema.
+    \item \textbf{Manual de usuario:} detalla las funcionalidades del proyecto para futuros usuarios del
+        mismo.
+\end{itemize}
+
+\subsection{Materiales adjuntos}
+
+Junto con esta memoria y anexos, se incluye:
+\begin{itemize}
+    \item Prototipos. Recoge el conjunto de prototipos realizados durante el desarrollo.
+    \item Análisis de rendimiento. Contiene los programas utilizados para hacer las pruebas de rendimiento 
+        de las bases de datos y de los modelos de predicción.
+    \item Código del sistema desarrollado.
+    \item Dataset de prueba. Se incluye, incluido en los directorios de los servicios, un dataset de un AGV 
+        real con el que realizar pruebas.
+\end{itemize}
