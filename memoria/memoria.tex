@@ -13,6 +13,12 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{listings}
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=none
+]{biblatex}
+\addbibresource{bibliografia.bib}
 
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
@@ -462,12 +468,18 @@ D. nombre co-tutor
 % Abstract en castellano
 \renewcommand*\abstractname{Resumen}
 \begin{abstract}
-En este primer apartado se hace una \textbf{breve} presentación del tema que se aborda en el proyecto.
+En cualquier entorno industrial, poder predecir el comportamiento de un sistema de manera precisa ofrece 
+una gran ventaja, pues permite ahorrar costes mejorando la productividad.
+
+En este trabajo se propone por tanto un sistema desarrollado como un conjunto de microservicios, capaz de 
+almacenar y predecir datos de un AGV (Autonomous Guided Vehicle), concretamente la velocidad de sus ruedas. 
+Con el fin de conseguir el sistema más óptimo y eficiente posible, se ha realizado un estudio comparativo 
+entre diferentes sistemas gestores de bases de datos y de modelos predictivos.
 \end{abstract}
 
 \renewcommand*\abstractname{Descriptores}
 \begin{abstract}
-Palabras separadas por comas que identifiquen el contenido del proyecto Ej: servidor web, buscador de vuelos, android \ldots
+AGV, series temporales, gestores de bases de datos, modelos predictivos, aprendizaje automático, microservicios, \ldots
 \end{abstract}
 
 \clearpage
@@ -475,12 +487,18 @@ Palabras separadas por comas que identifiquen el contenido del proyecto Ej: serv
 % Abstract en inglés
 \renewcommand*\abstractname{Abstract}
 \begin{abstract}
-A \textbf{brief} presentation of the topic addressed in the project.
+In any industrial environment, being able to predict the behavior of a system in an accurate way offers a 
+great advantage, since it allows cost savings by improving productivity.
+
+In this work we propose a system developed as a set of microservices, capable of storing and predicting data 
+from an AGV (Autonomous Guided Vehicle), specifically the speed of its wheels. In order to achieve the most 
+optimal and efficient system possible, a comparative study has been carried out between different database 
+and predictive model management systems.
 \end{abstract}
 
 \renewcommand*\abstractname{Keywords}
 \begin{abstract}
-keywords separated by commas.
+AGV, time series, database management systems, predictive models, machine learning, microservices, \ldots
 \end{abstract}
 
 \clearpage
@@ -507,7 +525,9 @@ keywords separated by commas.
 \include{./tex/7_Conclusiones_Lineas_de_trabajo_futuras}
 
 
-\bibliographystyle{plain}
-\bibliography{bibliografia}
+% \bibliographystyle{ieeetr}
+% \bibliography{bibliografia}
+
+\printbibliography
 
 \end{document}

@@ -1,6 +1,54 @@
 \capitulo{7}{Conclusiones y Líneas de trabajo futuras}
 
-% Todo proyecto debe incluir las conclusiones que se derivan de su desarrollo. Éstas pueden ser de diferente índole, dependiendo de la tipología del proyecto, pero normalmente van a estar presentes un conjunto de conclusiones relacionadas con los resultados del proyecto y un conjunto de conclusiones técnicas. 
-% Además, resulta muy útil realizar un informe crítico indicando cómo se puede mejorar el proyecto, o cómo se puede continuar trabajando en la línea del proyecto realizado. 
+A continuación, se exponen las conclusiones obtenidas tras la finalización del proyecto, así como mejoras a realizar 
+en el futuro.
 
-% TODO
+\section{Conclusiones}
+
+El objetivo general del proyecto ha sido cumplido de manera satisfactoria: se ha conseguido el desarrollo de un sistema
+capaz de almacenar los datos recibidos por un AGV o por el simulador, y capaz de realizar predicciones precisas que permitan 
+realizar mantenimiento predictivo.
+
+Se ha desarrollado un sistema modular, basado en el desarrollo de microservicios independientes entre sí. Gracias a
+esto, se ha conseguido también que el sistema se adapte a las limitaciones de hardware del cliente.
+
+Gracias a la utilización de Python y Docker, se ha conseguido crear un sistema sobre el que es muy fácil de realizar 
+modificaciones a futuro: Python agiliza mucho el desarrollo al ser un lenguaje interpretado, que no necesita de compilaciones 
+que resten tiempo al proceso de despliegue, y Docker permite modificar solo aquellos servicios en los que haya cambios.
+
+Durante el desarrollo del proyecto, se han utilizado metodologías y conocimientos obtenidos durante el grado. Se 
+ha seguido una metodología ágil para el desarrollo, se han aprovechado los conocimientos obtenidos sobre bases de 
+datos para la elección del sistema gestor de bases de datos, se han utilizado los conocimientos obtenidos sobre 
+inteligencia artificial y aprendizaje automático, etc.
+
+El desarrollo del proyecto ha servido también para ampliar mis conocimientos en dichos campos. Me ha servido 
+también para adquirir nuevos conocimientos, como herramientas de Integración continua, nuevos métodos de aprendizaje 
+automático, uso de contenedores de Docker para la creación de microservicios, etc.
+
+Por el trabajo de investigación realizado durante el desarrollo del proyecto, mi capacidad para buscar información 
+de calidad ha mejorado de manera sustancial, así como mi capacidad para leer documentos científicos.
+
+% TODO PREGUNTAR COMO CITAR EL SOCO
+Quiero destacar también la labor realizada por mis tutores, guiándome de manera efectiva durante todo el desarrollo del 
+trabajo. También, por sugerencia suya, una parte de este trabajo ha sido publicado en la conferencia SOCO 2023.
+
+\section{Líneas de trabajo futuras}
+
+
+Con el fin de mejorar la modularidad del proyecto, se sugieren los siguientes cambios:
+\begin{itemize}
+    \item Crear un nuevo servicio que haga de intermediario para otros servicios que quieran interaccionar con la propia base de datos 
+        (Figura \ref{fig:arquitectura_futura}). Para ello, se propone el desarrollado de una API Rest, mediante la cual 
+        se hagan las peticiones a este servicio para hacer consultas e inserciones. De esta forma, se consigue 
+        desacoplar los diferentes servicios de la base de datos, lo que resultaría en un diseño mucho más modular, y 
+        que simplificaría mucho el desarrollo de nuevos servicios en el futuro.
+    \item Modificar el servicio ``Forecaster'', para que pueda detectar comportamientos anómalos de los AGV de manera 
+        automática utilizando la detección de anomalías de Darts \cite{darts:anomaly}, herramienta utilizada para realizar las predicciones.
+    \item Modificar el servicio ``Simulator'' de manera que permita simular más de un AGV. De manera similar, se sugiere 
+        modificar también el servicio ``Forecaster'' para que pueda realizar predicciones de varios vehículos.
+    \item Ejecutar la optimización de los modelos de predicción comparados durante más tiempo. Por limitaciones 
+        de plazos, no fue posible optimizar dichos modelos durante mucho tiempo, por lo que todavía se pueden obtener 
+        mejores modelos potenciales.
+\end{itemize}
+
+\imagen{arquitectura_futura}{Diseño futuro de la arquitectura}{1}

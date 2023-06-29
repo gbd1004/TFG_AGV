@@ -284,8 +284,9 @@ Por último, el análisis de rendimiento compara:
 \subsubsection{Información general (Tabla \ref{tabla:gisgbd})} Solo software de código abierto será considerado en este
 trabajo. Aunque kdb+ tiene una versión de 32 bits, no se usará y no volverá a aparecer en las siguientes comparaciones.
 Por esta razón también, solo las características de la ``Comunity Edition'' de InfluxDB serán utilizadas en dichas
-comparaciones, y características de la ``Enterprise Edition'', que no es de códigp abierto, no se tendrán en cuenta.
+comparaciones, y características de la ``Enterprise Edition'', que no es de código abierto, no se tendrán en cuenta.
 
+% TODO TRADUCIR
 \begin{table}[H]
     \begin{center}
         \begin{adjustbox}{max width=\textwidth}
@@ -317,7 +318,7 @@ comparaciones, y características de la ``Enterprise Edition'', que no es de có
 
 \subsubsection{Soporte software (Tabla \ref{tabla:sssgbd})} Todos los sistemas soportan Linux y Python, el sistema operativo 
 y lenguaje utilizados. Solo Graphite no tiene un lenguaje de consultas definido, aunque se pueden realizar utilizando lo que 
-llaman Funciones \cite{graphite-functions}. Sólo InfluxDB soporta plugins para aprendizaje automático. Otros sistemas como
+llaman Funciones \cite{graphite-functions}. Solo InfluxDB soporta plugins para aprendizaje automático. Otros sistemas como
 TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes como Python o R \cite{timescale-forecasting}.
 
 \begin{table}[H]
@@ -389,7 +390,7 @@ para nuestras necesidades, ya que se requiere almacenar todos los datos enviados
                 Particionamiento & No & Sharding & No & Sí \\
                 Replicación & No & Sí & No & Sí \\
                 \rowcolor{gray!35}
-                Consistencia & Eventual & No & No & Innmediata \\
+                Consistencia & Eventual & No & No & Inmediata \\
                 ACID& No & No & No & Sí \\
                 \rowcolor{gray!35}
                 Concurrencia & Sí & Sí & Sí & Sí \\
@@ -397,7 +398,7 @@ para nuestras necesidades, ya que se requiere almacenar todos los datos enviados
                 \rowcolor{gray!35}
                 Permisos                   & Permisos vía    &                      &                      & Derechos \\
                 \rowcolor{gray!35}
-                de usuario & cuentas & \multirow{-2}{*}{No} & \multirow{-2}{*}{No} & estandar SQL \\
+                de usuario & cuentas & \multirow{-2}{*}{No} & \multirow{-2}{*}{No} & estándar SQL \\
                 Método inserción & Push & Pull & Push & Push \\
                 \bottomrule
             \end{tabular}

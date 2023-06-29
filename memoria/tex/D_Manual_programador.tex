@@ -218,7 +218,7 @@ siguiente comando:
 $ docker compose --profile cpu up --build
 \end{lstlisting}
 
-Se puede ejecutar también el sistema sin ejecuar el servicio de predicción. Para ello basta con no especificar 
+Se puede ejecutar también el sistema sin ejecutar el servicio de predicción. Para ello basta con no especificar 
 un perfil concreto en el comando:
 \begin{lstlisting}
 $ docker compose up --build
@@ -266,7 +266,7 @@ y los valores mostrados concuerdan con lo especificado en los archivos de config
 \imagen{recv_load}{Menasaje de carga del servicio ``Reciever''}
 
 En el caso de utilizar la versión con GPU, en los registros del sistema deberá aparecer el mensaje de que CUDA ha 
-cargado corretamente (Figura \ref{fig:cuda_load}). En el caso de utilizar CPU, este mensaje no aparece en el 
+cargado correctamente (Figura \ref{fig:cuda_load}). En el caso de utilizar CPU, este mensaje no aparece en el 
 registro.
 
 \imagen{cuda_load}{Registro de CUDA}
@@ -277,12 +277,12 @@ Para los casos en los que se cargue el modelo de uno ya entrenado, se deben ver 
 \imagen{wait_load}{Mensaje de espera para el escalador}
 \imagen{load_model}{Mensaje de carga del modelo}
 
-En los casos en los que se entrene un nuevo modelo, aparcen los siguientes registros (Figuras \ref{fig:train_model} y \ref{fig:wait_train}).
+En los casos en los que se entrene un nuevo modelo, aparecen los siguientes registros (Figuras \ref{fig:train_model} y \ref{fig:wait_train}).
 
 \imagen{wait_train}{Mensaje espera para el entrenamiento}
 \imagen{train_model}{Mensaje de entrenamiento del modelo}
 
-En estos dos últimas figuras (\ref{fig:load_model} y \ref{fig:train_model}) se puede obvservar también si hay 
+En estos dos últimas figuras (\ref{fig:load_model} y \ref{fig:train_model}) se puede observar también si hay 
 una GPU disponible para su utilización, o bien se utiliza la CPU.
 
 Por último, por cada predicción realizada con éxito, el siguiente mensaje debería verse en los registros (Figura \ref{fig:pred_exito}).
