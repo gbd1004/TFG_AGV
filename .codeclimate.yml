@@ -2,9 +2,6 @@ version: "2"
 plugins:
   pylint:
     enabled: true
-    checks:
-      import-error:
-        enabled: false
 
 checks:
   argument-count:
