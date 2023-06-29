@@ -14,24 +14,15 @@ URL = "http://database:8086"
 
 
 def get_influxdb_credentials():
+    """Obtiene las credenciales de InfluxDB a partir de variables de entorno."""
     token = os.getenv('DOCKER_INFLUXDB_INIT_ADMIN_TOKEN')
     org = os.getenv('DOCKER_INFLUXDB_INIT_ORG')
     bucket = os.getenv('DOCKER_INFLUXDB_INIT_BUCKET')
 
     return token, org, bucket
 
-
-def get_dbconn(token, org):
-    client = influxdb_client.InfluxDBClient(
-        url=URL,
-        token=token,
-        org=org
-    )
-
-    return client
-
-
 def main():
+    """Función main."""
     logging.basicConfig(level=logging.INFO)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -45,8 +36,6 @@ def main():
 
     connected = False
     retries = 0
-
-    client = get_dbconn(token=token, org=org)
 
     with influxdb_client.InfluxDBClient(url=URL, token=token, org=org) as client:
         while not connected and retries < max_retries:

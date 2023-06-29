@@ -16,6 +16,7 @@ UDP_PORT = 5004
 
 
 def generar_datos():
+    """Genera datos adel AGV aleatorios."""
     dato = {
         "time": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'),
         "AGVID": 1,
@@ -34,6 +35,12 @@ def generar_datos():
 
 
 def simular_csv(sock, csv_path):
+    """Simula el AGV leyendo datos de un archivo csv.
+    
+    Argumentos:
+    sock -- socket UDP por el que se envían los datos.
+    csv_path -- nombre del csv a utilizar.
+    """
     actual_time = datetime.utcnow()
     with open("/simulator/data/" + csv_path, "r", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
@@ -48,6 +55,11 @@ def simular_csv(sock, csv_path):
 
 
 def simular_aleatorio(sock):
+    """Simula el AGV de manera aleatoria.
+    
+    Argumentos:
+    sock -- socket UDP por el que se envían los datos.
+    """
     while True:
         datos = generar_datos()
         t_espera = random.randint(5, 20)
@@ -56,6 +68,7 @@ def simular_aleatorio(sock):
 
 
 def main():
+    """Función main."""
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     logging.basicConfig(level=logging.INFO)
 

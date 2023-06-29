@@ -12,8 +12,10 @@ from influxdb_client import InfluxDBClient, WriteOptions
 import numpy as np
 from pandas import DataFrame
 
+URL = "http://database:8086"
 
 def get_influxdb_credentials():
+    """Obtiene las credenciales de InfluxDB a partir de variables de entorno."""
     token = os.getenv('DOCKER_INFLUXDB_INIT_ADMIN_TOKEN')
     org = os.getenv('DOCKER_INFLUXDB_INIT_ORG')
     bucket = os.getenv('DOCKER_INFLUXDB_INIT_BUCKET')
@@ -22,6 +24,13 @@ def get_influxdb_credentials():
 
 
 def query_dataframe(client, bucket, tiempo) -> DataFrame:
+    """Obtiene un DataFrame con los datos de los últimos segundos.
+    
+    Argumentos:
+    client -- cliente de la base de datos sobre la que hacer la consulta.
+    bucket -- bucket en el que se encuentran los datos.
+    tiempo -- número de segundos especificados para obtener los datos.
+    """
     query = f'from(bucket:"{bucket}")' \
         f' |> range(start: -{tiempo}s)' \
         ' |> aggregateWindow(every: 200ms, fn: mean, createEmpty: true)' \
@@ -38,6 +47,11 @@ def query_dataframe(client, bucket, tiempo) -> DataFrame:
 
 
 def get_series(tag: str, dataframe: DataFrame) -> TimeSeries:
+    """Obtiene una TimeSeries concreta a partir de un DataFrame.
+    
+    tag -- nombre de la serie temporal a obtener.
+    dataframe -- DataFrame del que se obtiene la serie temporal.
+    """
     series = TimeSeries.from_dataframe(
         dataframe, "_time", tag, freq="200ms").astype(np.float32)
     series = fill_missing_values(series=series)
@@ -46,6 +60,10 @@ def get_series(tag: str, dataframe: DataFrame) -> TimeSeries:
 
 
 def get_all_series(dataframe):
+    """Obtiene todasl las TimeSeries a utilizar a partir de un DataFrame.
+    
+    dataframe -- DataFrame del que se obtiene la serie temporal.
+    """
     series_ed = get_series('encoder_derecho', dataframe)
     series_ed = fill_missing_values(
         Diff(lags=1, dropna=False).fit_transform(series=series_ed))
@@ -59,6 +77,13 @@ def get_all_series(dataframe):
 
 
 def train_model(client, bucket, config):
+    """Entrena el modelo de predicción.
+    
+    Argumentos:
+    client -- cliente de la base de datos sobre la que hacer la consulta.
+    bucket -- bucket en el que se encuentran los datos.
+    config -- diccionario con la configuración del servicio.
+    """
     tiempo = int(config['wait_time_before_train'])
     logging.info('Esperando %ss para datos para entrenamiento', tiempo)
     time.sleep(tiempo)
@@ -87,8 +112,35 @@ def train_model(client, bucket, config):
 
     return scaler_ed, scaler_ei, scaler_sr, scaler_sl, model
 
+def load_model(client, bucket, config):
+    """Carga el modelo de predicción.
+    
+    Argumentos:
+    client -- cliente de la base de datos sobre la que hacer la consulta.
+    bucket -- bucket en el que se encuentran los datos.
+    config -- diccionario con la configuración del servicio.
+    """
+    model_path = "/forecasting/model/" + \
+    config['model_file'] + ".pt"
+    model = TransformerModel.load(model_path)
+
+    tiempo = int(config['wait_time_before_load'])
+    logging.info(
+        'Esperando %s segundos para datos para scaler', tiempo)
+    time.sleep(tiempo)
+    dataframe = query_dataframe(client, bucket, tiempo)
+    series_ed, series_ei, series_sl, series_sr = get_all_series(
+        dataframe)
+    scaler_ed, scaler_ei, scaler_sr, scaler_sl = Scaler(), Scaler(), Scaler(), Scaler()
+    scaler_ed.fit(series_ed)
+    scaler_ei.fit(series_ei)
+    scaler_sr.fit(series_sr)
+    scaler_sl.fit(series_sl)
+
+    return scaler_ed, scaler_ei, scaler_sr, scaler_sl, model
 
 def main():
+    """Funcion main."""
     logging.basicConfig(level=logging.INFO)
     with open("/forecasting/config.json", "r", encoding="utf8") as file:
         config = json.load(file)
@@ -97,24 +149,10 @@ def main():
 
     time.sleep(0.5)
 
-    with InfluxDBClient(url="http://database:8086", token=token, org=org, debug=False) as client:
+    with InfluxDBClient(url=URL, token=token, org=org, debug=False) as client:
         if config['load_model']:
-            model_path = "/forecasting/model/" + \
-                config['model_file'] + ".pt"
-            model = TransformerModel.load(model_path)
-
-            tiempo = int(config['wait_time_before_load'])
-            logging.info(
-                'Esperando %s segundos para datos para scaler', tiempo)
-            time.sleep(tiempo)
-            dataframe = query_dataframe(client, bucket_agv, tiempo)
-            series_ed, series_ei, series_sl, series_sr = get_all_series(
-                dataframe)
-            scaler_ed, scaler_ei, scaler_sr, scaler_sl = Scaler(), Scaler(), Scaler(), Scaler()
-            scaler_ed.fit(series_ed)
-            scaler_ei.fit(series_ei)
-            scaler_sr.fit(series_sr)
-            scaler_sl.fit(series_sl)
+            scaler_ed, scaler_ei, scaler_sr, scaler_sl, model = load_model(
+                client, bucket_agv, config)
             logging.info("Modelo cargado satisfactoriamente")
         else:
             scaler_ed, scaler_ei, scaler_sr, scaler_sl, model = train_model(
