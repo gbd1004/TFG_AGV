@@ -266,7 +266,7 @@ Por último, el análisis de rendimiento compara:
             \rowcolors{2}{gray!35}{}
             \begin{tabular}{l c c c c}
                 \toprule
-                Systems & Organization & Launch year & Latest version & License \\
+                Sistema & Organización & Lanzamiento & Última versión & Licencia \\
                 \otoprule
                 InfluxDB    & InfluxData & 2013 & 2023 & OSS \\
                 db+        & Kx Systems & 2000 & 2020 & Comercial \\
@@ -292,7 +292,7 @@ comparaciones, y características de la ``Enterprise Edition'', que no es de có
         \begin{adjustbox}{max width=\textwidth}
             \begin{tabular}{l c c c c}
                 \toprule
-                System & OS & Python & Query language & ML Plugins\\
+                Sistema & OS & Python & Lenguaje de consultas & Plugins ML\\
                 \otoprule
                 & Linux &                       &  \\
                 \multirow{-2}{*}{InfluxDB} & OS x  & \multirow{-2}{*}{Sí} & \multirow{-2}{*}{Flux and InfluxQL} & \multirow{-2}{*}{Loud ML} \\
@@ -327,7 +327,7 @@ TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes
             \rowcolors{2}{gray!35}{}
             \begin{tabular}{l c c c c c c}
                 \toprule
-                Sistemas & Estrellas GitHub & Pull requests & Pull requests aceptadas & Issues & Issues cerrados \\
+                Sistema & Estrellas GitHub & Pull requests & Pull requests aceptadas & Issues & Issues cerrados \\
                 \otoprule
                 InfluxDB    & 25.2k & 26 & 22 & 37 & 13 \\
                 Prometheus  & 47.4k & 75 & 53 & 42 & 20\\
@@ -610,14 +610,14 @@ los gráficos de autocorrelación y autocorrelación parcial. El primero de esto
 un valor de la serie temporal con sus anteriores, mientras que el segundo muestra la correlación con el valor 
 inmediatamente anterior al actual.
 
-\imagen{acf}{ACF del encoder derecho}{1}
-\imagen{pacf}{PACF del encoder derecho}{1}
+\imagen{acf}{ACF del encoder derecho}
+\imagen{pacf}{PACF del encoder derecho}
 
 Como podemos ver, el valor del ACF decrementa, pero de manera muy lenta, lo que nos indica que necesitamos 
 por lo menos un orden de diferenciación, por lo que el parámetro d será por lo menos de 1. 
 
-\imagen{acf_dif2}{ACF del encoder derecho después de diferenciar}{1}
-\imagen{pacf_dif2}{PACF del encoder derecho después de diferenciar}{1}
+\imagen{acf_dif2}{ACF del encoder derecho después de diferenciar}
+\imagen{pacf_dif2}{PACF del encoder derecho después de diferenciar}
 
 Se puede ver también como a partir del elemento 16 no se aprecian valores significativos, por lo que el valor del 
 parámetro p será 16. Estas observaciones nos indican a pensar que el modelo es ARIMA(p, d, 0), ya que se cumplen 

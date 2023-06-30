@@ -2,9 +2,15 @@
 [![pylint score](https://github.com/gbd1004/TFG_AGV/actions/workflows/linting.yml/badge.svg)](https://github.com/gbd1004/TFG_AGV/actions/workflows/linting.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-# TFG AGV
+# Análisis y predicción de datos obtenidos del funcionamiento de un AGV
 
 En este proyecto se define la creación de un sistema capaz de almacenar datos recibidos de un AGV (Autonomous Guided Vehicle) y de predecir dichos datos. Esto permitirá realizar cosas como mantenimiento predictivo, alertas automáticas, etc.
+
+## Autor
+
+Trabajo desarrollado por Gonzalo Burgos de la Hera, gracias a la tutoría de Bruno Barque Zanón y Jesús Enrique Sierra García.
+
+![alt text](https://github.com/gbd1004/TFG_AGV/blob/main/memoria/img/ubuReadme.jpg?raw=true)
 
 ## Dependencias para la ejecución
 
