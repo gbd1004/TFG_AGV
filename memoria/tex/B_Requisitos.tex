@@ -456,6 +456,10 @@ Para realizar esto mismo con TimescaleDB, es necesario utilizar otra herramienta
 
 \section{Estudio del modelo de predicción}
 
+\subsection{Metodología}
+
+\subsubsection{Modelos bajo estudio}
+
 Los modelos elegidos para la comparación son los siguientes:
 \begin{itemize}
     \item ARIMA. Modelo estadístico basado en la unión de los modelos Autorregresivo, Integración y Media movil.
@@ -476,19 +480,44 @@ Estos modelos han sido comparados usando las siguientes métricas:
 Tanto los modelos elegidos como las métricas utilizadas para compararlos son explicados en más detalle en el apartado 3 Conceptos
 Teóricos en la memoria.
 
-Se van a hacer tres tipos de comparaciones: una comparación univariante en la que solo se prediga un valor, 
-una comparación univariante con covariables en la que solo se prediga un valor, pero se utilicen otros como entrada y 
-una comparación multivariante en la que se predigan todos los valores utilizados como entrada.
+\subsubsection{Procedimiento de la comparación}
 
+La comparación de los modelos de predicción se ha realizado en dos pasos. La primera comparativa se 
+realiza con los modelos por defecto otorgados por Darts. La segunda, se realiza después de una 
+optimización de los hiperparámetros de cada uno de los modelos.
 
 Para realizar la comparación, excepto en el caso de ARIMA que es un modelo estadístico que no usa redes neuronales, 
 se entrena el modelo durante 200 épocas y se realizan varias predicciones: una 200 milisegundos a futuro, otra 
 1 segundo a futuro y otra 10 segundos a futuro. Este procedimiento se realiza cinco veces y se calcula la media 
 de las métricas como valor final.
 
-\subsection{Comparativa inicial}
+Esta prueba se repite tres veces por cada modelo, de forma que al final surgen tres comparaciones 
+diferentes;
+\begin{itemize}
+    \item Univariante: el modelo toma como entrada valores anteriores de la serie temporal a predecir,
+        y como salida se obtiene solo dicha serie temporal.
+    \item Covariante: el modelo toma como entrada tanto valores anteriores de la serie temporal a predecir, 
+        como valores de otras series temporales relacionadas. La salida de este modelo es solo la serie temporal 
+        que se quiera predecir.
+    \item Multivariante: el modelo toma como entrada valores anteriores de varias series temporales, prediciendo valores
+        para todas ellas.
+\end{itemize}
 
-Una primera comparativa ha sido realizada con los parámetros por defecto que Darts provee de dichos modelos. 
+\subsection{Preprocesado}
+
+Se han realizado dos operaciones de preprocesado sobre los datos.
+\begin{enumerate}
+    \item Diferenciación: se restan los valores de una serie temporal con sus valores actuales.
+        Esto se ha realizado con los valores ``encoder\_derecho'' y ``encoder\_izquierdo'' para obtener
+        la velocidad de cada rueda a partir de la posición de los encoders.
+    \item Escalado: para aquellos modelos basados en redes neuronales (todos menos ARIMA), es preferible
+        tener valores de los datos entre 0 y 1 para el entrenamiento, por lo que los datos han de 
+        ser normalizados antes de entrendar.
+\end{enumerate}
+
+\subsection{Resultados con los modelos por defecto}
+
+Como se ha comentado anteriormente, una primera comparativa ha sido realizada con los parámetros por defecto que Darts provee de dichos modelos. 
 Los únicos parámetros especificados han sido la longitud de los datos de entrada y la longitud de los datos de salida 
 en aquellos modelos que lo permitan. Se ha especificado una longitud de entrada de 60 valores 
 (correspondiente a 12 segundos), y una longitud de salida de 10 valores (2 segundos). En los casos con covariables,
@@ -596,6 +625,15 @@ basado en redes neuronales, no necesita del mismo entrenamiento que el resto de 
 es sustancialmente más pequeño. Sin embargo, es el modelo más lento a la hora de predecir nuevos datos, por lo que no es 
 el mejor en caso de que queramos incluir dichas predicciones en el software del AGV.
 
+A continuación se ven los resultados de las predicciones realizadas. Se predicen los próximos
+10 segundos utilizando covariables (excepto en el caso de ARIMA que no lo soporta). En negro se 
+ven los valores pasados, en morado los valores predichos y en azul los valores reales para comparar.
+
+\imagenSized{arima_def}{Predicción de ARIMA por defecto}{1}
+\imagenSized{tcn_def}{Predicción de TCN por defecto}{1}
+\imagenSized{nhits_def}{Predicción de N-HiTS por defecto}{1}
+\imagenSized{transformer_def}{Predicción de Transformer por defecto}{1}
+
 \subsection{Optimización de los hiperparámetros}
 
 Los resultados del apartado anterior son potencialmente mejorables. Para ello, es necesario encontrar los parámetros de los 
@@ -628,6 +666,10 @@ dichas condiciones:
 \end{itemize}
 
 Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1, 0).
+
+\subsection{Resultados tras la optimización}
+
+Una vez optimizados los hiperparámetros de cada modelo, se vuelve a realizar la comparación.
 
 \begin{table}[H]
     \centering
@@ -724,12 +766,25 @@ Por todo esto, el modelo ARIMA que mejor se adapta a nuestro caso es ARIMA(16, 1
     \label{tab:tp_opt}
 \end{table}
 
+A continuación se ven los resultados de las predicciones realizadas con los modelos optimizados. 
+Al igual que en la anterior prueba, se predicen los próximos 10 segundos utilizando covariables 
+(excepto en el caso de ARIMA que no lo soporta). En negro se ven los valores pasados, en morado 
+los valores predichos y en azul los valores reales para comparar.
+
+\imagenSized{arima_opt}{Predicción de ARIMA con optimización}{1}
+\imagenSized{tcn_opt}{Predicción de TCN con optimización}{1}
+\imagenSized{nhits_opt}{Predicción de N-HiTS con optimización}{1}
+\imagenSized{transformer_opt}{Predicción de Transformer con optimización}{1}
+
+\subsection{Conclusiones}
+
 Como se puede observar, excepto en ARIMA, la optimización arroja peores resultados que los modelos por defecto. Esto 
-se puede deber principalmente a dos factores:
+se puede deber principalmente a tres factores:
 \begin{enumerate}
     \item Los modelos por defecto son lo suficientemente buenos.
     \item El tiempo de ejecución de la optimización no ha sido el suficiente, por lo que no se han encontrado las 
         mejores combinaciones de hiperparámetros.
+    \item La cantidad de datos utilizada para el entrenamiento no es suficiente.
 \end{enumerate}
 
 En cuanto a ARIMA, a cambio de obtener mejores resultados tanto el tiempo de entrenamiento como el de predicción 
@@ -737,7 +792,9 @@ son algo más del doble de grandes. Tampoco supone un gran problema, ya que a la
 supone unos segundos más, y en el caso de la predicción el aumento está en el rango de los milisegundos.
 
 Por todo esto, como queremos realizar predicciones a relativamente largo plazo (10 segundos), el modelo escogido 
-finalmente será el Transformer con los hiperparámetros por defecto.
+finalmente será el Transformer con los hiperparámetros por defecto y con covariables. Aunque el modelo Transformador
+multivariante produce aparentemente mejores resultados, el mismo modelo con covariantes tiene un mejor DTW (las curvas
+son más parecidas), y se simplifica la integración al no tener luego que separar cada una de las diferentes predicciones. 
 
 En el caso de que en un futuro quieran integrarse estas predicciones en el propio software del AGV con el fin 
 de mejorar su rendimiento, habría que estudiar si usar ARIMA por sus buenos resultados a corto plazo, o bien 

@@ -71,17 +71,17 @@ df = query_dataframe()
 series_ed = get_series('encoder_derecho', df)
 
 
-series_ed.plot()
-plt.show()
+# series_ed.plot()
+# plt.show()
 
 series_ed = fill_missing_values(Diff(lags=5, dropna=False).fit_transform(series=series_ed))
-series_ed.plot()
-plt.show()
+# series_ed.plot()
+# plt.show()
 
-plot_acf(series_ed, max_lag=20)
-plt.show()
-plot_pacf(series_ed, max_lag=20)
-plt.show()
+# plot_acf(series_ed, max_lag=20)
+# plt.show()
+# plot_pacf(series_ed, max_lag=20)
+# plt.show()
 
 series_ei = get_series('encoder_izquierdo', df)
 series_ei = fill_missing_values(Diff(lags=5, dropna=False).fit_transform(series=series_ei))
@@ -121,24 +121,46 @@ out = 300
 # model = KalmanForecaster(dim_x=1000)
 # model = Prophet()
 # model = TransformerModel(
-#     input_chunk_length=55,
+#     input_chunk_length=60,
 #     output_chunk_length=50,
-#     d_model=64,
-#     nhead=2,
+#     d_model=128,
+#     nhead=4,
 #     num_encoder_layers=4,
-#     num_decoder_layers=2,
-#     dim_feedforward=512,
-#     dropout=0.0616,
-#     activation="Bilinear",
-#     norm_type="RMSNorm"
+#     num_decoder_layers=3,
+#     dim_feedforward=128,
+#     dropout=0.02711,
+#     activation="SwiGLU",
+#     norm_type=None
 # )
-model = TransformerModel(input_chunk_length=60, output_chunk_length=50)
+# model = TCNModel(
+#     input_chunk_length=123,
+#     output_chunk_length=50,
+#     kernel_size=4,
+#     num_filters=10,
+#     weight_norm=False,
+#     dilation_base=1,
+#     num_layers=7,
+#     dropout=0.2105
+# )
+# model = NHiTSModel(
+#     input_chunk_length=53,
+#     output_chunk_length=50,
+#     num_stacks=4,
+#     num_blocks=4,
+#     num_layers=2,
+#     layer_widths=14,
+#     dropout=0.1855,
+#     activation="PReLU",
+#     MaxPool1d=False
+# )
+model = ARIMA(p=16, d=1, q=0)
+# model = TransformerModel(input_chunk_length=60, output_chunk_length=50)
 # model = TFTModel(input_chunk_length=360, output_chunk_length=20)
 # model = NBEATSModel(input_chunk_length=100, output_chunk_length=out)
 # model = FFT()
 # model = NHiTSModel(input_chunk_length=60, output_chunk_length=50)
 # model = NHiTSModel(input_chunk_length=100, output_chunk_length=50, num_stacks=5, num_blocks=2, num_layers=1, layer_widths=11, dropout=0.4293, activation="Softplus", MaxPool1d=False)
-# model = RNNModel(input_chunk_length=100, model="LSTM")
+# model = TCNModel(input_chunk_length=60, output_chunk_length=50)
 # model = TCNModel(input_chunk_length=349, output_chunk_length=50, kernel_size=2, num_filters=17, weight_norm=False, dilation_base=7, num_layers=6, dropout=0.1288)
 # model = ARIMA()
 # model = ARIMA(p=23, d=1, q=0)
@@ -159,22 +181,22 @@ multivariate_val_scaled = multivariate_scaler.transform(multivariate_val).astype
 
 covariates = train_sr_scaled.stack(train_sl_scaled)
 
-model.fit([train_ed_scaled, train_ei_scaled], past_covariates=[covariates, covariates])
+# model.fit([train_ed_scaled, train_ei_scaled], past_covariates=[covariates, covariates], epochs=200)
 # model.fit(multivariate_train)
 # model.fit(multivariate_train, val_series=multivariate_val, epochs=200)
-# model.fit(train_ed)
+model.fit(train_ed)
 # model.fit(train_scaled)
 # prediction = model.predict(series=multivariate_train, n=50)
-# prediction = model.predict(n=80)
+prediction = model.predict(n=50)
 # prediction = model.predict(series=train_scaled, n=out)
-prediction = model.predict(series=[train_ed_scaled, train_ei_scaled], past_covariates=[covariates, covariates], n=50)
+# prediction = model.predict(series=[train_ed_scaled, train_ei_scaled], past_covariates=[covariates, covariates], n=50)
 # prediction = model.predict(n=out)
 
 # print(prediction)
 
-pred = scaler_ed.inverse_transform(prediction[0])
+# pred = scaler_ed.inverse_transform(prediction[0])
 # pred = multivariate_scaler.inverse_transform(prediction)
-# pred = prediction
+pred = prediction
 
 # print(pred)
 
@@ -183,7 +205,9 @@ pred = scaler_ed.inverse_transform(prediction[0])
 # series_ed.plot()
 # train.plot()
 # val.plot()
-multivariate_series.plot()
+# multivariate_series.plot()
+train_ed.plot()
+val_ed[:50].plot()
 pred.plot()
 plt.show()
 
