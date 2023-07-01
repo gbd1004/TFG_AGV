@@ -268,11 +268,11 @@ Por último, el análisis de rendimiento compara:
                 \toprule
                 Sistema & Organización & Lanzamiento & Última versión & Licencia \\
                 \otoprule
-                InfluxDB    & InfluxData & 2013 & 2023 & OSS \\
-                db+        & Kx Systems & 2000 & 2020 & Comercial \\
-                Prometheus  & -          & 2015 & 2023 & OSS \\
-                Graphite    & -          & 2006 & 2022 & OSS \\
-                TimescaleDB & Timescale  & 2017 & 2023 & OSS \\
+                InfluxDB    & InfluxData & 2013 & 2023 & MIT \\
+                kdb+        & Kx Systems & 2000 & 2020 & Comercial \\
+                Prometheus  & -          & 2015 & 2023 & Apache License 2.0 \\
+                Graphite    & -          & 2006 & 2022 & Apache License 2.0 \\
+                TimescaleDB & Timescale  & 2017 & 2023 & Apache License 2.0 \\
                 \bottomrule
             \end{tabular}
         \end{adjustbox}
@@ -286,7 +286,6 @@ trabajo. Aunque kdb+ tiene una versión de 32 bits, no se usará y no volverá a
 Por esta razón también, solo las características de la ``Comunity Edition'' de InfluxDB serán utilizadas en dichas
 comparaciones, y características de la ``Enterprise Edition'', que no es de código abierto, no se tendrán en cuenta.
 
-% TODO TRADUCIR
 \begin{table}[H]
     \begin{center}
         \begin{adjustbox}{max width=\textwidth}
@@ -295,7 +294,7 @@ comparaciones, y características de la ``Enterprise Edition'', que no es de có
                 Sistema & OS & Python & Lenguaje de consultas & Plugins ML\\
                 \otoprule
                 & Linux &                       &  \\
-                \multirow{-2}{*}{InfluxDB} & OS x  & \multirow{-2}{*}{Sí} & \multirow{-2}{*}{Flux and InfluxQL} & \multirow{-2}{*}{Loud ML} \\
+                \multirow{-2}{*}{InfluxDB} & OS x  & \multirow{-2}{*}{Sí} & \multirow{-2}{*}{Flux e InfluxQL} & \multirow{-2}{*}{Loud ML} \\
                 \rowcolor{gray!35}
                                             & Linux   &                        & & \\
                 \rowcolor{gray!35}
@@ -318,7 +317,7 @@ comparaciones, y características de la ``Enterprise Edition'', que no es de có
 
 \subsubsection{Soporte software (Tabla \ref{tabla:sssgbd})} Todos los sistemas soportan Linux y Python, el sistema operativo 
 y lenguaje utilizados. Solo Graphite no tiene un lenguaje de consultas definido, aunque se pueden realizar utilizando lo que 
-llaman Funciones \cite{graphite-functions}. Solo InfluxDB soporta plugins para aprendizaje automático. Otros sistemas como
+llaman Funciones \cite{graphite-functions}. Únicamente InfluxDB soporta plugins para aprendizaje automático. Otros sistemas como
 TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes como Python o R \cite{timescale-forecasting}.
 
 \begin{table}[H]
@@ -327,7 +326,8 @@ TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes
             \rowcolors{2}{gray!35}{}
             \begin{tabular}{l c c c c c c}
                 \toprule
-                Sistema & Estrellas GitHub & Pull requests & Pull requests aceptadas & Issues & Issues cerrados \\
+                \multirow{2}{*}{Sistema} & Estrellas & \multirow{2}{*}{Pull requests} & Pull requests & \multirow{2}{*}{Issues}  & Issues \\
+                 &  GitHub &  & aceptadas &  &  cerrados \\
                 \otoprule
                 InfluxDB    & 25.2k & 26 & 22 & 37 & 13 \\
                 Prometheus  & 47.4k & 75 & 53 & 42 & 20\\
@@ -442,7 +442,7 @@ recursos del sistema. Si en un futuro es necesario escalar InfluxDB puede ser me
 recursos suele significar un menor coste. Sin embargo, TimescaleDB es más flexible, ya que al estar basado en PostgreSQL 
 tiene todas sus características. Cualquiera de estos dos sistemas puede ser perfectamente usado según los requisitos marcados.
 
-\subsection{Elección}
+\subsection{Elección final}
 
 Al final, el sistema gestor de bases de datos escogido ha sido InfluxDB. Aunque sea más lento que TimescaleDB, tiene
 una velocidad lo suficientemente buena, y al consumir menos recursos la hace una opción más barata en caso de que 
@@ -458,19 +458,19 @@ Para realizar esto mismo con TimescaleDB, es necesario utilizar otra herramienta
 
 Los modelos elegidos para la comparación son los siguientes:
 \begin{itemize}
-    \item ARIMA.
-    \item TCN.
-    \item N-HiTS.
-    \item Transformer Model.
+    \item ARIMA. Modelo estadístico basado en la unión de los modelos Autorregresivo, Integración y Media movil.
+    \item TCN. Modelo basado en el uso de redes neuronales convolucionales temporales.
+    \item N-HiTS. Mejora del modelo N-BEATS, que utiliza predicciones futuras y pasadas para entrenarse.
+    \item Transformer Model. Modelo basado en el uso del modelo transformador, normalmente usado para modelos generadores de texto como GPT.
 \end{itemize}
 
 Estos modelos han sido comparados usando las siguientes métricas:
 \begin{itemize}
-    \item MAE 
-    \item MASE 
-    \item DTW
-    \item Tiempo de entrenamiento.
-    \item Tiempo de predicción.
+    \item MAE. Error absoluto medio.
+    \item MASE. Error absoluto medio escalado.
+    \item DTW. Algoritmo ``Dynamic Time Warping''.
+    \item Tiempo de entrenamiento. Cuánto tarda el modelo en ajustarse.
+    \item Tiempo de predicción. Cuánto tarda el modelo en realizar una predicción.
 \end{itemize}
 
 Tanto los modelos elegidos como las métricas utilizadas para compararlos son explicados en más detalle en el apartado 3 Conceptos

@@ -11,13 +11,14 @@ fase estuvo relacionada con el diseño de la arquitectura, así como la elecció
 datos. En la segunda fase, se diseñó todo lo relativo a la predicción de datos y a la elección de las
 herramientas necesarias para dicha tarea.
 
-\section{Primera fase}
+\section{Diseño de la arquitectura y comparativa de los gestores de bases de datos}
 
 Como ha sido mencionado en el párrafo anterior, en la primera fase se llevó a cabo el diseño de la
 arquitectura del sistema, así como el desarrollo de los servicios que forman dicho sistema. Además,
 se ha realizado una comparativa de diferentes sistemas gestores de bases de datos con el fin de elegir
 el que mejor se adapte a nuestros requisitos.
 
+Esta parte del desarrollo del proyecto ha sido publicada en la conferencia SOCO 2023.
 %TODO AÑADIR REFERENCIA A SOCO
 
 \subsection{Diseño de la arquitectura}
@@ -116,7 +117,7 @@ Este servicio simplemente inicia un contenedor de Docker con la base de datos. E
 especificar las credenciales del usuario administrador que tendrá los permisos necesarios para insertar 
 información en dicha base de datos.
 
-\section{Segunda fase}
+\section{Modelo de predicción de datos}
 
 La segunda fase se centró en el desarrollo y diseño del servicio de predicción de nuevos datos.
 Se ha realizado un análisis comparativo de diferentes modelos predictivos, así como un análisis
@@ -143,13 +144,12 @@ queremos predecir. Del AGV recibimos los siguientes datos:
     \item Encoder derecho: valor del codificador de la rueda derecha. Cuando el AGV avanza este valor se
         incrementa, y cuando retrocede se decrementa.
     \item Encoder izquierdo: igual al anterior, pero con la rueda izquierda.
-    \item CorrienteL: % TODO
-    \item CorrienteH: %TODO
-    \item Medida batería: %TODO
+    \item Corriente: dividido en límites inferior y superior.
+    \item Medida batería: corriente medida en la batería.
     \item Error de guiado: distancia que el AGV está desviado de la banda magnética por la que se guía.
     \item Consigna de velocidad derecha: valor de la velocidad enviado a la rueda derecha.
     \item Consigna de velocidad izquierda: similar al anterior pero con la rueda izquierda.
-    \item Display: %TODO
+    \item Display: valor recibido con información del AGV.
 \end{itemize}
 
 Cabe mencionar que, como los encoders derecho e izquierdo no nos muestran directamente la velocidad de las 
@@ -230,7 +230,7 @@ servicio complementario.
 
 \imagen{diagrama_forecast}{Diagrama del servicio de predicción.}{0.8}
 
-\section{Puesta en marcha}
+\section{Despliegue del proyecto}
 
 Cada servicio queda definido en un archivo ``Dockerfile'', que definirá el contenido y acciones de cada uno de los 
 contenedores.
@@ -246,7 +246,7 @@ En la Figura \ref{fig:preds} podemos observar las predicciones realizadas en nar
 recibidos por el AGV en azul. Una explicación en detalle de como acceder y utilizar esta interfaz se da 
 en la sección E.4 de los anexos.
 
-\section{Depurado}
+\section{Mantenimiento del código}
 
 Al final del desarrollo, se integraron en el proyecto las herramientas de integración continua Code Climate y 
 Pylint. Gracias a estas herramientas, se localizaron y resolvieron errores estilísticos y de mantenibilidad del código.

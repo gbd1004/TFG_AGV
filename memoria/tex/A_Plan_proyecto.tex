@@ -7,40 +7,29 @@ sólida y realista, así como evaluar la viabilidad económica y legal del proye
 son clave para garantizar el éxito a largo plazo, la rentabilidad y la conformidad con las 
 regulaciones aplicables.
 
-El presente proyecto de software se enfoca en el análisis detallado de la planificación temporal,
-la viabilidad económica y la viabilidad legal, con el objetivo de proporcionar una base sólida
-para su implementación exitosa. Se realizará un exhaustivo examen de cada uno de estos aspectos,
-considerando tanto los recursos disponibles como las restricciones y requisitos específicos del
-proyecto.
+La fase de planificación se divide por tanto en los siguientes pasos:
+\begin{itemize}
+    \item Planificación temporal: se organizará el trabajo en los sprints correspondientes.
+    \item Estudio de viabilidad: se divide a su vez en otros dos pasos:
+    \begin{itemize}
+        \item Viabilidad económica: se explorarán los gastos del desarrollo del proyecto 
+            y los posibles beneficios generados por el mismo.
+        \item Viabilidad legal: se discutirá la licencia del proyecto, la cual depende de las
+            licencias de las dependencias utilizadas.
+    \end{itemize}
+\end{itemize}
 
-En primer lugar, se llevará a cabo un análisis de la planificación temporal del proyecto. Esto
-implica establecer un cronograma realista y eficiente, teniendo en cuenta las tareas necesarias,
-los hitos clave y las dependencias entre ellas. Se identificarán los recursos requeridos y se
-asignarán de manera adecuada para asegurar una ejecución eficiente y oportuna del proyecto. 
-Además, se considerarán posibles riesgos y se desarrollarán estrategias de mitigación para 
-evitar retrasos y garantizar la finalización exitosa del software en el tiempo establecido.
+Para el paso de la planificación temporal, se analizará el tiempo estimado para completar cada 
+uno de las partes del proyecto, y se distribuirán de manera uniforme en todos los sprints según 
+las convenciones marcadas por el método SCRUM.
 
-En segundo lugar, se realizará un estudio exhaustivo de la viabilidad económica del proyecto 
-de software. Esto implica evaluar los costos asociados con el desarrollo, implementación y 
-mantenimiento del software, así como proyectar los beneficios y retornos de inversión esperados. 
-Se analizarán los posibles ingresos generados por el software, los gastos operativos, el 
-costo de adquisición de herramientas y tecnologías necesarias, entre otros factores 
-relevantes. Este análisis permitirá tomar decisiones informadas sobre la asignación de 
-recursos financieros y evaluar la rentabilidad y sostenibilidad del proyecto.
+Para la segunda parte de la planificación, se tendrán en cuenta los gastos de hardware, software, 
+personal y otros (como el precio del alquiler y el internet). Se tendrán también en cuenta el modelo de 
+negocio planteado para generar beneficios.
 
-% TODO
-Por último, pero no menos importante, se llevará a cabo un análisis exhaustivo de la viabilidad 
-legal del proyecto de software. Se examinarán las leyes y regulaciones pertinentes, como la 
-protección de datos, los derechos de propiedad intelectual y cualquier otro requisito legal 
-aplicable. Se asegurará que el software cumpla con todas las normativas y se evitarán posibles 
-problemas legales en el futuro. Además, se considerarán las implicaciones éticas y de privacidad 
-para garantizar el cumplimiento de estándares éticos y legales relevantes.
-
-En resumen, este proyecto de software se enfoca en el análisis riguroso de la planificación 
-temporal, la viabilidad económica y la viabilidad legal. Al considerar estos aspectos de 
-manera integral, se establecerán las bases necesarias para el desarrollo exitoso del software, 
-asegurando su viabilidad financiera, su cumplimiento legal y su capacidad para cumplir con los 
-objetivos establecidos.
+Para ello, será necesario comprobar que las licencias de las dependencias utilizadas en el proyecto 
+permiten utilizar el modelo de negocio propuesto, por lo que deberá realizarse un análisis de la 
+viabilidad legal del proyecto.
 
 \section{Planificación temporal}
 
@@ -64,45 +53,91 @@ el desarrollo de este proyecto.
 \tablaSmallSinColores{Costes de hardware}{l l l}{coste_hw}{
     Elemento & Coste & Coste amortizado \\
 }{
-    Ordenador & 1500€ & 375€ \\
+    Ordenador & 1500 € & 375 € \\
+    Periféricos & 100 € & 25 € \\ 
     \midrule
-    Total & 1500€ & 375€ \\
+    Total & 1500 € & 400 € \\
 }
 
-\paragraph{Costes software}
+\paragraph{Costes de software}
 Debido a que el proyecto ha sido desarrollado utilizando únicamente software de código abierto,
 los costes de software han sido de cero. Convendría, sin embargo, en el supuesto caso de aplicar
 este proyecto en un entorno industrial real, estudiar si merece la pena utilizar la versión empresarial 
-y de pago de la base de datos utilizada, InfluxDB.
+y de pago de InfluxDB, la base de datos utilizada.
 
-\paragraph{Costes personales}
+\paragraph{Costes de personal}
 
 El desarrollo del proyecto ha sido llevado a cabo por un único programador. Se supone que ha sido 
 a jornada completa y que se trata de un desarrollador junior.
 
-\tablaSmallSinColores{Costes personales}{l l}{coste_per}{
+\tablaSmallSinColores{Costes de personal}{l l}{coste_per}{
     Elemento & Coste \\
 }{
-    Salario & 1200€ \\
-    IRPF & \\
-    Seguridad Social & \\
-    Salario bruto & \\
+    Salario bruto anual & 18.000 € \\
+    IRPF anual (13,25\%) & 2.385 € \\
+    Seguridad Social & 1.269 € \\
+    Salario neto anual & 14.346 € \\
     \midrule
-    Total 6 meses & \\
+    Total 6 meses & 7.173 € \\
 }
 
 \paragraph{Otros costes}
 
-% TODO ALQUILER, INTERNET, LUZ, AGUA, ETC
+En este apartado se estudian otros costes como el alquiler, internet, luz, etc.
+
+\tablaSmallSinColores{Otros costes}{l l}{otros_costes}{
+    Elemento & Coste \\
+}{
+    Alquiler (mensual) & 300 € \\
+    Internet (mensual) & 50 € \\
+    Luz (mensual) & 50 € \\
+    Calefacción (mensual) & 40 € \\ 
+    Agua (mensual) & 17 € \\
+    \midrule
+    Total 6 meses & 2.742 € \\
+}
 
 \paragraph{Coste total}
 
-% TODO TOTAL
+La suma de todos los costes queda reflejada en la siguiente tabla (Tabla \ref{tabla:suma_costes})
+
+\tablaSmallSinColores{Otros costes}{l l}{suma_costes}{
+    Elemento & Coste \\
+}{
+    Hardware & 400 € \\
+    Software & 0 € \\
+    Personal & 7.173 € \\
+    Otros & 2.742 € \\
+    \midrule
+    Total & 10.315 € \\
+}
 
 \subsubsection{Beneficios}
 
-% TODO
+Ya que el sistema desarrollado se distribuye principalmente a empresas, el precio de adquisición del
+mismo será de 2.000 €. Se ofrece también a demás un servicio de soporte continuo con un precio de 
+200 € al mes.
+
+% TODO Revisar que encaje con las licencias
 
 \subsection{Viabilidad legal}
 
-% TODO
+En este apartado se analizan las licencias del software utilizado, y se detallará la licencia 
+escogida para el software del proyecto, así como de la documentación, imágenes y vídeos utilizados.
+
+\subsubsection{Sofware}
+
+Se muestran a continuación las licencias del software utilizado.
+
+\tablaSmallFija{Licencias de las dependencias}{l l l}{licencias}{
+Dependencia & Versión & Licencia \\
+}{
+InfluxDB & 2.6.1 & MIT \\
+Docker & 24.0.2 & Docker Subscription Service Agreement \\
+Docker compose & 2.16.0 & Apache License 2.0 \\
+Nvidia-docker & 2.13.0 & Apache License 2.0 \\
+Darts & 0.24.0 & Apache License 2.0 \\
+Python UDP & 0.5.10 & MIT \\
+Python & 3.10 & Python Software Foundation \\ 
+CUDA & 11.8 & NVIDIA Deep Learning Container license\\
+}

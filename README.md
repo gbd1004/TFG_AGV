@@ -1,10 +1,10 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/69966b64b3b9c08413b9/maintainability)](https://codeclimate.com/github/gbd1004/TFG_AGV/maintainability)
 [![pylint score](https://github.com/gbd1004/TFG_AGV/actions/workflows/linting.yml/badge.svg)](https://github.com/gbd1004/TFG_AGV/actions/workflows/linting.yml)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Análisis y predicción de datos obtenidos del funcionamiento de un AGV
 
-En este proyecto se define la creación de un sistema capaz de almacenar datos recibidos de un AGV (Autonomous Guided Vehicle) y de predecir dichos datos. Esto permitirá realizar cosas como mantenimiento predictivo, alertas automáticas, etc.
+En este proyecto se define la creación de un sistema capaz de almacenar datos recibidos de un AGV (Autonomous Guided Vehicle) y de predecir dichos datos. Esto permitirá realizar mantenimiento predictivo, la creación de alertas automáticas, etc.
 
 ## Autor
 

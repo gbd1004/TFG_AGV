@@ -63,9 +63,9 @@ Los siguientes modelos se tendrán en cuenta en este trabajo:
         La combinación de estos tres componentes forman el modelo ARIMA(p, d, q), donde ``p'' representa el orden 
         del componente autorregresivo, ``d'' es el orden del componente de integración y ``q'' es el orden del componente 
         de media móvil.
-    \item \textbf{TCN.} Una Red neuronal Convolucional Temporal (Convolutional Temporal Network en inglés) \cite{DBLP:journals/corr/abs-1803-01271} es un tipo de 
+    \item \textbf{TCN.} Una Red neuronal Convolucional Temporal (Temporal Convolutional Network en inglés) \cite{DBLP:journals/corr/abs-1803-01271} es un tipo de 
         red neuronal utilizada para analizar series temporales. Las TCN tienen en cuenta la estructura temporal de los datos 
-        y aplican operaciones convolucionales para capturar patrones. Una convolución \cite{matlab:convolucion} es un operador matemático que transforma 
+        y aplican operaciones convolucionales para capturar patrones. Una convolución \cite{hirschman2012convolution} es un operador matemático que transforma 
         dos funciones en una nueva. Un ejemplo de convolución es la media móvil, o un filtro de aumento de nitidez para imágenes.
 
         TCN utiliza capas convolucionales de una dimensión para aprender características de la serie temporal. Estas 
@@ -85,12 +85,12 @@ Los siguientes modelos se tendrán en cuenta en este trabajo:
 Estos modelos serán los utilizados para la comparación en el desarrollo del proyecto. Para ello, se utilizan 
 las siguientes métricas:
 \begin{itemize}
-    \item \textbf{MAE}. Siglas de Mean Absolute Error, o Error Absoluto Medio en español. Mide el error medio
+    \item \textbf{MAE}. Siglas de Mean Absolute Error \cite{Botchkarev_2019}, o Error Absoluto Medio en español. Mide el error medio
         de una predicción sin tener en cuenta la dirección de dicho error.
-    \item \textbf{MASE}. El MASE \cite{ibm:docs/metrics} (Mean Absolte Scaled Error), o error absoluto escalado medio, mide como de bueno es 
+    \item \textbf{MASE}. El MASE \cite{hyndman2006another} (Mean Absolte Scaled Error), o error absoluto escalado medio, mide como de bueno es 
         el modelo comparado con un modelo ``ingenuo'' (modelo que predice un valor como su valor previo). Un valor 
         por encima de 1 significa que nuestro modelo es peor que dicho modelo ingenuo.
-    \item \textbf{DTW}. Siglas de Dynamic Time Warping, es utilizado para medir la similitud entre dos series temporales. Por ejemplo, una predicción 
+    \item \textbf{DTW}. Siglas de Dynamic Time Warping \cite{Müller2007}, es utilizado para medir la similitud entre dos series temporales. Por ejemplo, una predicción 
         con forma de ecuación lineal puede tener el mismo MAE que otra predicción más irregular, pero esta segunda 
         puede parecerse más a los datos reales.
 \end{itemize}
