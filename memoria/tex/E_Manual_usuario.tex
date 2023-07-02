@@ -136,4 +136,51 @@ ruta ``./services/simulator''. Este archivo especifica los siguientes parámetro
 
 \subsection{Entorno de usuario}
 
-% TODO
+InfluxDB abre por defecto en el puerto 8086 una aplicación web, Chronograf, con la que podemos observar los datos 
+almacenados. Para entrar a dicha aplicación, basta con introducir la dirección IP del ordenador en la que esté 
+alojada la base de datos, seguido de dos puntos y el puerto. En el caso de que se aloje de forma local, se podrá 
+acceder a Chronograf con la url ``localhost:8086''. Una vez accedido, se nos mostrará una página de inicio de sesión 
+(Figrua \ref{fig:login}) en la que introduciremos lo establecido en el archivo de variables de entorno ``influxdb\_credentials.env''.
+
+\imagen{login}{Página de inicio de sesión}
+
+Una vez iniciada la sesión, se nos mostrará la siguiente ventana de bienvenida. En esta ventana, podemos ver en la 
+parte izquierda los diferentes menús y acciones que existen.
+
+\imagen{getting_started}{Imagen de bienvenida}
+
+La primera de estas opciones muestra la información de la organización actual (Figura \ref{fig:about}), así como de los miembros que la forman (Figura \ref{fig:members}).
+Se puede también cambiar de organización y crear nuevas organizaciones.
+
+\imagen{about}{Información general de la organización}
+\imagen{members}{Información de los miembros de la organización}
+
+El siguiente apartado, representado por una flecha hacia arriba, es el apartado ``Load Data''. Desde aquí podremos realizar 
+varias operaciones, como insertar datos, ver los ``buckets'' existentes, configurar Telegraf \cite{telegraf}, etc. En nuestro 
+caso, el único apartado interesante es el de los ``buckets'' (Figura \ref{fig:ld_buckets}).
+
+\imagen{ld_buckets}{Buckets de la base de datos}
+
+Al seleccionar uno de estos ``buckets'', se nos redirecciona al apartado ``Data Explorer'', representado en el menú 
+lateral por un símbolo de un gráfico. Desde este apartado podremos realizar consultas a la base de datos y observar los 
+datos recibidos de varias formas (en este caso una gráfica). Las consultas se pueden hacer tanto de un modo gráfico (Figura \ref{fig:data_explorer}),
+como utilizando el lenguaje de consultas Flux \cite{flux} (Figura \ref{fig:data_explorer_flux})
+
+\imagen{data_explorer}{Consulta gráfica}
+\imagen{data_explorer_flux}{Consulta con Flux}
+
+El último apartado que se explica es el de ``Dashboards'', simbolizado por cuatro cuadrados pequeños. En este apartado (Figura \ref{fig:dashboards})
+podremos guardar consultas para luego visualizarlas en una especie de tablero. Se nos mostrarán todos los ``dashboards'' creados, 
+y podremos crear nuevos, así como importar plantillas ya hechas (Se incluye la plantilla guardada en ``services/database/predicciones\_dashboard.json'').
+
+\imagen{dashboards}{Apartado de ``Dashboards''}
+
+Una vez dentro de un ``dashboard'' (Figura \ref{fig:preds}), se pueden ver las diferentes gráficas creadas en 
+dicho tablero. Se puede configurar también cada cuanto quiere que se refresquen dichas gráficas y si quiere hacerse de manera 
+automática (Figura \ref{fig:set_auto_refresh}).
+
+\imagen{preds}{Tablero con las predicciones}
+\imagen{set_auto_refresh}{Configuración del refresco automático.}
+
+En esta guía solo se han mostrado aquellas herramientas importantes para el desarrollo de este proyecto. 
+Información más detallada sobre todas las utilidades puede verse en la documentación de Chronograf \cite{chronograf:docs}

@@ -57,9 +57,8 @@ Se muestran a continuación los requisitos obtenidos a partir del análisis de l
 \begin{itemize}
 	\item \textbf{RF-1 Gestión de datos:} el sistema tiene que ser capaz de almacenar los datos enviados por el AGV.
 	\begin{itemize}
-		\item \textbf{RF-1.1 Inserción de datos:} los datos tienen que poder insertarse en cualquier momento a la base de datos.
-		\item \textbf{RF-1.2 Visualización de datos:} el usuario debe poder ser capaz de visualizar los datos del AGV y las
-			predicciones realizadas.
+		\item \textbf{RF-1.1 Visualización de datos:} el usuario debe poder ser capaz de visualizar los datos del AGV
+		\item \textbf{RF-1.2 Visualización de predicciones:} el usuario tiene que ser capaz de ver las predicciones realizadas.
 	\end{itemize}
 	\item \textbf{RF-2 Predicción de datos:} el sistema tiene que poder generar predicciones a partir de los datos almacenados.
 	\begin{itemize}
@@ -91,15 +90,371 @@ Se muestran a continuación los requisitos obtenidos a partir del análisis de l
 		para Python y GNU/Linux.
 	\item \textbf{RNF-6 Rendimiento:} el sistema tiene que ser capaz de almacenar los datos del AGV en tiempo real, así como
 		tener un buen rendimiento a la hora de realizar las predicciones.
-	\item \textbf{RNF-7 Base de datos:} las entradas de la base de datos han de poder insertarse con el timestamp del momento
-		en el que dichos datos fueron generados en el AGV. Este timestamp a demás, debe tener una precisión en el rango de
-		los milisegundos.
-	\item \textbf{RNF-8 Predicción:} el modelo de predicción ha de generar resultados aceptables 10 segundos en el futuro.
+	\item \textbf{RNF-7 Momento de inserción:} las entradas de la base de datos han de poder insertarse con el timestamp del momento
+		en el que dichos datos fueron generados en el AGV. 
+    \item \textbf{RNF-8 Precisión temporal} El timestamp de cada entrada debe tener una precisión en el rango de
+        los milisegundos.
+	\item \textbf{RNF-9 Precisión:} los datos tienen que poder insertarse en cualquier momento a la base de datos.
+	\item \textbf{RNF-10 Predicción:} el modelo de predicción ha de generar resultados aceptables 10 segundos en el futuro.
 \end{itemize}
 
 \section{Especificación de requisitos}
 
-% TODO
+\subsection{Diagrama de casos de uso}
+
+Se muestra a continuación el diagrama de casos de uso (Figura \ref{fig:casos_uso})
+
+\imagen{casos_uso}{Diagrama de casos de uso}
+
+\subsection{Casos de uso detallados}
+% TODO revisar formato para que las tablas se "rompan" con un page break
+A continuación se detallan los diferentes casos de uso:
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Gestión de datos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-1, RF-1.1, RF-1.2 \\
+		\textbf{Descripción}          & El sistema tiene que ser capaz de almacenar los datos enviados por el AGV. \\
+		\textbf{Precondición}         & La base de datos debe estar activa. \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El AGV o el simulador envían datos.
+			\item El servicio ``Reciever'' envía esos datos a la base de datos.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Los datos se almacenan. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item No se puede conectar con la base de datos.
+			\item El servicio ``Reciever'' no está activo.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-1 Gestión de datos.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Visualización de datos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-1.1 \\
+		\textbf{Descripción}          & El usuario tiene que ser capaz de visualizar los datos almacenados. \\
+		\textbf{Precondición}         & La base de datos debe estar activa. \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario hace la consulta determinada a la base de datos.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Los datos se visualizan. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item No se puede conectar con la base de datos.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-2 Visualización de datos.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Visualización de predicciones}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-1.2 \\
+		\textbf{Descripción}          & El usuario tiene que ser capaz de visualizar las predicciones realizadas. \\
+		\textbf{Precondiciones}       & 
+        \begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item La base de datos debe estar activa.
+			\item El servicio de predicción está activo.
+		\end{enumerate}\\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario hace la consulta determinada a la base de datos.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Las predicciones se visualizan. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item No se puede conectar con la base de datos.
+			\item El sistema de predicción no está activo.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-3 Visualización de datos.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Predicción de datos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-2, RF-2.1, RF-2.2 \\
+		\textbf{Descripción}          & El sistema tiene que poder generar predicciones a partir de los datos almacenados. \\
+		\textbf{Precondiciones}       & 
+        \begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item La base de datos debe estar activa.
+			\item El servicio de predicción está activo.
+		\end{enumerate}\\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El servicio de predicciones hace una consulta con los datos necesarios.
+			\item El servicio de predicciones realiza la predicción.
+			\item El servicio inserta la predicción en la base de datos.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Las predicciones se almacenan en la base de datos. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item No se puede conectar con la base de datos.
+			\item El sistema de predicción no está activo.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-4 Predicción de datos.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Configuración de entrenamiento}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-2.1 \\
+		\textbf{Descripción}          & El usuario debe ser capaz de especificar en un archivo de configuración si se quiere entrenar un nuevo modelo o cargarlo desde un archivo. \\
+		\textbf{Precondiciones}       & 
+        \begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El servicio de predicción está inactivo.
+		\end{enumerate}\\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario modifica la configuración.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El servicio de predicciones se inicia con la configuración especificada. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item Se introduce una configuración inválida.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-5 Configuración de entrenamiento.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Cargar modelo desde archivo}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-2.2 \\
+		\textbf{Descripción}          & El usuario debe ser capaz de especificar en un archivo de configuración el nombre del archivo del modelo a cargar. \\
+		\textbf{Precondiciones}       & 
+        \begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El servicio de predicción está inactivo.
+		\end{enumerate}\\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El usuario modifica la configuración.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El servicio de predicciones se inicia con la configuración especificada. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item Se introduce una configuración inválida.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-6 Cargar modelo desde archivo.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Simulación de datos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-3, RF-3.1, RF-3.2, RF-3.3 \\
+		\textbf{Descripción}          & El sistema ha de poder simular datos en caso de no disponer de un AGV.\\
+		\textbf{Precondiciones}       & 
+        \begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El servicio de simulación está activo en la configuración.
+		\end{enumerate}\\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El simulador genera datos.
+			\item El servicio ``Reciever'' recibe los datos.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Los datos se almacenan en la base de datos. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item El simulador no se inicia.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-7 Simulación de datos.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Simulación aleatoria}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-3.1 \\
+		\textbf{Descripción}          & El simulador tiene que ser capaz de generar datos aleatorios.\\
+		\textbf{Precondiciones}       & 
+        \begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El servicio de simulación está activo en la configuración.
+			\item El servicio de simulación está configurado para generar datos aleatorios.
+		\end{enumerate}\\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El simulador genera datos.
+			\item El servicio ``Reciever'' recibe los datos.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Los datos se almacenan en la base de datos. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item El simulador no se inicia.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-8 Simulación aleatoria.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Simulación desde CSV}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-3.2 \\
+		\textbf{Descripción}          & El simulador debe poder leer los datos desde un archivo CSV con información real de un AGV. \\
+		\textbf{Precondiciones}       & 
+        \begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El servicio de simulación está activo en la configuración.
+			\item El servicio de simulación está configurado para generar datos desde un CSV.
+		\end{enumerate}\\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item El simulador genera datos.
+			\item El servicio ``Reciever'' recibe los datos.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Los datos se almacenan en la base de datos. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item El simulador no se inicia.
+			\item El archivo CSV especificado no existe.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-9 Simulación desde CSV.}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Desactivado desde configuración}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & Gonzalo Burgos de la Hera \\
+		\textbf{Requisitos asociados} & RF-3.3 \\
+		\textbf{Descripción}          & El usuario debe ser capaz de activar o desactivar el simulador desde un archivo de configuración. \\
+		\textbf{Precondiciones}       & 
+        \begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+            \item El servicio de simulación no está iniciado.
+			\item El servicio de simulación está desactivado en la configuración.
+		\end{enumerate}\\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Se inicia el simulador.
+			\item Inmediatamente después el simulador termina su ejecución.
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El simulador se detiene. \\
+		\textbf{Excepciones}          & 
+        \begin{itemize}
+			\tightlist
+			\item Se introduce una configuración inválida.
+        \end{itemize} \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-10 Desactivado desde configuración.}
+\end{table}
 
 \section{Estudio del sistema gestor de bases de datos}
 
@@ -112,7 +467,7 @@ gestor de bases de datos que mejor cumpla dichos requisitos.
 
 Lo primero a tener en cuenta es el modelo de la base de datos que se va a utilizar, ya que tendrá una gran importancia
 a la hora de decidir qué sistema de gestión de bases de datos se va a utilizar. Los siguientes modelos \cite{10.5555/3364297} han sido
-tenidos en cuenta: 
+tenidos en cuenta:
 
 \begin{itemize}
     \item Bases de datos relacionales: en estos sistemas, la información se almacena en relaciones. Una relación,

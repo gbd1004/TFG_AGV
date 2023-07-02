@@ -51,6 +51,8 @@ los modelos comparados.
 
 \dirtree{%
 .1 services.
+.2 database.
+.3 init\_scripts.
 .2 forecasting.
 .3 cpu.
 .3 gpu.
@@ -65,9 +67,16 @@ los modelos comparados.
 
 En el directorio de servicios se encuentra todo el código y archivos de configuración de cada 
 uno de los servicios desarrollados en este proyecto. El código se encuentra en el directorio
-``src'' de dentro de cada uno de los subdirectorios de cada servicio. En la carpeta ``data'',
-dentro del directorio del simulador, se guardan los archivos csv utilizados para leer desde 
-este servicio. En los subdirectorios ``cpu'' y ``gpu'' dentro del servicio de predicción se 
+``src'' de dentro de cada uno de los subdirectorios de cada servicio. 
+
+Dentro de la carpeta ``database'' se guarda una plantilla con las tablas utilizadas en la visualización 
+de los datos. A su vez, dentro de esta carpeta se encuentra la carpeta ``init\_scripts'', en la que se encuentran 
+todos los scripts que se ejecutaran en la base de datos en el momento de su inicialización.
+
+En la carpeta ``data'', dentro del directorio del simulador, se guardan los archivos csv utilizados para leer desde 
+este servicio. 
+
+En los subdirectorios ``cpu'' y ``gpu'' dentro del servicio de predicción se 
 encuentran los Dockerfiles de las respectivas versiones de este servicio.
 
 \section{Manual del programador}
