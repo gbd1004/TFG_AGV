@@ -9,7 +9,7 @@ import sys
 import time
 import csv
 
-UDP_IP = "reciever"
+UDP_IP = "receiver"
 UDP_PORT = 5004
 
 # Funcion temporal para generar datos

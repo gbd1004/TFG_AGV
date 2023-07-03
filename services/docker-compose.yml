@@ -15,8 +15,8 @@ services:
     env_file:
       - influxdb_credentials.env
 
-  reciever:
-    build: reciever/.
+  receiver:
+    build: receiver/.
     ports:
       - "5004:5004/udp"
     env_file:

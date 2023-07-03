@@ -1,4 +1,4 @@
-"""Servicio Reciever. Inserta datos en la base de datos."""
+"""Servicio Receiver. Inserta datos en la base de datos."""
 
 import json
 import os
@@ -30,7 +30,7 @@ def main():
 
     token, org, bucket = get_influxdb_credentials()
 
-    with open('/reciever/config.json', "r", encoding="utf-8") as file:
+    with open('/receiver/config.json', "r", encoding="utf-8") as file:
         data = json.load(file)
     max_retries = int(data['max_retries'])
 

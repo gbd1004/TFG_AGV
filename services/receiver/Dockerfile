@@ -3,7 +3,7 @@ FROM python:3.10-slim
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-WORKDIR /reciever
+WORKDIR /receiver
 COPY . ./
 
 EXPOSE 5004/udp
