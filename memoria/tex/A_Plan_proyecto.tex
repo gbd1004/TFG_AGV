@@ -33,7 +33,92 @@ viabilidad legal del proyecto.
 
 \section{Planificación temporal}
 
-% TODO
+Debido a la flexibilidad que ofrece SCRUM \cite{schwaber2001agile}, una metodología ágil, se planteó desde el inicio seguir dicha 
+metodología. Precisamente gracias a dicha flexibilidad, no se ha seguido al completo. Por ejemplo, ya que 
+el proyecto solo ha sido desarrollado por mí, no ha sido necesario la realización de una reunión diaria.
+
+Como marca esta metodología, el trabajo se divide en ``sprints'', de unas dos semanas de duración, en la que 
+se planifica lo que se va a realizar en una reunión al comienzo de dicho sprint. Al final de cada sprint, se
+ha realizado otra reunión (normalmente solapada con la del inicio del siguiente) para revisar el trabajo realizado.
+
+Para el seguimiento de los sprints, inicialmente se empezó a usar la herramienta ZenHub. Sin embargo, por un problema
+con las licencias, se dejó de usar en mitad del proyecto. Para el control de los sprints, se empezó a usar en su 
+lugar el apartado de ``Issues'' de GitHub. Para ello, se crea un issue con la tarea a realizar y se asigna una estimación 
+temporal. Dicha asignación temporal puede verse reflejada en la Tabla \ref{tabla:asignacion_temp}
+
+\tablaSmallFija{Asignación temporal}{l l}{asignacion_temp}{
+    Story points & Estimación \\
+}{
+    1 & 30 minutos \\
+    2 & 1 hora \\
+    3 & 2 horas \\
+    5 & 3 horas \\
+    8 & 6 horas \\
+    13 & 12 horas \\
+    21 & 1 día \\
+    34 & 3 día \\
+    55 & 1 semana \\
+}
+
+Se muestra a continuación la planificación de cada Sprint.
+
+\subsection{Sprint 1 (2 de marzo de 2023 - 16 de marzo de 2023)}
+
+En este Sprint se comenzó el proyecto, quedando definidos los objetivos del mismo. Este Sprint se dedicó principalmente 
+a tareas de investigación: se investigaron diferentes sistemas gestores de bases de datos, herramientas de visualización 
+de datos, ElasticSearch como recomendación de los tutores y Docker; y a tareas de inicialización del repositorio: se 
+importó la plantilla de LaTeX de la memoria y anexos y se desarrollaron las versiones iniciales del servicio ``Simulator'' y 
+``Reciever''.
+
+\imagen{sprint1}{Burndown del Sprint 1}
+
+\subsection{Sprint 2 (17 de marzo de 2023 - 31 de marzo de 2023)}
+
+Este Sprint se dedicó a la mejora de los servicios realizados en el Sprint anterior, así como la redacción de aspectos 
+generales de la memoria. Se integraron también dichos servicios con la herramienta docker compose para ejecutarlos todos 
+de manera coordinada. Por último, en este Sprint se comenzó a escribir lo publicado en el SOCO.
+
+\imagen{sprint2}{Burndown del Sprint 2}
+
+\subsection{Sprint 3 (31 de marzo de 2023 - 30 de abril de 2023)}
+
+La duración de este Sprint tuvo una mayor duración, y una menor carga de trabajo debido a dos motivos. Por un lado
+coincidió las vacaciones de Semana Santa. Por otro lado, en este Sprint me centré principalmente en escribir el informe 
+del SOCO, por lo que no hubo muchos avances directos en este proyecto.
+
+\imagen{sprint3}{Burndown del Sprint 3}
+
+\subsection{Sprint 4 (30 de abril de 2023 - 15 de mayo de 2023)}
+
+Al igual que en el anterior Sprint, este se centró también en la redacción del trabajo presentado en el SOCO, por lo 
+que este Sprint se centró en dicha tarea y en realizar avances en la memoria.
+
+\imagen{sprint4}{Burndown del Sprint 4}
+
+\subsection{Sprint 5 (15 de mayo de 2023 - 31 de mayo de 2023)}
+
+Una vez terminado el informe del SOCO, el trabajo de este Sprint se centró en tres apartados: integrar dicho trabajo 
+en la memoria y anexos del proyecto, investigar herramientas de aprendizaje automático e investigar y optimizar 
+los modelos escogidos en dicha investigación.
+
+\imagen{sprint5}{Burndown del Sprint 5}
+
+\subsection{Sprint 6 (31 de mayo de 2023 - 15 de junio de 2023)}
+
+En este Sprint, se desarrolló el servicio ``Forecaster'' y se mejoró el simulador para que pudiese leer datos 
+desde un archivo CSV. Se continuó integrando el trabajo del SOCO, así como mejorar el README del proyecto y realizar 
+avances en la memoria y anexos.
+
+\imagen{sprint6}{Burndown del Sprint 6}
+
+\subsection{Sprint 7 (15 de junio de 2023 - 4 de julio de 2023)}
+
+Como último Sprint, el trabajo realizado en este Sprint se centró en la mejora del código y de la funcionalidad 
+de los servicios, así como terminar la memoria y anexos. Se integró Code Climate en el repositorio para monitorizar 
+la mantenibilidad del código y Pylint para comprobar que se siguen las convenciones estilísticas. Por último, se 
+añadió la opción de usar GPU o CPU para entrenar el modelo de predicción.
+
+\imagen{sprint7}{Burndown del Sprint 7}
 
 \section{Estudio de viabilidad}
 
