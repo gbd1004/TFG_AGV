@@ -62,7 +62,7 @@ temporal. Dicha asignación temporal puede verse reflejada en la Tabla \ref{tabl
 
 Se muestra a continuación la planificación de cada Sprint.
 
-\subsection{Sprint 1 (2 de marzo de 2023 - 16 de marzo de 2023)}
+\subsection{Sprint 1 (2 de marzo de 2023 - 14 de marzo de 2023)}
 
 En este Sprint se comenzó el proyecto, quedando definidos los objetivos del mismo. Este Sprint se dedicó principalmente 
 a tareas de investigación: se investigaron diferentes sistemas gestores de bases de datos, herramientas de visualización 
@@ -72,7 +72,7 @@ importó la plantilla de LaTeX de la memoria y anexos y se desarrollaron las ver
 
 \imagen{sprint1}{Burndown del Sprint 1}
 
-\subsection{Sprint 2 (17 de marzo de 2023 - 31 de marzo de 2023)}
+\subsection{Sprint 2 (15 de marzo de 2023 - 31 de marzo de 2023)}
 
 Este Sprint se dedicó a la mejora de los servicios realizados en el Sprint anterior, así como la redacción de aspectos 
 generales de la memoria. Se integraron también dichos servicios con la herramienta docker compose para ejecutarlos todos 
@@ -80,7 +80,7 @@ de manera coordinada. Por último, en este Sprint se comenzó a escribir lo publ
 
 \imagen{sprint2}{Burndown del Sprint 2}
 
-\subsection{Sprint 3 (31 de marzo de 2023 - 30 de abril de 2023)}
+\subsection{Sprint 3 (31 de marzo de 2023 - 1 de mayo de 2023)}
 
 La duración de este Sprint tuvo una mayor duración, y una menor carga de trabajo debido a dos motivos. Por un lado
 coincidió las vacaciones de Semana Santa. Por otro lado, en este Sprint me centré principalmente en escribir el informe 
@@ -88,7 +88,7 @@ del SOCO, por lo que no hubo muchos avances directos en este proyecto.
 
 \imagen{sprint3}{Burndown del Sprint 3}
 
-\subsection{Sprint 4 (30 de abril de 2023 - 15 de mayo de 2023)}
+\subsection{Sprint 4 (1 de mayo de 2023 - 15 de mayo de 2023)}
 
 Al igual que en el anterior Sprint, este se centró también en la redacción del trabajo presentado en el SOCO, por lo 
 que este Sprint se centró en dicha tarea y en realizar avances en la memoria.
@@ -212,9 +212,12 @@ escogida para el software del proyecto, así como de la documentación, imágene
 
 \subsubsection{Sofware}
 
-Se muestran a continuación las licencias del software utilizado.
+Una licencia es ``un contrato entre el desarrollador de un software sometido a la propiedad
+intelectual y a derechos de autor y el usuario, en el cual se definen con precisión los 
+derechos y deberes de ambas partes.'' \cite{labrador2012tipos}
+Se muestran en la Tabla \ref{tabla:licencias} las licencias del software utilizado.
 
-\tablaSmallFija{Licencias de las dependencias}{l l l}{licencias}{
+\tablaSmall{Licencias de las dependencias}{l l l}{licencias}{
 Dependencia & Versión & Licencia \\
 }{
 InfluxDB & 2.6.1 & MIT \\
@@ -226,3 +229,26 @@ Python UDP & 0.5.10 & MIT \\
 Python & 3.10 & Python Software Foundation \\ 
 CUDA & 11.8 & NVIDIA Deep Learning Container license\\
 }
+
+Inicialmente se planteó utilizar la licencia GPLv3 \cite{gplv3}, sin embargo, esta licencia 
+obliga a que todo el código del programa y las herramientas utilizadas cumplan esta licencia: 
+``You must license the entire work, as a whole, under this License to anyone who comes into 
+possession of a copy. This License will therefore apply, along with any applicable section 
+7 additional terms, to the whole of the work, and all its parts, regardless of how they are 
+packaged.'' Esto sin embargo no es compatible con la licencia NVIDIA Deep Learning Container license
+\cite{nvidia_dl_container_license}: ``You may not use the CONTAINER in any manner that would cause it
+to become subject to an open source software license.'' Por ello, se finalmente se decidió 
+usar la licencia MIT \cite{mit_license} para todo el código del proyecto.
+
+\subsubsection{Documentación}
+
+Para licenciar la memoria y estos anexos se ha decidido utilizar una licencia ``Creative Commons''.
+Para elegir la más adecuada, se ha utilizado la herramienta ``License Chooser'' \cite{creativecommons_chooser}.
+Finalmente, se ha elegido la licencia ``Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)'' \cite{cc_by_sa_license}, que permite 
+tanto el uso comercial, como compartir dicha documentación, siempre y cuando se compartan de la misma manera que 
+en este trabajo.
+
+\subsubsection{Imágenes y vídeos}
+
+Para licenciar las imágenes y vídeos se ha utilizado la licencia ``Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)'', 
+la misma que la de la documentación.
