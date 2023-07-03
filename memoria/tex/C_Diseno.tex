@@ -100,9 +100,9 @@ La comunicación entre servicios ocurre de tres formas diferentes:
     \item 5G Wifi: Los AGV envían datos al ``AGV Coordinator'' como cadenas de bytes a este servicio.
         Como este servicio no está desarrollado como parte de este proyecto, no se detallará más.
     \item UDP/JSON: Tanto el ``AGV Coordinator'' como el ``Simulator'' envían los datos codificados en 
-        forma de JSON a través de una conexión UDP. Estos datos son recibidos por el servicio ``Reciever'',
+        forma de JSON a través de una conexión UDP. Estos datos son recibidos por el servicio ``Receiver'',
         que los introducirá en la base de datos.
-    \item Database API: El ``Reciever'' es el encargado de insertar los datos de los AGV o del simulador, 
+    \item Database API: El ``Receiver'' es el encargado de insertar los datos de los AGV o del simulador, 
         utilizando para ello la API de la base de datos a través de consultas.
 \end{itemize}
 
@@ -112,7 +112,7 @@ Se muestran a continuación los diagramas de secuencia de cada servicio.
 
 \imagen{sec_simular_aleatorio}{Diagrama de secuencia del servicio ``Simulator'' generando datos aleatorios}
 \imagen{sec_simular_csv}{Diagrama de secuencia del servicio ``Simulator'' generando datos de un CSV}
-\imagen{sec_recv}{Diagrama de secuencia del servicio ``Reciever''}
+\imagen{sec_recv}{Diagrama de secuencia del servicio ``Receiver''}
 \imagen{sec_forecast}{Diagrama de secuencia del servicio ``Forecaster''}
 
 
@@ -133,7 +133,7 @@ Como se puede ver en la Figura \ref{fig:diagrama_paquetes}, existen cuatro paque
 \begin{itemize}
     \item Database: contiene los scripts que se ejecutan al iniciar la base de datos.
     \item Simulator: contiene el código y archivos de configuración relacionados con el simulador.
-    \item Reciever: contiene el código y archivos de configuración del servicio ``Reciever''.
+    \item Receiver: contiene el código y archivos de configuración del servicio ``Receiver''.
     \item Forecasting: contiene el código y archivos de configuración del servicio de predicción.
 \end{itemize}
 

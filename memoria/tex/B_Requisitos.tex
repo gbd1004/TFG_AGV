@@ -97,14 +97,14 @@ A continuación se detallan los diferentes casos de uso:
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
 			\item El AGV o el simulador envían datos.
-			\item El servicio ``Reciever'' envía esos datos a la base de datos.
+			\item El servicio ``Receiver'' envía esos datos a la base de datos.
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Los datos se almacenan. \\
 		\textbf{Excepciones}          & 
         \begin{itemize}
 			\tightlist
 			\item No se puede conectar con la base de datos.
-			\item El servicio ``Reciever'' no está activo.
+			\item El servicio ``Receiver'' no está activo.
         \end{itemize} \\
 		\textbf{Importancia}          & Alta \\
 		\bottomrule
@@ -304,7 +304,7 @@ A continuación se detallan los diferentes casos de uso:
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
 			\item El simulador genera datos.
-			\item El servicio ``Reciever'' recibe los datos.
+			\item El servicio ``Receiver'' recibe los datos.
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Los datos se almacenan en la base de datos. \\
 		\textbf{Excepciones}          & 
@@ -340,7 +340,7 @@ A continuación se detallan los diferentes casos de uso:
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
 			\item El simulador genera datos.
-			\item El servicio ``Reciever'' recibe los datos.
+			\item El servicio ``Receiver'' recibe los datos.
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Los datos se almacenan en la base de datos. \\
 		\textbf{Excepciones}          & 
@@ -376,7 +376,7 @@ A continuación se detallan los diferentes casos de uso:
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
 			\item El simulador genera datos.
-			\item El servicio ``Reciever'' recibe los datos.
+			\item El servicio ``Receiver'' recibe los datos.
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Los datos se almacenan en la base de datos. \\
 		\textbf{Excepciones}          & 
@@ -704,7 +704,7 @@ valores guardan la información, no están indexados y están asociados con un t
 Graphite agrega los datos de manera automática en ventanas de un segundo o más. Este comportamiento no es el deseado 
 para nuestras necesidades, ya que se requiere almacenar todos los datos enviados.
 
-\begin{table}[H]
+\begin{table}[]
     \begin{center}
         \begin{adjustbox}{max width=\textwidth}
             \begin{tabular}{l c c c c}
@@ -753,7 +753,7 @@ sistemas se compararán en la prueba de rendimiento.
 este modelo de CPU tiene 12 hilos, el uso de la CPU puede ser tan alto como 1200\% (Uso CPU = Hilos * 100). Los resultados
 de esta prueba se muestran en la tabla \ref{tabla:ptsgbd}.
 
-\tablaSmallFija{Resultados de la prueba de rendimiento}{l c c}{ptsgbd}{
+\tablaSmall{Resultados de la prueba de rendimiento}{l c c}{ptsgbd}{
 System & InfluxDB & TimescaleDB \\
 }{
     Tiempo inserción (s) & 24.13 & \textbf{1.16} \\
@@ -776,7 +776,7 @@ esta solución se aplique comercialmente.
 
 Otro motivo de peso para elegir InfluxDB es que viene por defecto con una interfaz web llamada Chronograf 
 (Figura \ref{fig:interfaz}) en la que se puede manejar la base de datos, crear gráficas, establecer alarmas, etc. 
-Para realizar esto mismo con TimescaleDB, es necesario utilizar otra herramienta, como podría ser Grafana \cite{Web:Grafana:Docs}
+Para realizar esto mismo con TimescaleDB, es necesario utilizar otra herramienta, como podría ser Grafana \cite{Web:Grafana:Docs}.
 
 \imagen{interfaz}{Interfaz Chronograf}
 

@@ -12,7 +12,8 @@ arquitectura del sistema, así como el desarrollo de los servicios que forman di
 se ha realizado una comparativa de diferentes sistemas gestores de bases de datos con el fin de elegir
 el que mejor se adapte a nuestros requisitos.
 
-Esta parte del desarrollo del proyecto ha sido publicada en la conferencia SOCO 2023.
+Esta parte del desarrollo del proyecto ha sido publicada en la conferencia SOCO 2023. Esta publicación 
+se incluye también en la sección F de los anexos.
 %TODO AÑADIR REFERENCIA A SOCO
 
 \subsection{Diseño de la arquitectura}
@@ -99,11 +100,11 @@ se decide según lo especificado en un archivo de configuración.
 
 \subsubsection{Receiver}
 
-El funcionamiento del nodo ``Reciever'' es muy simple (Figura \ref{fig:recv}): escucha el puerto UDP 5004, y cuando recibe información, la inserta 
+El funcionamiento del nodo ``Receiver'' es muy simple (Figura \ref{fig:recv}): escucha el puerto UDP 5004, y cuando recibe información, la inserta 
 en la base de datos. Inicialmente, el servicio intentará conectarse a la base de datos. Si esta conexión falla un número
 determinado de veces, el servicio fallará informando de que la conexión no ha podido realizarse.
 
-\imagen{recv}{Diagrama de flujo del servicio ``Reciever''}{0.5}
+\imagen{recv}{Diagrama de flujo del servicio ``Receiver''}{0.5}
 
 \subsubsection{Database}
 

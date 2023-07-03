@@ -4,7 +4,7 @@ memoria/build/*
 
 prototipos/timescaledb/.venv
 
-servicios/reciever/.venv
+servicios/receiver/.venv
 servicios/simulator/.venv
 
 .vscode
