@@ -2,35 +2,6 @@
 
 \section{Introducción}
 
-% Una muestra de cómo podría ser una tabla de casos de uso:
-
-% % Caso de Uso 1 -> Consultar Experimentos.
-% \begin{table}[p]
-% 	\centering
-% 	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
-% 		\toprule
-% 		\textbf{CU-1}    & \textbf{Ejemplo de caso de uso}\\
-% 		\toprule
-% 		\textbf{Versión}              & 1.0    \\
-% 		\textbf{Autor}                & Alumno \\
-% 		\textbf{Requisitos asociados} & RF-xx, RF-xx \\
-% 		\textbf{Descripción}          & La descripción del CU \\
-% 		\textbf{Precondición}         & Precondiciones (podría haber más de una) \\
-% 		\textbf{Acciones}             &
-% 		\begin{enumerate}
-% 			\def\labelenumi{\arabic{enumi}.}
-% 			\tightlist
-% 			\item Pasos del CU
-% 			\item Pasos del CU (añadir tantos como sean necesarios)
-% 		\end{enumerate}\\
-% 		\textbf{Postcondición}        & Postcondiciones (podría haber más de una) \\
-% 		\textbf{Excepciones}          & Excepciones \\
-% 		\textbf{Importancia}          & Alta o Media o Baja... \\
-% 		\bottomrule
-% 	\end{tabularx}
-% 	\caption{CU-1 Nombre del caso de uso.}
-% \end{table}
-
 En esta sección de los anexos se especifican los requisitos, tanto funcionales como no funcionales, que el sistema 
 debe de cumplir.
 
@@ -563,7 +534,7 @@ El indicador de rendimiento del soporte de software analiza:
     \item Soporte para Python: como el sistema está implementado en Python, nos interesa que el sistema tenga
         buen soporte de este lenguaje.
     \item Lenguaje de consultas: que lenguaje de consultas soporta el sistema.
-    \item Plugins para aprendizaje automático: si el sistema soporta plugins que simplifiquen la predicción de nuevos
+    \item Plugins para aprendizaje automático: si el sistema soporta complementos que simplifiquen la predicción de nuevos
         datos.
 \end{itemize}
 La comparación del soporte de la comunidad contiene:
@@ -672,7 +643,7 @@ comparaciones, y características de la ``Enterprise Edition'', que no es de có
 
 \subsubsection{Soporte software (Tabla \ref{tabla:sssgbd})} Todos los sistemas soportan Linux y Python, el sistema operativo 
 y lenguaje utilizados. Solo Graphite no tiene un lenguaje de consultas definido, aunque se pueden realizar utilizando lo que 
-llaman Funciones \cite{graphite-functions}. Únicamente InfluxDB soporta plugins para aprendizaje automático. Otros sistemas como
+llaman Funciones \cite{graphite-functions}. Únicamente InfluxDB soporta complementos para aprendizaje automático. Otros sistemas como
 TimescaleDB proveen documentación para realizarlo de forma externa en lenguajes como Python o R \cite{timescale-forecasting}.
 
 \begin{table}[H]
@@ -817,7 +788,7 @@ Para realizar esto mismo con TimescaleDB, es necesario utilizar otra herramienta
 
 Los modelos elegidos para la comparación son los siguientes:
 \begin{itemize}
-    \item ARIMA. Modelo estadístico basado en la unión de los modelos Autorregresivo, Integración y Media movil.
+    \item ARIMA. Modelo estadístico basado en la unión de los modelos Autorregresivo, Integración y Media móvil.
     \item TCN. Modelo basado en el uso de redes neuronales convolucionales temporales.
     \item N-HiTS. Mejora del modelo N-BEATS, que utiliza predicciones futuras y pasadas para entrenarse.
     \item Transformer Model. Modelo basado en el uso del modelo transformador, normalmente usado para modelos generadores de texto como GPT.
@@ -867,7 +838,7 @@ Se han realizado dos operaciones de preprocesado sobre los datos.
         la velocidad de cada rueda a partir de la posición de los encoders.
     \item Escalado: para aquellos modelos basados en redes neuronales (todos menos ARIMA), es preferible
         tener valores de los datos entre 0 y 1 para el entrenamiento, por lo que los datos han de 
-        ser normalizados antes de entrendar.
+        ser normalizados antes de entrenar.
 \end{enumerate}
 
 \subsection{Resultados con los modelos por defecto}

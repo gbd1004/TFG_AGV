@@ -18,7 +18,7 @@ hardware irán dictados en gran medida por dicho servicio. Según la documentaci
 estimadas se necesita de una CPU de 2 a 4 núcleos y de 2 a 5 GB de memoria RAM. Un disco SSD también es muy recomendado.
 
 \subsection{Requisitos de software}
-Para la ejecución del proyecto las únicas herramientas necesarias son Docker \cite{docker-pag} y docker-compose \cite{compose}.
+Para la ejecución del proyecto las únicas herramientas necesarias son Docker \cite{docker-pag} y docker compose \cite{compose}.
 En cuanto al sistema operativo, el proyecto puede ejecutarse en cualquier sistema operativo que soporte estas aplicaciones.
 
 En el caso de querer usar la versión del servicio de predicción que utiliza la GPU, es necesario también instalar 
@@ -94,7 +94,7 @@ El contenido es el siguiente:
 \end{itemize}
 De todos estos campos, el único que no es configurable es el último, pues sin este valor la base de datos 
 no se cargará correctamente. Tampoco se recomienda cambiar el campo DOCKER\_INFLUXDB\_INIT\_BUCKET, aunque 
-el sistema no debería tener problemas en el caso de que se especifique otro nombre para el bucker de datos del AGV.
+el sistema no debería tener problemas en el caso de que se especifique otro nombre para el bucket de datos del AGV.
 
 \subsubsection{Forecasting}
 
@@ -129,7 +129,7 @@ ruta ``./services/simulator''. Este archivo especifica los siguientes parámetro
   \item simulate: guarda un valor booleano que especifica si la simulación está activada o desactivada.
   \item from\_csv: guarda un valor booleano, que en caso de ser ``true'' carga los datos de la simulación desde
     un csv. En caso de ser ``false'' los datos generados serán completamente aleatorios.
-  \item csv\_file: nombre del archivo csv a cargar en caso de que se necesite.
+  \item csv\_file: nombre del archivo CSV a cargar en caso de que se necesite.
   \item loop: valor booleano que especifica si, en caso de simular desde un CSV, al acabar de recorrer dicho fichero 
     vuelve a ejecutarse el simulador o no.
 \end{itemize}
