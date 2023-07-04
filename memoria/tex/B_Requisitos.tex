@@ -956,10 +956,33 @@ A continuación se ven los resultados de las predicciones realizadas. Se predice
 10 segundos utilizando covariables (excepto en el caso de ARIMA que no lo soporta). En negro se 
 ven los valores pasados, en morado los valores predichos y en azul los valores reales para comparar.
 
-\imagenSized{arima_def}{Predicción de ARIMA por defecto}{1}
-\imagenSized{tcn_def}{Predicción de TCN por defecto}{1}
-\imagenSized{nhits_def}{Predicción de N-HiTS por defecto}{1}
-\imagenSized{transformer_def}{Predicción de Transformer por defecto}{1}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth,trim={1cm 0.7cm 1cm 2.5cm},clip]{arima_def}
+    \caption{Predicción de ARIMA por defecto}\label{fig:arima_def}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth,trim={1cm 0.7cm 1cm 2.5cm},clip]{tcn_def}
+    \caption{Predicción de TCN por defecto}\label{fig:tcn_def}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth,trim={1cm 0.7cm 1cm 2.5cm},clip]{nhits_def}
+    \caption{Predicción de N-HiTS por defecto}\label{fig:nhits_def}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth,trim={1cm 0.7cm 1cm 2.5cm},clip]{transformer_def}
+    \caption{Predicción de Transformer por defecto}\label{fig:transformer_def}
+\end{figure}
+% \imagenSized{arima_def}{}{0.8}
+% \imagenSized{tcn_def}{}{0.8}
+% \imagenSized{nhits_def}{}{0.8}
+% \imagenSized{transformer_def}{}{0.8}
 
 \subsection{Optimización de los hiperparámetros}
 
@@ -975,14 +998,14 @@ los gráficos de autocorrelación y autocorrelación parcial. El primero de esto
 un valor de la serie temporal con sus anteriores, mientras que el segundo muestra la correlación con el valor 
 inmediatamente anterior al actual.
 
-\imagen{acf}{ACF del encoder derecho}
-\imagen{pacf}{PACF del encoder derecho}
+\imagenSized{acf}{ACF del encoder derecho}{1}
+\imagenSized{pacf}{PACF del encoder derecho}{1}
 
 Como podemos ver, el valor del ACF decrementa, pero de manera muy lenta, lo que nos indica que necesitamos 
 por lo menos un orden de diferenciación, por lo que el parámetro d será por lo menos de 1. 
 
-\imagen{acf_dif2}{ACF del encoder derecho después de diferenciar}
-\imagen{pacf_dif2}{PACF del encoder derecho después de diferenciar}
+\imagenSized{acf_dif2}{ACF del encoder derecho después de diferenciar}{1}
+\imagenSized{pacf_dif2}{PACF del encoder derecho después de diferenciar}{1}
 
 Se puede ver también como a partir del elemento 16 no se aprecian valores significativos, por lo que el valor del 
 parámetro p será 16. Estas observaciones nos indican a pensar que el modelo es ARIMA(p, d, 0), ya que se cumplen 
@@ -1070,7 +1093,7 @@ Una vez optimizados los hiperparámetros de cada modelo, se vuelve a realizar la
             \bottomrule
         \end{tabular}
     \end{adjustbox}
-    \caption{Tiempo de entrenamiento en segundos de los modelos optimizados}
+    \caption{Tiempo de ajuste en segundos de los modelos optimizados}
     \label{tab:te_opt}
 \end{table}
 
@@ -1098,31 +1121,66 @@ Al igual que en la anterior prueba, se predicen los próximos 10 segundos utiliz
 (excepto en el caso de ARIMA que no lo soporta). En negro se ven los valores pasados, en morado 
 los valores predichos y en azul los valores reales para comparar.
 
-\imagenSized{arima_opt}{Predicción de ARIMA con optimización}{1}
-\imagenSized{tcn_opt}{Predicción de TCN con optimización}{1}
-\imagenSized{nhits_opt}{Predicción de N-HiTS con optimización}{1}
-\imagenSized{transformer_opt}{Predicción de Transformer con optimización}{1}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth,trim={1cm 0.7cm 1cm 2.5cm},clip]{arima_opt}
+    \caption{Predicción de ARIMA con optimización}\label{fig:arima_opt}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth,trim={1cm 0.7cm 1cm 2.5cm},clip]{tcn_opt}
+    \caption{Predicción de TCN con optimización}\label{fig:tcn_opt}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth,trim={1cm 0.7cm 1cm 2.5cm},clip]{nhits_opt}
+    \caption{Predicción de N-HiTS con optimización}\label{fig:nhits_opt}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth,trim={1cm 0.7cm 1cm 2.5cm},clip]{transformer_opt}
+    \caption{Predicción de Transformer con optimización}\label{fig:transformer_opt}
+\end{figure}
+
+% \imagenSized{arima_opt}{Predicción de ARIMA con optimización}{0.8}
+% \imagenSized{tcn_opt}{Predicción de TCN con optimización}{0.8}
+% \imagenSized{nhits_opt}{Predicción de N-HiTS con optimización}{0.8}
+% \imagenSized{transformer_opt}{Predicción de Transformer con optimización}{0.8}
 
 \subsection{Conclusiones}
 
-Como se puede observar, excepto en ARIMA, la optimización arroja peores resultados que los modelos por defecto. Esto 
-se puede deber principalmente a tres factores:
+% Como se puede observar, excepto en ARIMA, la optimización arroja peores resultados que los modelos por defecto. Esto 
+% se puede deber principalmente a tres factores:
+% \begin{enumerate}
+%     \item Los modelos por defecto son lo suficientemente buenos.
+%     \item El tiempo de ejecución de la optimización no ha sido el suficiente, por lo que no se han encontrado las 
+%         mejores combinaciones de hiperparámetros.
+%     \item La cantidad de datos utilizada para el entrenamiento no es suficiente.
+% \end{enumerate}
+
+% En cuanto a ARIMA, a cambio de obtener mejores resultados tanto el tiempo de entrenamiento como el de predicción 
+% son algo más del doble de grandes. Tampoco supone un gran problema, ya que a la hora de entrenar solo 
+% supone unos segundos más, y en el caso de la predicción el aumento está en el rango de los milisegundos.
+
+Como se puede ver, la optimización ha mejorado la mayoría de resultados, a costa de aumentar el tiempo de
+ajuste y el de predicción. Se sacan por tanto las siguientes conclusiones de las siguientes tablas y figuras:
 \begin{enumerate}
-    \item Los modelos por defecto son lo suficientemente buenos.
-    \item El tiempo de ejecución de la optimización no ha sido el suficiente, por lo que no se han encontrado las 
-        mejores combinaciones de hiperparámetros.
-    \item La cantidad de datos utilizada para el entrenamiento no es suficiente.
+    \item El modelo transformador no mejora especialmente con la optimización, en especial en predicciones
+        a 10 segundos en el futuro, que es el rango de tiempo que queremos predecir. El resto de modelos 
+        mejoran apreciablemente en la mayoría de casos.
+    \item La cantidad de datos utilizada para el entrenamiento no es suficiente. Se habrían podido conseguir mejores
+        resultados con un conjunto de datos más grande.
+    \item El tiempo de optimización en el caso del modelo transformador no ha sido suficiente.
 \end{enumerate}
 
-En cuanto a ARIMA, a cambio de obtener mejores resultados tanto el tiempo de entrenamiento como el de predicción 
-son algo más del doble de grandes. Tampoco supone un gran problema, ya que a la hora de entrenar solo 
-supone unos segundos más, y en el caso de la predicción el aumento está en el rango de los milisegundos.
-
 Por todo esto, como queremos realizar predicciones a relativamente largo plazo (10 segundos), el modelo escogido 
-finalmente será el Transformer con los hiperparámetros por defecto y con covariables. Aunque el modelo Transformador
-multivariante produce aparentemente mejores resultados, el mismo modelo con covariantes tiene un mejor DTW (las curvas
-son más parecidas), y se simplifica la integración al no tener luego que separar cada una de las diferentes predicciones. 
+finalmente será el Transformer con los hiperparámetros por defecto y con covariables. Aunque existen casos en los que 
+este modelo no es el mejor, tiene un buen balance entre los tiempos de ajuste y predicción y resultados en el resto 
+de métricas.
 
 En el caso de que en un futuro quieran integrarse estas predicciones en el propio software del AGV con el fin 
-de mejorar su rendimiento, habría que estudiar si usar ARIMA por sus buenos resultados a corto plazo, o bien 
-utilizar el modelo Transformer por sus bajos tiempos de predicción.
+de mejorar su rendimiento, habría que estudiar si usar ARIMA por sus buenos resultados a corto plazo, aunque habría 
+que comprobar que los tiempos de predicción sean lo suficientemente buenos.

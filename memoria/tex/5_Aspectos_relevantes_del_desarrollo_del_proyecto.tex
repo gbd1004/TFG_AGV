@@ -190,11 +190,14 @@ de predicción puede encontrarse en la sección B.6 de los anexos complementario
 
 De dicha comparación se sacan las siguientes conclusiones:
 \begin{itemize}
-    \item El tiempo empleado para la optimización de los modelos no ha sido suficiente, pues los modelos
-        supuestamente optimizados dan peores resultados, tanto en las métricas como en el tiempo de entrenamiento.
+    \item La optimización de los modelos mejora ligeramente los resultados a costa de subir tanto el tiempo de
+        ajuste como el de predicción.
     \item El mejor modelo para predicciones a largo plazo es el Transformer por defecto, aunque N-HiTS da buenos
-        resultados también con un tiempo de entrenamiento menor.
+        resultados también con un tiempo de entrenamiento menor. Aunque la optimización de este modelo ofrece mejores
+        resultados en alguna de las métricas, no son lo suficientemente buenas como para justificar el tiempo de
+        entrenamiento extra.
     \item Para predicciones a corto plazo, ARIMA resulta el mejor modelo.
+    \item El conjunto de datos no es lo suficientemente grande.
 \end{itemize}
 
 Ya que nuestra intención es realizar predicciones a relativamente largo plazo, el modelo escogido ha sido el modelo 
