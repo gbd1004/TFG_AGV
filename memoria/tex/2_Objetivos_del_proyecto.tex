@@ -1,7 +1,12 @@
 \capitulo{2}{Objetivos del proyecto}
 
-El objetivo principal de este trabajo es desarrollar un sistema dedicado a un entorno profesional, capaz 
-de mejorar la eficiencia y reducir costes en procesos industriales. % TODO EXPANDIR ESTO
+El objetivo principal de este trabajo es desarrollar un sistema capaz de almacenar, visualizar y predecir 
+datos producidos por un AGV. Este sistema está planteado para permitir la realización de mantenimiento 
+predictivo o alertas de fallos en el funcionamiento de manera automática en entornos industriales, 
+por lo que su objetivo final será el de reducir costes y mejorar la eficiencia en estos entornos.
+
+Se pretendo conseguir también un sistema eficiente, por lo que será necesario una extensa investigación 
+y comparación de sistemas gestores de bases de datos a utilizar, así como de diferentes modelos predictivos.
 
 Este proyecto ha sido diseñado como un conjunto de microservicios \cite{7030212}. Las aplicaciones diseñadas de esta manera se dividen 
 en elementos más pequeños e independientes entre sí, y que deben comunicarse y coordinarse. De esta 
@@ -9,18 +14,20 @@ forma, se consigue que la aplicación sea modular, más fácil de escalar, de ma
 
 Al dividir la aplicación en lo que a efectos prácticos son aplicaciones más simples, se consigue un código 
 mucho más sencillo, por lo que el diseño del propio código se simplifica. En nuestro caso, se ha utilizado 
-un enfoque de programación funcional, en vez de programación orientada a objetos, pues la simplicidad del propio 
+un enfoque de programación procedimental, en vez de programación orientada a objetos, pues la simplicidad del propio 
 código hace que esta última metodología no sea la más apropiada.
 
 Los objetivos pueden quedar resumidos en la siguiente lista:
 \begin{itemize}
-    \item Desarrollar un conjunto de microservicios que interaccionen entre sí para obtener un sistema modular.
+    \item Desarrollar sistema que permita la monitorización de un sistema de AGVs enviando información en tiempo real.
     \item Diseñar una metodología que sirva como base para realizar una comparativa de sistemas gestores de bases de datos.
     \item Crear un sistema que almacene de manera eficiente la información, utilizando para ello el sistema gestor de bases 
         de datos que mejor se adapte a los requisitos según la metodología diseñada.
-    \item Realizar predicciones sobre los datos almacenados en a diez segundos en el futuro.
+    \item Realizar predicciones sobre los datos almacenados a diez segundos en el futuro.
     \item Diseñar una metodología para realizar una comparativa de modelos de predicción de datos, de manera que se escoja el 
         más eficiente.
+    \item Desarrollar el sistema como un conjunto de microservicios que interaccionan entre sí para conseguir una
+        mayor modularidad.
     \item Diseñar un código mantenible y que se adapte a las convenciones estilísticas establecidas a partir del uso de
         herramientas de integración continua como CodeClimate o Pylint.
     \item Mantener un control de las versiones del proyecto a partir de un uso correcto de Git.

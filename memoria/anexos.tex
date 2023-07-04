@@ -12,7 +12,12 @@
 \usepackage{dirtree}
 \usepackage{adjustbox}
 \usepackage{longtable}
-
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=none
+]{biblatex}
+\addbibresource{bibliografiaAnexos.bib}
 
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
@@ -445,7 +450,8 @@
 \include{./tex/F_Publicaciones}
 
 
-\bibliographystyle{IEEEtran}
-\bibliography{bibliografiaAnexos}
+% \bibliographystyle{IEEEtran}
+% \bibliography{bibliografiaAnexos}
+\printbibliography
 
 \end{document}

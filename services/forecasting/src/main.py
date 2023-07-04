@@ -106,7 +106,7 @@ def train_model(client, bucket, config):
 
     logging.info("Iniciando entrenamiento")
     model.fit(series=[series_ed_scaled, series_ei_scaled],
-              past_covariates=[covariates, covariates], epochs=200)
+              past_covariates=[covariates, covariates], epochs=150)
 
     model.save("/forecasting/model/" + config["model_file"] + ".pt")
 

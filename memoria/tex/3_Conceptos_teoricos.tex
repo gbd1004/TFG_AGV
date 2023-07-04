@@ -1,12 +1,36 @@
 \capitulo{3}{Conceptos teóricos}
 
 Como se ha mencionado en apartados anteriores, los datos recibidos por el AGV se agrupan en series temporales. Conviene por tanto explicar
-que son las series temporales, así como los modelos que se utilizarán para intentar predecirlas.
+primero que es exactamente un AGV, que son las series temporales, así como los modelos que se utilizarán para intentar predecirlas.
 
+También, como el proyecto se ha desarrollado como un conjunto de microservicios, se explicará brevemente en 
+que consiste brevemente este estilo de estructurado de aplicaciones.
+
+\section{Autonomous Guided Vehicles}
+
+Un Autonomous Guided Vehicle, o AGV, es un robot que se mueve generalmente por una banda magnética que utiliza 
+como guía, aunque también pueden ubicarse utilizando ondas de radio, visión artificial a través de cámaras,
+o mediante el uso de láseres.
+
+Su uso principal es el de transporte de cargas pesadas en entornos industriales, como puede ser una fábrica 
+o un almacén. Como estos sistemas se integran en entornos en los que trabajan personas, han de incluirse con 
+rigurosas medidas de seguridad para evitar accidentes.
+
+Generalmente, estos vehículos se organizan en flotas, por lo que puede haber varios vehículos en un mismo circuito.
+Esto requiere que estos AGV sean capaces de comunicarse y coordinarse entre sí, por lo que tecnologías como el 5G 
+son prácticamente necesarias para su correcto funcionamiento \cite{10.1007/978-3-030-50426-7_25}.
+
+Debido a su prevalencia en entornos industriales, existen numerosas soluciones diseñadas para optimizar 
+el funcionamiento de dichos vehículos: optimización de las misiones que han de cumplir \cite{XIDIAS201134},
+optimización de trayectorias \cite{8022960}, etc. 
+
+Existen también soluciones diseñadas para detectar anomalías en el funcionamiento \cite{9341386}. Este proyecto
+se diferencia sin embargo en el uso de predicciones del funcionamiento a partir de datos anteriores, por lo 
+que se propone una solución poco investigada en este aspecto.
 
 \section{Series temporales}
 
-Una serie temporal es una colección de observaciones obtenidas mediante mediciones repetidas a lo largo del tiempo \cite{influx:timeseries}.
+Una serie temporal es una colección de observaciones obtenidas mediante mediciones repetidas a lo largo del tiempo \cite{hamilton2020time}.
 
 Normalmente, las series temporales presentan patrones que pueden utilizarse para realizar predicciones. Estos patrones son:
 \begin{itemize}
@@ -63,6 +87,9 @@ Los siguientes modelos se tendrán en cuenta en este trabajo:
         La combinación de estos tres componentes forman el modelo ARIMA(p, d, q), donde ``p'' representa el orden 
         del componente autorregresivo, ``d'' es el orden del componente de integración y ``q'' es el orden del componente 
         de media móvil.
+        Al tratarse de un modelo estadístico no requiere de entrenamiento como el resto de modelos expuestos. Por ello, 
+        resulta interesante compararlo con modelos basados en redes neuronales. Es también un modelo muy extendido y 
+        que suele utilizarse de base para realizar pruebas de este tipo.
     \item \textbf{TCN.} Una Red neuronal Convolucional Temporal (Temporal Convolutional Network en inglés) \cite{DBLP:journals/corr/abs-1803-01271} es un tipo de 
         red neuronal utilizada para analizar series temporales. Las TCN tienen en cuenta la estructura temporal de los datos 
         y aplican operaciones convolucionales para capturar patrones. Una convolución \cite{hirschman2012convolution} es un operador matemático que transforma 
@@ -78,16 +105,25 @@ Los siguientes modelos se tendrán en cuenta en este trabajo:
         TCN utiliza capas convolucionales de una dimensión para aprender características de la serie temporal. Estas 
         capas son aplicadas sobre ventanas deslizantes de la secuencia para extraer características en diferentes puntos 
         de tiempo.
+        Este modelo se ha escogido debido a que las redes neuronales convolucionales son utilizadas típicamente en 
+        problemas de visión artificial o que requieran de tratamiento de imágenes, por lo que pretende comprobarse 
+        su utilidad para predecir series temporales.
     \item \textbf{N-HiTS.} Este modelo (Neural Hierarchical interpolation for Time Series) es una extensión del modelo 
         N-BEATS, mejorando su rendimiento y velocidad de entrenamiento \cite{DBLP:journals/corr/abs-2201-12886}. N-BEATS \cite{Oreshkin2020N-BEATS:}
         está formado por dos componentes: stack y bloque. Un bloque está formado por una red multicapa que predice 
         valores futuros y pasados. Estos bloques se organizan en pilas (stacks), que agregan las predicciones y errores 
         residuales. 
+        Este modelo es interesante porque utiliza ``predicciones'' del pasado para calcular el error que está teniendo 
+        la red al entrenarse con el fin de compensarlo en predicciones futuras. Por ello, se pretende comparar con otras 
+        soluciones más típicas y populares.
     \item \textbf{Transformer Model.} El Modelo Transformador \cite{DBLP:journals/corr/VaswaniSPUJGKP17} es una red 
         neuronal que aprende el contexto de la información. Este modelo usa una arquitectura codificador-decodificador,
         en la que el codificador procesa la entrada de forma iterativa, y el decodificador hace lo mismo con la salida del 
         codificador.
-    \end{itemize}
+        Este modelo está siendo muy utilizado en la actualidad, especialmente en modelos de generadores de lenguaje como 
+        GPT (Generative Pre-Trained Transformer). Al escoger este modelo, se pretende por tanto comprobar su viabilidad 
+        para la predicción de series temporales.
+\end{itemize}
 
 Estos modelos serán los utilizados para la comparación en el desarrollo del proyecto. Para ello, se utilizan 
 las siguientes métricas:
@@ -100,4 +136,54 @@ las siguientes métricas:
     \item \textbf{DTW}. Siglas de Dynamic Time Warping \cite{Müller2007}, es utilizado para medir la similitud entre dos series temporales. Por ejemplo, una predicción 
         con forma de ecuación lineal puede tener el mismo MAE que otra predicción más irregular, pero esta segunda 
         puede parecerse más a los datos reales.
+\end{itemize}
+
+\section{Microservicios}
+
+Un microservicio es una pequeña aplicación que puede ser desplegada, escalada y probada de manera independiente,
+además de caracterizarse por tener una única responsabilidad. De esta manera, las aplicaciones diseñadas siguiendo 
+este tipo de arquitectura están formadas por un conjunto de microservicios, en vez de desarrollarse de manera monolítica.
+
+La arquitectura de microservicios es una arquitectura orientada a servicios, es decir, que dicta cómo deben trazarse los 
+límites de los servicios, y una en la que la independencia en la capacidad de despliegue es el concepto clave.
+Esta manera de organizar las aplicaciones permite una mayor modularidad, lo que a su vez facilita su mantenimiento 
+y escalabilidad. Permite también desarrollar y desplegar aplicaciones de manera mucho más rápida, ya que modificar 
+la implementación de uno de estos microservicios no debería tener ningún efecto sobre el resto.
+
+Algunos conceptos clave de los microservicios son \cite{newman2021building}:
+\begin{itemize}
+    \item Capacidad de despliegue independiente: esta idea consiste en que pueden realizarse cambios sobre un
+        microservicio, desplegarlo y lanzar dicho servicio a nuestros usuarios, sin necesidad de tener que 
+        desplegar ningún otro microservicio.
+    \item Modelado en torno a un dominio de negocio: cada microservicio debe tener una única responsabilidad, de 
+        esta manera se simplifica el desarrollo del mismo, así como la combinación de diferentes
+        microservicios para entregar nuevas funcionalidades.
+    \item Tamaño: ya que no existe una buena forma de medir el tamaño del software, como norma general
+        se dice que el tamaño de un microservicio debe mantenerse en un tamaño en el que pueda ser 
+        fácilmente entendido.
+    \item Flexibilidad: al dividir la aplicación en un conjunto de microservicios independientes, la flexibilidad
+        aumenta.
+\end{itemize}
+
+Idealmente, estos microservicios se ejecutan de manera aislada del resto. De esta forma, un fallo en uno de ellos 
+no afecta al resto. Para ello, se recurren a técnicas de virtualización que crean entornos de ejecución aislados.
+Sin embargo, las técnicas clásicas de virtualización, como las Máquinas Virtuales, suelen ser demasiado pesadas
+cuando se tiene en cuenta el tamaño de los microservicios. Por ello, se utilizan Contenedores, como los proveídos 
+por Docker \cite{docker-pag}. Estos contenedores proveen entornos de ejecución independientes, igual que las Máquinas 
+Virtuales, pero son mucho más ligeros.
+
+En cuanto a las ventajas ofrecidas por los microservicios, se pueden destacar las siguientes:
+\begin{itemize}
+    \item Heterogeneidad de la tecnología: como los microservicios son independientes entre sí, podemos 
+        escoger tecnologías diferentes para cada uno de ellos, permitiendo así escoger la herramienta 
+        adecuada para cada tarea.
+    \item Robustez: ya que los errores en un servicio no se propagan al resto, se consigue un sistema mucho
+        más robusto.
+    \item Escalado: en aplicaciones monolíticas, todo a de ser escalado en conjunto. Sin embargo, al dividir 
+        la aplicación en partes más pequeñas, podemos simplemente escalar aquella parte que lo necesite.
+    \item Facilidad del despliegue: un cambio en una aplicación monolítica requiere de volver a desplegar 
+        toda la aplicación, lo que puede ser una operación peligrosa. Un cabio en un microservicio, sin embargo,
+        solo provoca un nuevo despliegue en dicho servicio.
+    \item Productividad: ya que los microservicios son pequeños en tamaño, es mucho más fácil coordinar a un grupo
+        de desarrolladores para trabajar en dicha aplicación.
 \end{itemize}

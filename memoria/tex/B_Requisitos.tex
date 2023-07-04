@@ -13,7 +13,7 @@ acordes a dichos requisitos.
 El proyecto ha de cumplir los siguientes objetivos generales:
 \begin{enumerate}
 	\item Desarrollar un sistema capaz de almacenar, monitorizar y predecir los datos enviados por los AGV.
-	\item Desarrollar los servicios del sistema de la forma más modular posible, de forma que sea factible modificar
+	\item Desarrollar los servicios del sistema de la forma más modular posible, de forma que simplifique la modificación de las
 		funcionalidades del sistema.
 	\item Realizar un estudio de las herramientas a utilizar con el fin de obtener el sistema más eficiente posible.
 	\item El funcionamiento de los servicios que componen el sistema han de ser configurables a través de archivos de
@@ -813,9 +813,10 @@ realiza con los modelos por defecto otorgados por Darts. La segunda, se realiza 
 optimización de los hiperparámetros de cada uno de los modelos.
 
 Para realizar la comparación, excepto en el caso de ARIMA que es un modelo estadístico que no usa redes neuronales, 
-se entrena el modelo durante 200 épocas y se realizan varias predicciones: una 200 milisegundos a futuro, otra 
-1 segundo a futuro y otra 10 segundos a futuro. Este procedimiento se realiza cinco veces y se calcula la media 
-de las métricas como valor final.
+se entrena el modelo durante 150 épocas y se realizan varias predicciones del conjunto de validación. Para ello, 
+se utiliza una ventana deslizante, de forma que todo este conjunto se predecirá en tramos de 200 milisegundos, 1 segundo 
+y 10 segundos.
+Este procedimiento se realiza cinco veces y se calcula la media de las métricas como valor final.
 
 Esta prueba se repite tres veces por cada modelo, de forma que al final surgen tres comparaciones 
 diferentes;
@@ -858,10 +859,10 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{65.099} & \textbf{161.666} & 1907.520 & - & - & - & - & - & - \\
-            TCN & 1171.997 & 1332.097 & 2384.317 & 1319.644 & 1309.481 & 2917.175 & 1332.920 & 1253.553 & 2375.751 \\
-            N-HiTS & 89.323 & 426.071 & 2051.014 & 527.865 & 731.733 & 1625.994 & 467.818 & 455.427 & 1200.268 \\
-            Transformer & 420.348 & 269.185 & 1856.455 & 234.741 & 178.082 & 779.017 & 189.326 & 364.382 & \textbf{651.375} \\
+            ARIMA & \textbf{162.909} & \textbf{410.160} & 1222.112 & - & - & - & - & - & - \\
+            TCN & 2219.023 & 1985.076 & 2159.769 & 1797.013 & 2492.409 & 1984.476 & 1988.296 & 2255.940 & 2445.329 \\
+            N-HiTS & 359.733 & 1102.238 & 2095.359 & 1119.604 & 595.256 & 1664.665 & 797.003 & 821.614 & 1594.119 \\
+            Transformer & 681.963 & 708.625 & 1453.811 & 432.977 & 488.078 & \textbf{1070.926} & 525.755 & 667.424 & 1234.222 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -877,10 +878,10 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{0.301} & \textbf{0.749} & 8.832 & - & - & - & - & - & - \\
-            TCN & 5.427 & 6.168 & 11.040 & 6.110 & 6.063 & 13.507 & 6.172 & 5.804 & 11.000 \\
-            N-HiTS & 0.414 & 1.973 & 9.497 & 2.444 & 3.388 & 7.529 & 2.166 & 2.109 & 5.558 \\
-            Transformer & 1.946 & 1.246 & 8.596 & 1.087 & 0.825 & 3.607 & 0.877 & 1.687 & \textbf{3.016} \\
+            ARIMA & \textbf{0.692} & \textbf{1.744} & 5.204 & - & - & - & - & - & - \\
+            TCN & 9.398 & 8.399 & 9.141 & 7.607 & 10.542 & 8.388 & 8.414 & 9.546 & 10.340 \\
+            N-HiTS & 1.522 & 4.668 & 8.850 & 4.734 & 2.523 & 7.035 & 3.377 & 3.476 & 6.735 \\
+            Transformer & 2.905 & 3.015 & 6.148 & 1.844 & 2.077 & \textbf{4.525} & 2.237 & 2.834 & 5.223 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}    
@@ -896,10 +897,10 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{65.099} & \textbf{128.896} & 1345.799 & - & - & - & - & - & - \\
-            TCN & 1171.997 & 1332.097 & 1200.933 & 1319.644 & 1309.481 & 2112.024 & 1332.920 & 1253.553 & 1190.241 \\
-            N-HiTS & 89.323 & 426.071 & 862.970 & 527.865 & 731.733 & 970.195 & 467.818 & 455.427 & 599.107 \\
-            Transformer & 420.348 & 252.468 & 593.228 & 234.741 & 133.774 & \textbf{262.340} & 189.326 & 343.909 & 269.327 \\
+            ARIMA & \textbf{162.909} & \textbf{389.584} & 1011.495 & - & - & - & - & - & - \\
+            TCN & 2219.023 & 1969.839 & 1646.481 & 1797.013 & 2485.890 & 1222.429 & 1988.296 & 2227.340 & 1946.709 \\
+            N-HiTS & 359.733 & 1083.267 & 1254.794 & 1119.604 & 560.890 & 1296.753 & 797.003 & 785.735 & 1303.806 \\
+            Transformer & 681.963 & 668.339 & 678.005 & 432.977 & 467.128 & 545.544 & 525.755 & 639.565 & \textbf{530.672} \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -915,14 +916,14 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{0.346} & \textbf{0.747} & \textbf{1.110} & - & - & - & - & - & - \\
-            TCN & 38.761 & 42.199 & 40.709 & 48.929 & 54.908 & 51.291 & 39.916 & 40.346 & 40.380 \\
-            N-HiTS & 41.019 & 41.613 & 40.470 & 53.496 & 53.334 & 50.245 & 41.693 & 41.385 & 39.363 \\
-            Transformer & 119.819 & 127.825 & 125.355 & 134.100 & 138.126 & 133.646 & 122.732 & 129.830 & 122.162 \\
+            ARIMA & \textbf{0.378} & \textbf{0.371} & \textbf{0.312} & - & - & - & - & - & - \\
+            TCN & 30.916 & 30.080 & 30.818 & 37.011 & 36.938 & 37.353 & 29.851 & 28.975 & 28.900 \\
+            N-HiTS & 28.149 & 27.630 & 27.977 & 34.794 & 34.812 & 34.508 & 28.031 & 27.987 & 27.655 \\
+            Transformer & 88.604 & 90.306 & 89.935 & 101.665 & 102.316 & 96.463 & 98.377 & 88.959 & 93.865 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
-    \caption{Tiempo de entrenamiento en segundos de los modelos por defecto}
+    \caption{Tiempo de ajuste en segundos de los modelos por defecto}
     \label{tab:te_inicial}
 \end{table}
 
@@ -934,10 +935,10 @@ de dichas covariables solo se puede hacer una predicción a futuro, ya que no se
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 0.009 & 0.009 & 0.009 & - & - & - & - & - & - \\
-            TCN & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 \\
-            N-HiTS & 0.003 & 0.003 & 0.004 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.004 \\
-            Transformer & 0.004 & 0.004 & 0.007 & 0.005 & 0.004 & 0.005 & \textbf{<0.001} & \textbf{<0.001} & \textbf{<0.001} \\
+            ARIMA & 0.043 & 0.036 & 0.037 & - & - & - & - & - & - \\
+            TCN & \textbf{0.013} & \textbf{0.013} & \textbf{0.015} & 0.018 & 0.013 & 0.014 & 0.017 & 0.013 & 0.014 \\
+            N-HiTS & 0.019 & 0.016 & 0.018 & 0.018 & 0.017 & 0.018 & 0.019 & 0.017 & 0.018 \\
+            Transformer & 0.020 & 0.021 & 0.021 & 0.020 & 0.020 & 0.021 & 0.021 & 0.021 & 0.021 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -1005,10 +1006,10 @@ Una vez optimizados los hiperparámetros de cada modelo, se vuelve a realizar la
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{38.961} & \textbf{133.312} & 1904.280 & - & - & - & - & - & - \\
-            TCN & 1964.383 & 1664.512 & 2301.540 & 1246.520 & 1288.028 & 2032.812 & 1306.301 & 1351.884 & 2309.763 \\
-            N-HiTS & 224.531 & 410.060 & 2076.162 & 567.246 & 570.008 & 2242.317 & 490.646 & 611.851 & \textbf{1879.377} \\
-            Transformer & 810.602 & 740.833 & 2128.102 & 913.553 & 1078.878 & 2483.066 & 492.486 & 646.667 & 2266.571 \\
+            ARIMA & \textbf{156.587} & 402.922 & 1222.479 & - & - & - & - & - & - \\
+            TCN & 1584.048 & 1611.392 & 1898.327 & 1568.804 & 1596.126 & 1631.922 & 1256.715 & 1974.812 & 1787.258 \\
+            N-HiTS & 313.865 & 642.887 & 1429.619 & 349.071 & \textbf{396.670} & 1140.826 & 413.604 & 495.936 & \textbf{973.573} \\
+            Transformer & 312.591 & 442.846 & 1292.514 & 450.393 & 410.858 & 1119.789 & 683.099 & 604.807 & 1062.630 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -1024,10 +1025,10 @@ Una vez optimizados los hiperparámetros de cada modelo, se vuelve a realizar la
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{0.180} & \textbf{0.617} & 8.817 & - & - & - & - & - & - \\
-            TCN & 9.096 & 7.707 & 10.657 & 5.772 & 5.964 & 9.413 & 6.049 & 6.260 & 10.695 \\
-            N-HiTS & 1.040 & 1.899 & 9.613 & 2.627 & 2.639 & 10.383 & 2.272 & 2.833 & \textbf{8.702} \\
-            Transformer & 3.753 & 3.430 & 9.854 & 4.230 & 4.996 & 11.497 & 2.280 & 2.994 & 10.495 \\
+            ARIMA & \textbf{0.665} & 1.713 & 5.206 & - & - & - & - & - & - \\
+            TCN & 6.708 & 6.824 & 8.032 & 6.628 & 6.751 & 6.904 & 5.335 & 8.345 & 7.553 \\
+            N-HiTS & 1.331 & 2.724 & 6.047 & 1.483 & \textbf{1.688} & 4.828 & 1.753 & 2.106 & \textbf{4.126} \\
+            Transformer & 1.329 & 1.882 & 5.490 & 1.910 & 1.748 & 4.746 & 2.907 & 2.573 & 4.488 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}    
@@ -1043,10 +1044,10 @@ Una vez optimizados los hiperparámetros de cada modelo, se vuelve a realizar la
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{38.961} & \textbf{110.171} & 1606.009 & - & - & - & - & - & - \\
-            TCN & 1964.383 & 1664.512 & 1108.831 & 1246.520 & 1288.028 & 1291.965 & 1306.301 & 1351.884 & 1266.140 \\
-            N-HiTS & 224.531 & 410.060 & \textbf{940.509} & 567.246 & 570.008 & 1416.521 & 490.646 & 611.851 & 1179.411 \\
-            Transformer & 810.602 & 740.833 & 1018.206 & 913.553 & 1078.878 & 1851.306 & 492.486 & 646.667 & 1181.562 \\
+            ARIMA & \textbf{156.587} & \textbf{371.751} & 1059.898 & - & - & - & - & - & - \\
+            TCN & 1584.048 & 1587.879 & 1218.422 & 1568.804 & 1574.762 & 650.782 & 1256.715 & 1950.265 & 910.187 \\
+            N-HiTS & 313.865 & 629.109 & 973.335 & 349.071 & 375.828 & 692.528 & 413.604 & 460.923 & 545.182 \\
+            Transformer & 312.591 & 393.569 & 723.987 & 450.393 & 358.407 & \textbf{515.197} & 683.099 & 554.948 & 707.391 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -1062,10 +1063,10 @@ Una vez optimizados los hiperparámetros de cada modelo, se vuelve a realizar la
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & \textbf{0.843} & \textbf{1.610} & \textbf{2.410} & - & - & - & - & - & - \\
-            TCN & 50.430 & 50.648 & 52.969 & 60.830 & 61.489 & 64.225 & 48.641 & 49.186 & 53.759 \\
-            N-HiTS & 140.357 & 141.576 & 168.711 & 154.149 & 166.998 & 161.123 & 141.904 & 174.071 & 142.991 \\
-            Transformer & 185.125 & 174.690 & 186.759 & 189.849 & 199.023 & 186.065 & 191.429 & 195.641 & 189.349 \\
+            ARIMA & \textbf{0.875} & \textbf{0.823} & \textbf{0.687} & - & - & - & - & - & - \\
+            TCN & 36.238 & 37.601 & 35.455 & 42.710 & 42.582 & 42.831 & 35.664 & 33.898 & 34.281 \\
+            N-HiTS & 92.157 & 96.569 & 92.305 & 100.803 & 99.655 & 101.466 & 93.489 & 90.949 & 92.417 \\
+            Transformer & 101.097 & 100.450 & 107.295 & 108.456 & 109.764 & 114.103 & 104.710 & 101.225 & 110.707 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}
@@ -1081,10 +1082,10 @@ Una vez optimizados los hiperparámetros de cada modelo, se vuelve a realizar la
             & \multicolumn{3}{c | }{Univariante} & \multicolumn{3}{c | }{Covariante} & \multicolumn{3}{c}{Multivariante} \\
             Tiempo & 0.2 & 1 & 10 & 0.2 & 1 & 10 & 0.2 & 1 & 10 \\
             \otoprule
-            ARIMA & 0.014 & 0.015 & 0.015 & - & - & - & - & - & - \\
-            TCN & 0.003 & 0.003 & 0.004 & 0.003 & 0.003 & 0.003 & 0.003 & 0.003 & 0.006 \\
-            N-HiTS & 0.005 & 0.033 & 0.006 & 0.005 & 0.004 & 0.004 & 0.005 & 0.004 & 0.006 \\
-            Transformer & 0.004 & 0.004 & 0.006 & 0.004 & 0.004 & 0.005 & \textbf{<0.001} & \textbf{<0.001} & \textbf{<0.001} \\
+            ARIMA & 0.052 & 0.049 & 0.048 & - & - & - & - & - & - \\
+            TCN & 0.021 & 0.016 & 0.015 & \textbf{0.019} & \textbf{0.014} & \textbf{0.015} & 0.019 & 0.015 & 0.016 \\
+            N-HiTS & 0.025 & 0.028 & 0.025 & 0.025 & 0.027 & 0.025 & 0.027 & 0.025 & 0.026 \\
+            Transformer & 0.027 & 0.025 & 0.025 & 0.025 & 0.029 & 0.026 & 0.026 & 0.027 & 0.029 \\
             \bottomrule
         \end{tabular}
     \end{adjustbox}

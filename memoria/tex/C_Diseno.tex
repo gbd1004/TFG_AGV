@@ -12,9 +12,9 @@ en la base de datos, y la segunda detallará el flujo de datos entre los diferen
 
 \subsection{Base de datos}
 
-Como se ha especificado en el anexo B, la base de datos elegida es InfluxDB. Esta es una base de datos 
-de series temporales no relacional, por lo que las características de esta base de datos no siguen 
-las de una base de datos relacional.
+De acuerdo con lo establecido en el anexo B, se ha seleccionado InfluxDB como la base de datos de elección. 
+InfluxDB es una base de datos no relacional orientada a series temporales, lo cual implica que sus 
+características difieren de las bases de datos relacionales convencionales.
 
 El elemento de mayor nivel organizativo en InfluxDB es la organización. Una organización es un 
 entorno de trabajo en el que se definen el resto de elementos de la base de datos: usuarios, ``buckets'',
@@ -108,7 +108,9 @@ La comunicación entre servicios ocurre de tres formas diferentes:
 
 \section{Diseño procedimental}
 
-Se muestran a continuación los diagramas de secuencia de cada servicio.
+Se muestran a continuación los diagramas de secuencia de cada servicio. En naranja se marcan los elementos
+pertenecientes al servicio ``Simulator'', en amarillo los pertenecientes al servicio ``Receiver'', en verde 
+el servicio de la base de datos y por último en azul los elementos pertenecientes al servicio ``Forecaster''.
 
 \imagen{sec_simular_aleatorio}{Diagrama de secuencia del servicio ``Simulator'' generando datos aleatorios}
 \imagen{sec_simular_csv}{Diagrama de secuencia del servicio ``Simulator'' generando datos de un CSV}
@@ -140,10 +142,20 @@ Como se puede ver en la Figura \ref{fig:diagrama_paquetes}, existen cuatro paque
 \subsection{Diseño de despliegue}
 
 Un diagrama de despliegue muestra la arquitectura de ejecución de sistemas que representan la asignación
-de artefactos de software a objetivos de despliegue \cite{uml:deploy}. La Figura \ref{fig:deploy_diag} muestra el 
+de artefactos de software a objetivos de despliegue \cite{arlow2005uml}. La Figura \ref{fig:deploy_diag} muestra el 
 diagrama de despliegue del sistema.
 
 Cada nodo normalmente representa un dispositivo hardware o un entorno de ejecución de software, y las asociaciones 
 representan las comunicaciones entre nodos.
 
 \imagenSized{deploy_diag}{Diagrama de despliegue}{0.8}
+
+En este caso, el diagrama de despliegue se ha modelado de forma que todos los servicios del sistema se ejecutan
+de manera independiente sobre el mismo hardware y en el mismo sistema operativo. Sin embargo, esto no tiene por
+qué ser así. Ya que son servicios independientes, podrían ejecutarse en sistemas operativos diferentes, e 
+incluso en dispositivos hardware diferentes. 
+
+Esto puede tener sentido desde un punto de vista del rendimiento, 
+ya que podrían tenerse varios servidores, de forma que, por ejemplo, uno esté optimizado para alojar la base de 
+datos, mientras que otro podría estar preparado con hardware especial para realizar las predicciones de la manera 
+más rápida posible.
