@@ -2,16 +2,19 @@ import json
 import logging
 import os
 import time
+import torch
 
 from darts.timeseries import TimeSeries
 from darts.utils.missing_values import fill_missing_values
 from darts.dataprocessing.transformers import Diff
 from darts.models.forecasting.transformer_model import TransformerModel
+from darts.models.forecasting.nhits import NHiTSModel
 from darts.dataprocessing.transformers import Scaler
 from influxdb_client import InfluxDBClient, WriteOptions
 import numpy as np
 from pandas import DataFrame
 
+torch.set_float32_matmul_precision('high')
 URL = "http://database:8086"
 
 def get_influxdb_credentials():
