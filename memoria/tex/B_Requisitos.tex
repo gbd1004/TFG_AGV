@@ -1168,9 +1168,12 @@ los valores predichos y en azul los valores reales para comparar.
 Como se puede ver, la optimización ha mejorado la mayoría de resultados, a costa de aumentar el tiempo de
 ajuste y el de predicción. Se sacan por tanto las siguientes conclusiones de las siguientes tablas y figuras:
 \begin{enumerate}
-    \item El modelo transformador no mejora especialmente con la optimización, en especial en predicciones
-        a 10 segundos en el futuro, que es el rango de tiempo que queremos predecir. El resto de modelos 
-        mejoran apreciablemente en la mayoría de casos.
+    % \item El modelo transformador no mejora especialmente con la optimización, en especial en predicciones
+    %     a 10 segundos en el futuro, que es el rango de tiempo que queremos predecir. El resto de modelos 
+    %     mejoran ligeramente en la mayoría de casos.
+    \item Los mejores modelos en predicciones a 10 segundos en el futuro son el transformador por defecto y 
+        con covariables, o N-HiTS con optimizado con multivariables. Ya que trabajar en Darts con covariables 
+        es más simple que con multivariables, se escogerá el primero.
     \item La cantidad de datos utilizada para el entrenamiento no es suficiente. Se habrían podido conseguir mejores
         resultados con un conjunto de datos más grande.
     \item El tiempo de optimización en el caso del modelo transformador no ha sido suficiente.

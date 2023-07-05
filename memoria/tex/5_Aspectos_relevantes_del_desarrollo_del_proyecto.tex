@@ -192,8 +192,8 @@ De dicha comparación se sacan las siguientes conclusiones:
 \begin{itemize}
     \item La optimización de los modelos mejora ligeramente los resultados a costa de subir tanto el tiempo de
         ajuste como el de predicción.
-    \item El mejor modelo para predicciones a largo plazo es el Transformer por defecto, aunque N-HiTS da buenos
-        resultados también con un tiempo de entrenamiento menor. Aunque la optimización de este modelo ofrece mejores
+    \item El mejor modelo para predicciones a largo plazo es el Transformer por defecto y con covariables, o N-HiTS con 
+        optimización y con multivariables. Aunque la optimización de este primer modelo ofrece mejores
         resultados en alguna de las métricas, no son lo suficientemente buenas como para justificar el tiempo de
         entrenamiento extra.
     \item Para predicciones a corto plazo, ARIMA resulta el mejor modelo.
@@ -201,8 +201,8 @@ De dicha comparación se sacan las siguientes conclusiones:
 \end{itemize}
 
 Ya que nuestra intención es realizar predicciones a relativamente largo plazo, el modelo escogido ha sido el modelo 
-Transformer. Podría haberse escogido también el modelo N-HiTS, pero como el modelo solo se entrena una vez el tiempo 
-de entrenamiento tendrá una menor importancia comparada con el resto de métricas.
+Transformer. Otro de los motivos por el que se escoge este modelo es que, al usar covariables en vez de multivariables,
+su implementación resulta más sencilla.
 
 \subsection{Desarrollo del servicio}
 
@@ -251,5 +251,5 @@ en la sección E.4 de los anexos.
 
 \section{Mantenimiento del código}
 
-Al final del desarrollo, se integraron en el proyecto las herramientas de integración continua Code Climate y 
-Pylint. Gracias a estas herramientas, se localizaron y resolvieron errores estilísticos y de mantenibilidad del código.
+Al final del desarrollo, se integraron en el proyecto las herramientas de integración continua Code Climate \cite{codeclimate} y 
+Pylint \cite{pylint}. Gracias a estas herramientas, se localizaron y resolvieron errores estilísticos y de mantenibilidad del código.

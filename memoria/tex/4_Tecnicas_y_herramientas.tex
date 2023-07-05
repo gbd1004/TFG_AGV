@@ -7,7 +7,7 @@
 
 Las siguientes metodologías han sido utilizadas:
 \begin{itemize}
-    \item \textbf{SCRUM}: es un marco de trabajo cuyas características principales son: desarrollo incremental
+    \item \textbf{SCRUM} es un marco de trabajo cuyas características principales son: desarrollo incremental
         en lugar de una ejecución completa, basar la calidad en el conocimiento de los integrantes del
         equipo en vez de en la calidad de los procesos y solapar las fases del proyecto.
 
@@ -34,11 +34,11 @@ El proyecto ha sido desarrollado íntegramente en el lenguaje de programación P
 Además, todos los módulos que más tarde se explican han sido desarrollados como contenedores de Docker. Para ello 
 se han utilizado:
 \begin{itemize}
-    \item Docker, en su versión 24.0.2. Docker permite el despliegue de aplicaciones dentro de contenedores, similares
+    \item Docker \cite{docker-pag}, en su versión 24.0.2. Docker permite el despliegue de aplicaciones dentro de contenedores, similares
         a máquinas virtuales, de forma que cada contenedor está aislado del resto del sistema. Docker permite también
         la ejecución de dichas aplicaciones de forma independiente al sistema operativo, por lo que permite una gran 
         compatibilidad. 
-    \item Docker compose versión 2.16.0. Esta herramienta sirve para definir y ejecutar aplicaciones multi-contenedor.
+    \item Docker compose \cite{compose} versión 2.16.0. Esta herramienta sirve para definir y ejecutar aplicaciones multi-contenedor.
 \end{itemize}
 
 \subsection{Sistema Gestor de Base de Datos}
@@ -67,7 +67,7 @@ Se ha utilizado también la librería Optuna\cite{optuna} para la optimización 
 
 \section{Entorno de desarrollo}
 
-Todo el trabajo ha sido realizado con el editor de texto de Microsoft Visual Studio Code. Esto ha sido así por 
+Todo el trabajo ha sido realizado con el editor de texto de Microsoft Visual Studio Code \cite{visualstudiocode}. Esto ha sido así por 
 varios motivos, principalmente mi comodidad con él, pues es el editor de texto que estoy acostumbrado a usar, y 
 la gran cantidad de extensiones existentes que permitan una mejor experiencia de usuario.
 
@@ -88,8 +88,8 @@ En cuanto a las extensiones utilizadas, caben destacar:
 
 \subsection{Control de versiones}
 
-El proyecto se aloja en la plataforma GitHub, y la herramienta utilizada para el control de versiones es git.
-Inicialmente se empezó a usar ZenHub para llevar el control de los sprints. Sin embargo, debido a un problema de 
+El proyecto se aloja en la plataforma GitHub \cite{github}, y la herramienta utilizada para el control de versiones es git.
+Inicialmente se empezó a usar ZenHub \cite{zenhub} para llevar el control de los sprints. Sin embargo, debido a un problema de 
 licencias a mitad del desarrollo se dejó de utilizar en favor de simplemente usar el apartado de Issues del repositorio 
 para dicha labor.
 
@@ -102,8 +102,8 @@ compilación de dichos documentos.
 
 Se han utilizado dos herramientas para el análisis estático del código:
 \begin{itemize}
-    \item Codeclimate: Analiza la mantenibilidad del código, cobertura de pruebas, etc.
-    \item Pylint: Analiza y puntúa el estilo del código.
+    \item Codeclimate \cite{codeclimate}: Analiza la mantenibilidad del código, cobertura de pruebas, etc.
+    \item Pylint \cite{pylint}: Analiza y puntúa el estilo del código.
 \end{itemize}
 
 Estas herramientas se integran de forma que se ejecutan cada vez que se hace un nuevo commit en el repositorio del proyecto.
