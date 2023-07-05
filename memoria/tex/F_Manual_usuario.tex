@@ -1,0 +1,186 @@
+\apendice{Documentación de usuario}
+
+\section{Introducción}
+
+Este manual detalla los requisitos desde el punto de vista del usuario, así como la guía de instalación y 
+un manual del funcionamiento del proyecto.
+
+\section{Requisitos de usuarios}
+
+\subsection{Requisitos de hardware}
+Como ya ha sido mencionado con anterioridad, es muy recomendable utilizar la GPU para acelerar la predicción de 
+los datos. Para ello, se necesita una GPU con soporte para CUDA 11.8 o superior. Dicha compatibilidad puede
+comprobarse en \cite{cuda-compatibility}.
+
+El otro elemento que necesita de un buen rendimiento es la base de datos. Un hardware insuficiente puede suponer 
+retrasos a la hora de insertar nuevos datos e incluso cuelgues del sistema, por lo que los requisitos mínimos de 
+hardware irán dictados en gran medida por dicho servicio. Según la documentación de InfluxDB \cite{influx:requirements}, para nuestras necesidades 
+estimadas se necesita de una CPU de 2 a 4 núcleos y de 2 a 5 GB de memoria RAM. Un disco SSD también es muy recomendado.
+
+\subsection{Requisitos de software}
+Para la ejecución del proyecto las únicas herramientas necesarias son Docker \cite{docker-pag} y docker compose \cite{compose}.
+En cuanto al sistema operativo, el proyecto puede ejecutarse en cualquier sistema operativo que soporte estas aplicaciones.
+
+En el caso de querer usar la versión del servicio de predicción que utiliza la GPU, es necesario también instalar 
+nvidia-docker \cite{nvidia-docker}. Esta herramienta solo funciona en Linux, por lo que este es el único sistema 
+operativo soportado para este caso.
+
+\section{Instalación}
+
+El primer paso para instalar el proyecto es clonar el repositorio con el siguiente comando:
+\begin{lstlisting}[language=bash]
+$ git clone https://github.com/gbd1004/TFG_AGV.git
+\end{lstlisting}
+Después de clonar el repositorio se navega a la carpeta ``services'' y se ejecuta el siguiente 
+comando para construir las imágenes de los contenedores de cada servicio:
+\begin{lstlisting}[language=bash]
+$ docker compose build
+\end{lstlisting}
+
+Una vez ejecutados estos comandos tendremos el proyecto listo para ejecutarse.
+
+\section{Manual del usuario}
+
+\subsection{Ejecución del proyecto}
+
+Para ejecutar el proyecto usando la GPU se utiliza el siguiente comando desde la carpeta ``services'':
+\begin{lstlisting}[language=bash]
+$ docker compose --profile gpu up --build
+\end{lstlisting}
+En caso de que no quiera, o no pueda, usarse la GPU, y por ende se utilice la CPU para el servicio de 
+predicciones, se utiliza el siguiente comando:
+\begin{lstlisting}[language=bash]
+$ docker compose --profile cpu up --build
+\end{lstlisting}
+Por último, mencionar que si no quiere ejecutarse el servicio de predicción basta con ejecutar el mismo comando 
+sin especificar ningún perfil.
+\begin{lstlisting}[language=bash]
+$ docker compose up --build
+\end{lstlisting}
+
+La opción ``--build'' construye las imágenes de los contenedores en caso de que algo haya cambiado o 
+no se haya ejecutado el paso anterior.
+
+Opcionalmente se puede añadir también el argumento ``-d'' en caso de que se quiera ejecutar desacoplado 
+del terminal actual.
+
+Para detener la ejecución del proyecto se ejecuta el siguiente comando:
+\begin{lstlisting}[language=bash]
+$ docker compose down
+\end{lstlisting}
+Se puede añadir también el argumento ``-v'' en caso de que queramos eliminar los volúmenes montados 
+en los contenedores.
+
+\subsection{Archivos de configuración}
+
+Cada servicio cuenta con sus archivos de configuración. A continuación se detallan los elementos 
+de cada uno de ellos.
+
+\subsubsection{Database}
+El archivo de configuración de la base de datos se encuentra en el directorio ``./services/database'' 
+y se llama ``influxdb\_credentials.env''. Este archivo de variables de entorno se carga en el servicio 
+de la base de datos y en todos los servicios que tengan conexión con dicha base de datos.
+
+El contenido es el siguiente:
+\begin{itemize}
+    \item DOCKER\_INFLUXDB\_INIT\_USERNAME: Nombre de usuario utilizado para iniciar sesión en la aplicación web.
+    \item DOCKER\_INFLUXDB\_INIT\_PASSWORD: Contraseña del usuario del sistema.
+    \item DOCKER\_INFLUXDB\_INIT\_ADMIN\_TOKEN: Token de seguridad del usuario administrador, y que tiene permisos 
+        de escritura en la base de datos.
+    \item DOCKER\_INFLUXDB\_INIT\_ORG: Nombre de la organización en la que se crean los ``buckets'' y usuarios de
+        la base de datos.
+    \item DOCKER\_INFLUXDB\_INIT\_BUCKET: Nombre del ``bucket'' en el que se insertan los datos del AGV o del simulador.
+    \item DOCKER\_INFLUXDB\_INIT\_MODE: Modo en el que se inicia la base de datos.
+\end{itemize}
+De todos estos campos, el único que no es configurable es el último, pues sin este valor la base de datos 
+no se cargará correctamente. Tampoco se recomienda cambiar el campo DOCKER\_INFLUXDB\_INIT\_BUCKET, aunque 
+el sistema no debería tener problemas en el caso de que se especifique otro nombre para el bucket de datos del AGV.
+
+\subsubsection{Forecasting}
+
+El archivo de configuración del servicio de predicción se encuentra en la carpeta ``./services/forecasting'', y 
+se llama ``config.json''. En este archivo aparecen los siguientes campos:
+\begin{itemize}
+    \item load\_model: guarda un valor booleano. En caso de ser ``true'' el servicio carga el modelo a entrenar.
+        Por contra, si el valor es ``false'' el modelo se entrenará en la ejecución del servicio.
+    \item model\_file: nombre del modelo a cargar. Es también el nombre que tendrá el modelo guardado en el caso 
+        de que se entrene el modelo.
+    \item wait\_time\_before\_train: tiempo a esperar antes de entrenar para dar tiempo a que haya datos que 
+        utilizar en la base de datos. Cuanto más alto sea este valor, más preciso será el modelo, pero también
+        más tiempo tardará en entrenarse.
+    \item wait\_time\_before\_load: tiempo a esperar antes de cargar el modelo para poder ajustar el escalador de los
+        datos. Los datos necesitan escalarse, ya que el modelo de predicciones espera valores entre 0 y 1.
+\end{itemize}
+
+\subsubsection{Receiver}
+
+El archivo de configuración para este servicio se encuentra en el directorio ``./services/receiver'' y 
+contiene solo un único campo:
+\begin{itemize}
+    \item max\_retries: reintentos máximos que realizara este servicio en caso de que la conexión con 
+        la base de datos falle al iniciar este proceso.
+\end{itemize}
+
+\subsubsection{Simulator}
+
+El archivo de configuración del servicio de simulación, llamado también ``config.json'', se encuentra en la 
+ruta ``./services/simulator''. Este archivo especifica los siguientes parámetros de configuración:
+\begin{itemize}
+  \item simulate: guarda un valor booleano que especifica si la simulación está activada o desactivada.
+  \item from\_csv: guarda un valor booleano, que en caso de ser ``true'' carga los datos de la simulación desde
+    un csv. En caso de ser ``false'' los datos generados serán completamente aleatorios.
+  \item csv\_file: nombre del archivo CSV a cargar en caso de que se necesite.
+  \item loop: valor booleano que especifica si, en caso de simular desde un CSV, al acabar de recorrer dicho fichero 
+    vuelve a ejecutarse el simulador o no.
+\end{itemize}
+
+\subsection{Entorno de usuario}
+
+InfluxDB abre por defecto en el puerto 8086 una aplicación web, Chronograf, con la que podemos observar los datos 
+almacenados. Para entrar a dicha aplicación, basta con introducir la dirección IP del ordenador en la que esté 
+alojada la base de datos, seguido de dos puntos y el puerto. En el caso de que se aloje de forma local, se podrá 
+acceder a Chronograf con la url ``localhost:8086''. Una vez accedido, se nos mostrará una página de inicio de sesión 
+(Figrua \ref{fig:login}) en la que introduciremos lo establecido en el archivo de variables de entorno ``influxdb\_credentials.env''.
+
+\imagen{login}{Página de inicio de sesión}
+
+Una vez iniciada la sesión, se nos mostrará la siguiente ventana de bienvenida. En esta ventana, podemos ver en la 
+parte izquierda los diferentes menús y acciones que existen.
+
+\imagen{getting_started}{Imagen de bienvenida}
+
+La primera de estas opciones muestra la información de la organización actual (Figura \ref{fig:about}), así como de los miembros que la forman (Figura \ref{fig:members}).
+Se puede también cambiar de organización y crear nuevas organizaciones.
+
+\imagen{about}{Información general de la organización}
+\imagen{members}{Información de los miembros de la organización}
+
+El siguiente apartado, representado por una flecha hacia arriba, es el apartado ``Load Data''. Desde aquí podremos realizar 
+varias operaciones, como insertar datos, ver los ``buckets'' existentes, configurar Telegraf \cite{telegraf}, etc. En nuestro 
+caso, el único apartado interesante es el de los ``buckets'' (Figura \ref{fig:ld_buckets}).
+
+\imagen{ld_buckets}{Buckets de la base de datos}
+
+Al seleccionar uno de estos ``buckets'', se nos redirecciona al apartado ``Data Explorer'', representado en el menú 
+lateral por un símbolo de un gráfico. Desde este apartado podremos realizar consultas a la base de datos y observar los 
+datos recibidos de varias formas (en este caso una gráfica). Las consultas se pueden hacer tanto de un modo gráfico (Figura \ref{fig:data_explorer}),
+como utilizando el lenguaje de consultas Flux \cite{flux} (Figura \ref{fig:data_explorer_flux})
+
+\imagen{data_explorer}{Consulta gráfica}
+\imagen{data_explorer_flux}{Consulta con Flux}
+
+El último apartado que se explica es el de ``Dashboards'', simbolizado por cuatro cuadrados pequeños. En este apartado (Figura \ref{fig:dashboards})
+podremos guardar consultas para luego visualizarlas en una especie de tablero. Se nos mostrarán todos los ``dashboards'' creados, 
+y podremos crear nuevos, así como importar plantillas ya hechas (Se incluye la plantilla guardada en ``services/database/predicciones\_dashboard.json'').
+
+\imagen{dashboards}{Apartado de ``Dashboards''}
+
+Una vez dentro de un ``dashboard'' (Figura \ref{fig:preds}), se pueden ver las diferentes gráficas creadas en 
+dicho tablero. Se puede configurar también cada cuanto quiere que se refresquen dichas gráficas y si quiere hacerse de manera 
+automática (Figura \ref{fig:set_auto_refresh}).
+
+\imagen{preds}{Tablero con las predicciones}
+\imagen{set_auto_refresh}{Configuración del refresco automático.}
+
+En esta guía solo se han mostrado aquellas herramientas importantes para el desarrollo de este proyecto. 
+Información más detallada sobre todas las utilidades puede verse en la documentación de Chronograf \cite{chronograf:docs}

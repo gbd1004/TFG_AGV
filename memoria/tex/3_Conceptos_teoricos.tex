@@ -96,13 +96,20 @@ Los siguientes modelos se tendrán en cuenta en este trabajo:
         red neuronal utilizada para analizar series temporales. Las TCN tienen en cuenta la estructura temporal de los datos 
         y aplican operaciones convolucionales para capturar patrones. Una convolución \cite{hirschman2012convolution} es un operador matemático que transforma 
         dos funciones en una nueva, y se define como la integral del producto de ambas funciones después de desplazar una de ellas 
-        una distancia t (Figura \ref{conv}). Un ejemplo de convolución es la media móvil, o un filtro de aumento de nitidez para imágenes.
+        una distancia t (Fórmula \ref{conv}). Un ejemplo de convolución es la media móvil, o un filtro de aumento de nitidez para imágenes.
 
-        \begin{figure}[h]
-            \[\int_{-\infty}^{\infty}f(\eta)g(t - \eta)d\eta\]
+        % \begin{figure}[h]
+        %     \[\int_{-\infty}^{\infty}f(\eta)g(t - \eta)d\eta\]
+        %     \caption{Convolución}
+        %     \label{conv}
+        % \end{figure}
+        \begin{equ}[H]
+            \begin{equation}
+                \int_{-\infty}^{\infty}f(\eta)g(t - \eta)d\eta
+            \end{equation}
             \caption{Convolución}
             \label{conv}
-        \end{figure}
+        \end{equ}
 
         TCN utiliza capas convolucionales de una dimensión para aprender características de la serie temporal. Estas 
         capas son aplicadas sobre ventanas deslizantes de la secuencia para extraer características en diferentes puntos 

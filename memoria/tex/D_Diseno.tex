@@ -1,0 +1,161 @@
+\apendice{Especificación de diseño}
+
+\section{Introducción}
+
+En esta sección se detalla la organización y flujo de datos del proyecto, el diseño de los diferentes 
+servicios mencionados en apartados anteriores, y un diseño más en profundidad de toda la arquitectura.
+
+\section{Diseño de datos}
+
+Esta sección se divide en otras dos subsecciones: la primera detallará la organización de los datos 
+en la base de datos, y la segunda detallará el flujo de datos entre los diferentes servicios.
+
+\subsection{Base de datos}
+
+De acuerdo con lo establecido en el anexo B, se ha seleccionado InfluxDB como la base de datos de elección. 
+InfluxDB es una base de datos no relacional orientada a series temporales, lo cual implica que sus 
+características difieren de las bases de datos relacionales convencionales.
+
+El elemento de mayor nivel organizativo en InfluxDB es la organización. Una organización es un 
+entorno de trabajo en el que se definen el resto de elementos de la base de datos: usuarios, ``buckets'',
+tareas, etc.
+
+En InfluxDB, los datos se almacenan en lo que se conoce como ``buckets''. La característica principal
+de estos ``buckets'' es que tienen un periodo de retención, es decir, el tiempo que perduran los datos
+almacenados. Así, por ejemplo, un ``bucket'' con un periodo de retención de un minuto, los datos insertados
+hace más de un minuto son automáticamente eliminados. 
+
+Dentro de cada ``bucket'', los datos están organizados según los siguientes elementos:
+\begin{enumerate}
+    \item Time: Al ser InfluxDB una serie de datos de series temporales, este campo cobra 
+        una gran importancia. Este campo almacena el tiempo de cada entrada según el estándar
+        RFC3339 \cite{rfc3339}.
+    \item Field set: El conjunto de campos, o field set, almacena pares de claves y valore: las 
+        claves guardan metadatos y son cadenas de caracteres, y los valores almacenan los datos 
+        propiamente dichos. 
+    \item Tag set: el conjunto de etiquetas, o tag set, almacena, al igual que el field set, pares 
+        de clave-valor. El tag set, sin embargo, solo almacena metadatos, y tanto la clave como el
+        valor almacenan cadenas de caracteres. Este elemento es opcional, aunque es muy recomendado 
+        utilizarlo, pues la etiquetas están indexadas, por lo que las consultas en este tipo de datos 
+        son mucho más rápidas.
+    \item Measurement: la medida, o measurement, actúa como contenedor de los campos anteriores, 
+        y sería el equivalente a una tabla en una base de datos relacional.
+\end{enumerate}
+
+Con esta información en mente, la organización de la base de datos queda definida de la siguiente 
+manera. Se utilizan dos ``buckets'', uno para los datos recibidos por el AGV o por el simulador con 
+un periodo de retención infinito (los datos no se eliminan nunca), y otro para almacenar las predicciones 
+realizadas con un periodo de retención bajo, especificado en un archivo de configuración. 
+
+En cada uno de estos ``buckets'' se almacenan las series temporales siguiendo el esquema de las 
+tablas \ref{tabla:bucket_agv} y \ref{tabla:bucket_pred}
+
+\tablaSmallSinColores{Bucket ``AGV''}{l l l}{bucket_agv}{
+    Elemento & Descripción \\
+}{
+    Measurement & \multicolumn{2}{l}{AGVDATA} \\
+    \midrule
+    & Clave & Valor \\
+    Tag set & agvid & string \\
+    & type & string \\
+    \midrule
+    & Clave & Valor \\
+    \multirow{9}{*}{Field set} & encoder\_derecho & int \\
+    & encoder\_izquierdo & int \\
+    & in.current\_l & int \\
+    & in.current\_h & int \\
+    & in.i\_medida\_bat & int \\
+    & in.guide\_error & float \\
+    & out.set\_speed\_right & int \\
+    & out.set\_speed\_left & int \\
+    & out.display & int \\
+}
+
+El bucket AGV contiene un tag para la ID del AGV que mande dichos datos. Esto ahora mismo no se utiliza, pues 
+solo se puede simular y predecir un único AGV, pero se incluye por si en el futuro se decide ampliar para poder 
+trabajar con varios vehículos. 
+
+La otra tag, ``type'', se incluye también para posibles futuros desarrollos. Todos los valores enviados por los 
+vehículos o por el simulador deben tener el valor ``value''. En el futuro, en caso de que quieran almacenarse 
+otros datos externos a los vehículos, o datos procesados de los mismos, se han de introducir con otro valor de 
+esta tag diferente.
+
+\tablaSmallSinColores{Bucket ``Predictions''}{l l l}{bucket_pred}{
+    Elemento & Descripción \\
+}{
+    Measurement & \multicolumn{2}{l}{pred} \\
+    \midrule
+    & Clave & Valor \\
+    \multirow{2}{*}{Field set} & encoder\_derecho & int \\
+    & encoder\_izquierdo & int \\
+}
+
+El bucket de las predicciones es mucho más simple. Simplemente tiene los valores generados por el servicio de 
+predicciones.
+
+\subsection{Flujo de datos}
+
+La comunicación entre servicios ocurre de tres formas diferentes:
+\begin{itemize}
+    \item 5G Wifi: Los AGV envían datos al ``AGV Coordinator'' como cadenas de bytes a este servicio.
+        Como este servicio no está desarrollado como parte de este proyecto, no se detallará más.
+    \item UDP/JSON: Tanto el ``AGV Coordinator'' como el ``Simulator'' envían los datos codificados en 
+        forma de JSON a través de una conexión UDP. Estos datos son recibidos por el servicio ``Receiver'',
+        que los introducirá en la base de datos.
+    \item Database API: El ``Receiver'' es el encargado de insertar los datos de los AGV o del simulador, 
+        utilizando para ello la API de la base de datos a través de consultas.
+\end{itemize}
+
+\section{Diseño procedimental}
+
+Se muestran a continuación los diagramas de secuencia de cada servicio. En naranja se marcan los elementos
+pertenecientes al servicio ``Simulator'', en amarillo los pertenecientes al servicio ``Receiver'', en verde 
+el servicio de la base de datos y por último en azul los elementos pertenecientes al servicio ``Forecaster''.
+
+\imagen{sec_simular_aleatorio}{Diagrama de secuencia del servicio ``Simulator'' generando datos aleatorios}
+\imagen{sec_simular_csv}{Diagrama de secuencia del servicio ``Simulator'' generando datos de un CSV}
+\imagen{sec_recv}{Diagrama de secuencia del servicio ``Receiver''}
+\imagen{sec_forecast}{Diagrama de secuencia del servicio ``Forecaster''}
+
+
+\section{Diseño arquitectónico}
+
+Debido a la simplicidad del código utilizado en el proyecto, se ha decidido seguir un enfoque de programación 
+funcional, más que programación orientada a objetos. Por esto, no podrán definirse diagramas típicos de UML como 
+puede ser un diagrama de clases.
+
+\subsection{Diseño de paquetes}
+
+El código del proyecto ha sido organizado según el servicio al que pertenecen. De esta forma se simplifica la organización,
+consiguiendo un proyecto con un código más fácil de leer y de mantener.
+
+\imagenSized{diagrama_paquetes}{Diagrama de paquetes}{0.45}
+
+Como se puede ver en la Figura \ref{fig:diagrama_paquetes}, existen cuatro paquetes, uno por cada servicio:
+\begin{itemize}
+    \item Database: contiene los scripts que se ejecutan al iniciar la base de datos.
+    \item Simulator: contiene el código y archivos de configuración relacionados con el simulador.
+    \item Receiver: contiene el código y archivos de configuración del servicio ``Receiver''.
+    \item Forecasting: contiene el código y archivos de configuración del servicio de predicción.
+\end{itemize}
+
+\subsection{Diseño de despliegue}
+
+Un diagrama de despliegue muestra la arquitectura de ejecución de sistemas que representan la asignación
+de artefactos de software a objetivos de despliegue \cite{arlow2005uml}. La Figura \ref{fig:deploy_diag} muestra el 
+diagrama de despliegue del sistema.
+
+Cada nodo normalmente representa un dispositivo hardware o un entorno de ejecución de software, y las asociaciones 
+representan las comunicaciones entre nodos.
+
+\imagenSized{deploy_diag}{Diagrama de despliegue}{0.8}
+
+En este caso, el diagrama de despliegue se ha modelado de forma que todos los servicios del sistema se ejecutan
+de manera independiente sobre el mismo hardware y en el mismo sistema operativo. Sin embargo, esto no tiene por
+qué ser así. Ya que son servicios independientes, podrían ejecutarse en sistemas operativos diferentes, e 
+incluso en dispositivos hardware diferentes. 
+
+Esto puede tener sentido desde un punto de vista del rendimiento, 
+ya que podrían tenerse varios servidores, de forma que, por ejemplo, uno esté optimizado para alojar la base de 
+datos, mientras que otro podría estar preparado con hardware especial para realizar las predicciones de la manera 
+más rápida posible.
